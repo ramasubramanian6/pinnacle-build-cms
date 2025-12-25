@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-construction.jpg";
 
@@ -35,7 +35,7 @@ export const HeroSection = () => {
             className="mb-6"
           >
             <span className="inline-block px-4 py-2 bg-accent/20 border border-accent/30 rounded-full text-accent text-sm font-medium tracking-wider uppercase">
-              Excellence in Construction
+              Nellai's Future, Built by Us
             </span>
           </motion.div>
 
@@ -45,9 +45,9 @@ export const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-cream leading-[1.1] mb-6"
           >
-            Building Tomorrow's{" "}
-            <span className="text-gradient-gold">Landmarks</span>{" "}
-            Today
+            Building{" "}
+            <span className="text-gradient-gold">Tirunelveli's</span>{" "}
+            Tomorrow
           </motion.h1>
 
           <motion.p
@@ -56,8 +56,8 @@ export const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.7 }}
             className="text-lg md:text-xl text-cream/70 mb-10 max-w-xl leading-relaxed"
           >
-            With over 35 years of excellence, we transform ambitious visions 
-            into architectural masterpieces that redefine skylines and inspire generations.
+            BRIXXSPACE transforms ambitious visions into architectural masterpieces. 
+            Premium construction and infrastructure solutions that redefine the skyline of South Tamil Nadu.
           </motion.p>
 
           <motion.div
@@ -66,16 +66,18 @@ export const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.9 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <Link to="/projects">
+            <Link to="/contact">
               <Button variant="hero" size="xl" className="w-full sm:w-auto">
-                View Our Projects
+                Get Consultation
                 <ArrowRight className="ml-2" />
               </Button>
             </Link>
-            <Button variant="hero-outline" size="xl" className="group">
-              <Play className="mr-2 group-hover:scale-110 transition-transform" size={20} />
-              Watch Our Story
-            </Button>
+            <Link to="/projects">
+              <Button variant="hero-outline" size="xl" className="group">
+                View Projects
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </div>
@@ -90,10 +92,10 @@ export const HeroSection = () => {
         <div className="container mx-auto px-6 py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { value: "500+", label: "Projects Completed" },
-              { value: "35+", label: "Years Experience" },
-              { value: "150+", label: "Expert Team" },
-              { value: "98%", label: "Client Satisfaction" },
+              { value: "200+", label: "Projects Delivered" },
+              { value: "15+", label: "Years Experience" },
+              { value: "50+", label: "Expert Professionals" },
+              { value: "100%", label: "Client Satisfaction" },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}

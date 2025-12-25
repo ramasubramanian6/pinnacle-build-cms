@@ -3,12 +3,13 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import brixxspaceLogo from "@/assets/brixxspace-logo.png";
 
 const navLinks = [
   { name: "Home", path: "/" },
-  { name: "Projects", path: "/projects" },
-  { name: "Properties", path: "/properties" },
   { name: "About", path: "/about" },
+  { name: "Services", path: "/services" },
+  { name: "Projects", path: "/projects" },
   { name: "Blog", path: "/blog" },
   { name: "Contact", path: "/contact" },
 ];
@@ -48,17 +49,11 @@ export const Navbar = () => {
             whileHover={{ scale: 1.02 }}
             className="flex items-center gap-3"
           >
-            <div className="w-10 h-10 bg-accent rounded-sm flex items-center justify-center">
-              <span className="font-display text-xl font-bold text-primary">A</span>
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="font-display text-xl font-semibold text-cream tracking-wide">
-                APEX
-              </h1>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-cream/60">
-                Construction
-              </p>
-            </div>
+            <img 
+              src={brixxspaceLogo} 
+              alt="BRIXXSPACE" 
+              className="h-12 w-auto"
+            />
           </motion.div>
         </Link>
 
@@ -88,15 +83,15 @@ export const Navbar = () => {
         {/* CTA Button */}
         <div className="hidden lg:flex items-center gap-4">
           <a
-            href="tel:+1234567890"
+            href="tel:+919876543210"
             className="flex items-center gap-2 text-cream/80 hover:text-cream transition-colors"
           >
             <Phone size={18} />
-            <span className="text-sm font-medium">+1 (234) 567-890</span>
+            <span className="text-sm font-medium">+91 98765 43210</span>
           </a>
           <Link to="/contact">
             <Button variant="gold" size="lg">
-              Get a Quote
+              Get Consultation
             </Button>
           </Link>
         </div>

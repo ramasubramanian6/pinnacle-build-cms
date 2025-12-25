@@ -2,68 +2,94 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Layout } from "@/components/layout/Layout";
-import { MapPin, ArrowUpRight } from "lucide-react";
+import { MapPin, ArrowUpRight, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 import projectOngoing from "@/assets/project-ongoing.jpg";
 
-const categories = ["All", "Residential", "Commercial", "Ongoing", "Completed"];
+const categories = ["All", "Residential", "Commercial", "Infrastructure", "Ongoing", "Completed"];
 
 const projects = [
   {
     id: 1,
-    title: "Skyline Tower",
-    category: "Commercial",
+    title: "Nellai Heights",
+    category: "Residential",
     status: "Completed",
-    location: "Manhattan, NY",
-    image: projectCommercial,
-    description: "A 52-story commercial tower featuring state-of-the-art office spaces and retail outlets.",
+    location: "Palayamkottai, Tirunelveli",
+    year: "2023",
+    image: projectResidential,
+    description: "Premium 3-tower residential complex with 120 luxury apartments and modern amenities.",
   },
   {
     id: 2,
-    title: "The Residences at Park Avenue",
-    category: "Residential",
+    title: "BRIXX Commercial Plaza",
+    category: "Commercial",
     status: "Completed",
-    location: "Upper East Side, NY",
-    image: projectResidential,
-    description: "Luxury residential complex with 120 premium apartments and world-class amenities.",
+    location: "Junction Road, Tirunelveli",
+    year: "2022",
+    image: projectCommercial,
+    description: "State-of-the-art commercial complex with office spaces, retail outlets, and basement parking.",
   },
   {
     id: 3,
-    title: "Harbor View Complex",
-    category: "Commercial",
+    title: "Thamiraparani Bridge Extension",
+    category: "Infrastructure",
     status: "Ongoing",
-    location: "Brooklyn, NY",
+    location: "Tirunelveli",
+    year: "2024",
     image: projectOngoing,
-    description: "Mixed-use development featuring offices, retail, and waterfront dining.",
+    description: "Major infrastructure project extending the bridge connectivity across Thamiraparani river.",
   },
   {
     id: 4,
-    title: "Central Park Estates",
+    title: "Green Valley Villas",
     category: "Residential",
     status: "Completed",
-    location: "Central Park West, NY",
+    location: "Vannarpettai, Tirunelveli",
+    year: "2021",
     image: projectResidential,
-    description: "Exclusive residential development overlooking Central Park.",
+    description: "Exclusive gated community with 45 premium villas featuring contemporary architecture.",
   },
   {
     id: 5,
-    title: "Tech Hub Center",
+    title: "Tech Park Nellai",
     category: "Commercial",
     status: "Ongoing",
-    location: "Silicon Alley, NY",
+    location: "Bypass Road, Tirunelveli",
+    year: "2024",
     image: projectCommercial,
-    description: "Modern tech campus designed for innovation and collaboration.",
+    description: "Modern IT park with 5 lakh sq.ft. of Grade-A office space designed for tech companies.",
   },
   {
     id: 6,
-    title: "Riverside Condominiums",
+    title: "Nellai Smart Road Project",
+    category: "Infrastructure",
+    status: "Completed",
+    location: "Tirunelveli Municipal Corporation",
+    year: "2023",
+    image: projectOngoing,
+    description: "Smart road infrastructure with LED lighting, drainage, and pedestrian pathways.",
+  },
+  {
+    id: 7,
+    title: "Royal Apartments",
     category: "Residential",
     status: "Completed",
-    location: "Hudson River, NY",
+    location: "NGO Colony, Tirunelveli",
+    year: "2020",
     image: projectResidential,
-    description: "Waterfront living with stunning river views and premium finishes.",
+    description: "Affordable housing project with 200 units designed for middle-class families.",
+  },
+  {
+    id: 8,
+    title: "Nellai Convention Center",
+    category: "Commercial",
+    status: "Completed",
+    location: "Tirunelveli Town",
+    year: "2022",
+    image: projectCommercial,
+    description: "Multi-purpose convention center with seating for 2000+ guests and modern AV facilities.",
   },
 ];
 
@@ -81,10 +107,10 @@ const Projects = () => {
   return (
     <>
       <Helmet>
-        <title>Our Projects | Apex Construction Portfolio</title>
+        <title>Our Projects | BRIXXSPACE - Construction Portfolio in Tirunelveli</title>
         <meta 
           name="description" 
-          content="Explore Apex Construction's portfolio of residential, commercial, and infrastructure projects. View our completed and ongoing developments." 
+          content="Explore BRIXXSPACE's portfolio of residential, commercial, and infrastructure projects in Tirunelveli. View our completed and ongoing developments." 
         />
       </Helmet>
       <Layout>
@@ -105,7 +131,7 @@ const Projects = () => {
               </h1>
               <p className="text-cream/70 text-lg">
                 Discover our extensive portfolio of completed and ongoing projects 
-                that showcase our commitment to excellence in construction.
+                that showcase our commitment to excellence in construction across South Tamil Nadu.
               </p>
             </motion.div>
           </div>
@@ -145,7 +171,7 @@ const Projects = () => {
                   layout
                 >
                   <Link to={`/projects/${project.id}`} className="group block">
-                    <div className="relative h-[350px] rounded-lg overflow-hidden mb-4">
+                    <div className="relative h-[300px] rounded-lg overflow-hidden mb-4">
                       <img
                         src={project.image}
                         alt={project.title}
@@ -171,14 +197,49 @@ const Projects = () => {
                     <h3 className="font-display text-xl font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
                       {project.title}
                     </h3>
-                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                      <MapPin size={14} />
-                      <span className="text-sm">{project.location}</span>
+                    <div className="flex items-center gap-4 text-muted-foreground mb-2">
+                      <div className="flex items-center gap-1">
+                        <MapPin size={14} />
+                        <span className="text-sm">{project.location}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar size={14} />
+                        <span className="text-sm">{project.year}</span>
+                      </div>
                     </div>
                     <p className="text-muted-foreground text-sm line-clamp-2">
                       {project.description}
                     </p>
                   </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-16 bg-slate-dark">
+          <div className="container mx-auto px-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              {[
+                { value: "200+", label: "Projects Completed" },
+                { value: "50L+", label: "Sq.Ft. Constructed" },
+                { value: "15+", label: "Cities Covered" },
+                { value: "₹500Cr+", label: "Project Value" },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <p className="font-display text-3xl md:text-4xl font-bold text-accent mb-2">
+                    {stat.value}
+                  </p>
+                  <p className="text-cream/60 text-sm uppercase tracking-wider">
+                    {stat.label}
+                  </p>
                 </motion.div>
               ))}
             </div>
