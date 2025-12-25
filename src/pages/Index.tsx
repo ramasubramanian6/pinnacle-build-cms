@@ -1,13 +1,29 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Helmet } from "react-helmet-async";
+import { Layout } from "@/components/layout/Layout";
+import { HeroSection } from "@/components/home/HeroSection";
+import { FeaturedProjects } from "@/components/home/FeaturedProjects";
+import { WhyChooseUs } from "@/components/home/WhyChooseUs";
+import { CTASection } from "@/components/home/CTASection";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      <Helmet>
+        <title>Apex Construction | Premium Construction & Infrastructure Company</title>
+        <meta 
+          name="description" 
+          content="Apex Construction - Building tomorrow's landmarks today. 35+ years of excellence in residential, commercial, and infrastructure construction projects." 
+        />
+        <meta name="keywords" content="construction company, building contractor, commercial construction, residential construction, infrastructure" />
+        <link rel="canonical" href="https://apexconstruction.com" />
+      </Helmet>
+      <Layout>
+        <HeroSection />
+        <FeaturedProjects />
+        <WhyChooseUs />
+        <CTASection />
+      </Layout>
+    </>
   );
 };
 
