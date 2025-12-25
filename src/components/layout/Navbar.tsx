@@ -4,25 +4,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import brixxspaceLogo from "@/assets/brixxspace-logo.png";
-const navLinks = [{
-  name: "Home",
-  path: "/"
-}, {
-  name: "About",
-  path: "/about"
-}, {
-  name: "Services",
-  path: "/services"
-}, {
-  name: "Projects",
-  path: "/projects"
-}, {
-  name: "Blog",
-  path: "/blog"
-}, {
-  name: "Contact",
-  path: "/contact"
-}];
+const navLinks = [
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" },
+  { name: "Services", path: "/services" },
+  { name: "Projects", path: "/projects" },
+  { name: "Properties", path: "/properties" },
+  { name: "Blog", path: "/blog" },
+  { name: "Contact", path: "/contact" },
+];
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -63,12 +53,13 @@ export const Navbar = () => {
             </Link>)}
         </nav>
 
-        {/* CTA Button */}
+        {/* CTA Buttons */}
         <div className="hidden lg:flex items-center gap-4">
-          <a href="tel:+919876543210" className="flex items-center gap-2 text-cream/80 hover:text-cream transition-colors">
-            
-            
-          </a>
+          <Link to="/auth">
+            <Button variant="outline" size="lg" className="border-cream/30 text-cream hover:bg-cream/10">
+              Client Portal
+            </Button>
+          </Link>
           <Link to="/contact">
             <Button variant="gold" size="lg">
               Get Consultation
