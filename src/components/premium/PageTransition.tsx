@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { ReactNode } from "react";
 
@@ -6,7 +6,10 @@ interface PageTransitionProps {
   children: ReactNode;
 }
 
-const pageVariants = {
+const easeOut = [0.16, 1, 0.3, 1] as const;
+const easeIn = [0.4, 0, 0.2, 1] as const;
+
+const pageVariants: Variants = {
   initial: {
     opacity: 0,
     y: 20,
@@ -18,7 +21,7 @@ const pageVariants = {
     filter: "blur(0px)",
     transition: {
       duration: 0.6,
-      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      ease: easeOut,
     },
   },
   exit: {
@@ -27,7 +30,7 @@ const pageVariants = {
     filter: "blur(10px)",
     transition: {
       duration: 0.4,
-      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+      ease: easeIn,
     },
   },
 };
@@ -59,8 +62,8 @@ export const CurtainTransition = ({ children }: PageTransitionProps) => {
       <motion.div key={location.pathname} className="relative">
         <motion.div
           initial={{ scaleY: 1 }}
-          animate={{ scaleY: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 } }}
-          exit={{ scaleY: 1, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } }}
+          animate={{ scaleY: 0, transition: { duration: 0.8, ease: easeOut, delay: 0.2 } }}
+          exit={{ scaleY: 1, transition: { duration: 0.6, ease: easeIn } }}
           className="fixed inset-0 z-50 bg-accent origin-bottom"
         />
         <motion.div
@@ -89,7 +92,7 @@ export const StaggerWrapper = ({ children, delay = 0 }: StaggerWrapperProps) => 
       transition={{
         duration: 0.6,
         delay,
-        ease: [0.16, 1, 0.3, 1],
+        ease: easeOut,
       }}
     >
       {children}
