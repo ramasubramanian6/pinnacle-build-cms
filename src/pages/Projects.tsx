@@ -1,97 +1,23 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { motion } from "framer-motion";
 import { Layout } from "@/components/layout/Layout";
 import { MapPin, ArrowUpRight, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
+import { GlassmorphismCard } from "@/components/premium/GlassmorphismCard";
+import { GradientText } from "@/components/premium/AnimatedText";
+import { AnimatedCounter } from "@/components/premium/ProgressRing";
+import { projects, projectCategories, projectStats } from "@/data/projects";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 import projectOngoing from "@/assets/project-ongoing.jpg";
 
-const categories = ["All", "Residential", "Commercial", "Infrastructure", "Ongoing", "Completed"];
-
-const projects = [
-  {
-    id: 1,
-    title: "Nellai Heights",
-    category: "Residential",
-    status: "Completed",
-    location: "Palayamkottai, Tirunelveli",
-    year: "2023",
-    image: projectResidential,
-    description: "Premium 3-tower residential complex with 120 luxury apartments and modern amenities.",
-  },
-  {
-    id: 2,
-    title: "BRIXX Commercial Plaza",
-    category: "Commercial",
-    status: "Completed",
-    location: "Junction Road, Tirunelveli",
-    year: "2022",
-    image: projectCommercial,
-    description: "State-of-the-art commercial complex with office spaces, retail outlets, and basement parking.",
-  },
-  {
-    id: 3,
-    title: "Thamiraparani Bridge Extension",
-    category: "Infrastructure",
-    status: "Ongoing",
-    location: "Tirunelveli",
-    year: "2024",
-    image: projectOngoing,
-    description: "Major infrastructure project extending the bridge connectivity across Thamiraparani river.",
-  },
-  {
-    id: 4,
-    title: "Green Valley Villas",
-    category: "Residential",
-    status: "Completed",
-    location: "Vannarpettai, Tirunelveli",
-    year: "2021",
-    image: projectResidential,
-    description: "Exclusive gated community with 45 premium villas featuring contemporary architecture.",
-  },
-  {
-    id: 5,
-    title: "Tech Park Nellai",
-    category: "Commercial",
-    status: "Ongoing",
-    location: "Bypass Road, Tirunelveli",
-    year: "2024",
-    image: projectCommercial,
-    description: "Modern IT park with 5 lakh sq.ft. of Grade-A office space designed for tech companies.",
-  },
-  {
-    id: 6,
-    title: "Nellai Smart Road Project",
-    category: "Infrastructure",
-    status: "Completed",
-    location: "Tirunelveli Municipal Corporation",
-    year: "2023",
-    image: projectOngoing,
-    description: "Smart road infrastructure with LED lighting, drainage, and pedestrian pathways.",
-  },
-  {
-    id: 7,
-    title: "Royal Apartments",
-    category: "Residential",
-    status: "Completed",
-    location: "NGO Colony, Tirunelveli",
-    year: "2020",
-    image: projectResidential,
-    description: "Affordable housing project with 200 units designed for middle-class families.",
-  },
-  {
-    id: 8,
-    title: "Nellai Convention Center",
-    category: "Commercial",
-    status: "Completed",
-    location: "Tirunelveli Town",
-    year: "2022",
-    image: projectCommercial,
-    description: "Multi-purpose convention center with seating for 2000+ guests and modern AV facilities.",
-  },
-];
+const imageMap: Record<string, string> = {
+  "project-residential": projectResidential,
+  "project-commercial": projectCommercial,
+  "project-ongoing": projectOngoing,
+};
 
 const Projects = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -115,44 +41,46 @@ const Projects = () => {
       </Helmet>
       <Layout>
         {/* Hero Section */}
-        <section className="pt-32 pb-16 bg-slate-dark">
-          <div className="container mx-auto px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-3xl"
-            >
+        <section className="pt-32 pb-20 bg-background relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
+          <div className="container mx-auto px-6 relative z-10">
+            <ScrollReveal>
               <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
                 Our Portfolio
               </span>
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-cream mb-6">
-                Featured Projects
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+                <GradientText>Featured</GradientText> Projects
               </h1>
-              <p className="text-cream/70 text-lg">
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="text-muted-foreground text-lg max-w-2xl">
                 Discover our extensive portfolio of completed and ongoing projects 
                 that showcase our commitment to excellence in construction across South Tamil Nadu.
               </p>
-            </motion.div>
+            </ScrollReveal>
           </div>
         </section>
 
         {/* Filter Section */}
-        <section className="py-8 bg-background border-b border-border">
+        <section className="py-8 bg-secondary border-b border-border">
           <div className="container mx-auto px-6">
             <div className="flex flex-wrap gap-4">
-              {categories.map((category) => (
-                <button
+              {projectCategories.map((category) => (
+                <motion.button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
                     activeCategory === category
-                      ? "bg-accent text-primary"
-                      : "bg-secondary text-foreground hover:bg-accent/10"
+                      ? "bg-accent text-primary shadow-gold"
+                      : "bg-card text-foreground border border-border hover:border-accent/50"
                   }`}
                 >
                   {category}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -161,88 +89,84 @@ const Projects = () => {
         {/* Projects Grid */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              layout
+            >
               {filteredProjects.map((project, index) => (
                 <motion.div
                   key={project.id}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   layout
                 >
                   <Link to={`/projects/${project.id}`} className="group block">
-                    <div className="relative h-[300px] rounded-lg overflow-hidden mb-4">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="absolute top-4 left-4 flex gap-2">
-                        <span className="px-3 py-1 bg-accent text-primary text-xs font-semibold uppercase tracking-wider rounded">
-                          {project.category}
-                        </span>
-                        <span className={`px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded ${
-                          project.status === "Completed" 
-                            ? "bg-green-500 text-white" 
-                            : "bg-blue-500 text-white"
-                        }`}>
-                          {project.status}
-                        </span>
+                    <GlassmorphismCard hover className="overflow-hidden">
+                      <div className="relative h-[280px] overflow-hidden">
+                        <img
+                          src={imageMap[project.image]}
+                          alt={project.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute top-4 left-4 flex gap-2">
+                          <span className="px-3 py-1 bg-accent text-primary text-xs font-semibold uppercase tracking-wider rounded-full">
+                            {project.category}
+                          </span>
+                          <span className={`px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${
+                            project.status === "Completed" 
+                              ? "bg-green-500/90 text-white" 
+                              : "bg-blue-500/90 text-white"
+                          }`}>
+                            {project.status}
+                          </span>
+                        </div>
+                        <div className="absolute bottom-4 right-4 w-10 h-10 bg-accent rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                          <ArrowUpRight className="text-primary" size={20} />
+                        </div>
                       </div>
-                      <div className="absolute bottom-4 right-4 w-10 h-10 bg-accent rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <ArrowUpRight className="text-primary" size={20} />
+                      <div className="p-6">
+                        <h3 className="font-display text-xl font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
+                          {project.title}
+                        </h3>
+                        <div className="flex items-center gap-4 text-muted-foreground mb-3">
+                          <div className="flex items-center gap-1">
+                            <MapPin size={14} className="text-accent" />
+                            <span className="text-sm">{project.location}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar size={14} className="text-accent" />
+                            <span className="text-sm">{project.year}</span>
+                          </div>
+                        </div>
+                        <p className="text-muted-foreground text-sm line-clamp-2">
+                          {project.description}
+                        </p>
                       </div>
-                    </div>
-                    <h3 className="font-display text-xl font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
-                      {project.title}
-                    </h3>
-                    <div className="flex items-center gap-4 text-muted-foreground mb-2">
-                      <div className="flex items-center gap-1">
-                        <MapPin size={14} />
-                        <span className="text-sm">{project.location}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        <span className="text-sm">{project.year}</span>
-                      </div>
-                    </div>
-                    <p className="text-muted-foreground text-sm line-clamp-2">
-                      {project.description}
-                    </p>
+                    </GlassmorphismCard>
                   </Link>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Stats Section */}
-        <section className="py-16 bg-slate-dark">
+        <section className="py-20 bg-primary">
           <div className="container mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              {[
-                { value: "200+", label: "Projects Completed" },
-                { value: "50L+", label: "Sq.Ft. Constructed" },
-                { value: "15+", label: "Cities Covered" },
-                { value: "₹500Cr+", label: "Project Value" },
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <p className="font-display text-3xl md:text-4xl font-bold text-accent mb-2">
-                    {stat.value}
+            <StaggerReveal className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              {projectStats.map((stat) => (
+                <div key={stat.label}>
+                  <p className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-accent mb-2">
+                    <AnimatedCounter value={parseInt(stat.value.replace(/[^0-9]/g, ''))} suffix={stat.value.replace(/[0-9]/g, '')} />
                   </p>
                   <p className="text-cream/60 text-sm uppercase tracking-wider">
                     {stat.label}
                   </p>
-                </motion.div>
+                </div>
               ))}
-            </div>
+            </StaggerReveal>
           </div>
         </section>
       </Layout>

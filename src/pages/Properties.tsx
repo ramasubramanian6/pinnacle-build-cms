@@ -1,78 +1,20 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { motion } from "framer-motion";
 import { Layout } from "@/components/layout/Layout";
-import { MapPin, Maximize2, DollarSign, Phone, Mail } from "lucide-react";
+import { MapPin, Maximize2, Phone, Mail, IndianRupee } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
+import { GlassmorphismCard, AnimatedBorderCard } from "@/components/premium/GlassmorphismCard";
+import { GradientText } from "@/components/premium/AnimatedText";
+import { properties, propertyStatuses } from "@/data/properties";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 
-const statuses = ["All", "Available", "Sold", "Upcoming"];
-
-const properties = [
-  {
-    id: 1,
-    name: "Penthouse Suite A",
-    location: "Skyline Tower, Manhattan",
-    price: "$2,850,000",
-    area: "3,200 sq ft",
-    bedrooms: 4,
-    bathrooms: 3,
-    status: "Available",
-    image: projectResidential,
-  },
-  {
-    id: 2,
-    name: "Executive Office Floor",
-    location: "Tech Hub Center, NY",
-    price: "$5,500,000",
-    area: "8,500 sq ft",
-    status: "Available",
-    image: projectCommercial,
-  },
-  {
-    id: 3,
-    name: "Garden Duplex Unit",
-    location: "Central Park Estates",
-    price: "$1,950,000",
-    area: "2,100 sq ft",
-    bedrooms: 3,
-    bathrooms: 2,
-    status: "Sold",
-    image: projectResidential,
-  },
-  {
-    id: 4,
-    name: "Waterfront Villa",
-    location: "Riverside Condominiums",
-    price: "$3,200,000",
-    area: "4,500 sq ft",
-    bedrooms: 5,
-    bathrooms: 4,
-    status: "Available",
-    image: projectResidential,
-  },
-  {
-    id: 5,
-    name: "Harbor View Loft",
-    location: "Harbor View Complex",
-    price: "Coming Soon",
-    area: "1,800 sq ft",
-    bedrooms: 2,
-    bathrooms: 2,
-    status: "Upcoming",
-    image: projectCommercial,
-  },
-  {
-    id: 6,
-    name: "Corner Office Suite",
-    location: "Skyline Tower",
-    price: "$1,200,000",
-    area: "2,800 sq ft",
-    status: "Sold",
-    image: projectCommercial,
-  },
-];
+const imageMap: Record<string, string> = {
+  "project-residential": projectResidential,
+  "project-commercial": projectCommercial,
+};
 
 const Properties = () => {
   const [activeStatus, setActiveStatus] = useState("All");
@@ -85,65 +27,67 @@ const Properties = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Available":
-        return "bg-green-500 text-white";
+        return "bg-green-500/90 text-white";
       case "Sold":
-        return "bg-red-500 text-white";
+        return "bg-red-500/90 text-white";
       case "Upcoming":
-        return "bg-blue-500 text-white";
+        return "bg-blue-500/90 text-white";
       default:
-        return "bg-gray-500 text-white";
+        return "bg-muted text-muted-foreground";
     }
   };
 
   return (
     <>
       <Helmet>
-        <title>Properties for Sale | Apex Construction Real Estate</title>
+        <title>Properties for Sale | BRIXXSPACE Real Estate Tirunelveli</title>
         <meta 
           name="description" 
-          content="Browse premium properties for sale by Apex Construction. Luxury residences, commercial spaces, and exclusive developments in prime locations." 
+          content="Browse premium properties for sale by BRIXXSPACE. Luxury residences, commercial spaces, and exclusive developments in Tirunelveli." 
         />
       </Helmet>
       <Layout>
         {/* Hero Section */}
-        <section className="pt-32 pb-16 bg-slate-dark">
-          <div className="container mx-auto px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-3xl"
-            >
+        <section className="pt-32 pb-20 bg-background relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
+          <div className="container mx-auto px-6 relative z-10">
+            <ScrollReveal>
               <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
                 Real Estate
               </span>
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-cream mb-6">
-                Premium Properties
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+                <GradientText>Premium</GradientText> Properties
               </h1>
-              <p className="text-cream/70 text-lg">
-                Discover exclusive properties developed by Apex Construction. 
-                From luxury residences to prime commercial spaces.
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="text-muted-foreground text-lg max-w-2xl">
+                Discover exclusive properties developed by BRIXXSPACE. 
+                From luxury residences to prime commercial spaces in Tirunelveli.
               </p>
-            </motion.div>
+            </ScrollReveal>
           </div>
         </section>
 
         {/* Filter Section */}
-        <section className="py-8 bg-background border-b border-border">
+        <section className="py-8 bg-secondary border-b border-border">
           <div className="container mx-auto px-6">
             <div className="flex flex-wrap gap-4">
-              {statuses.map((status) => (
-                <button
+              {propertyStatuses.map((status) => (
+                <motion.button
                   key={status}
                   onClick={() => setActiveStatus(status)}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
                     activeStatus === status
-                      ? "bg-accent text-primary"
-                      : "bg-secondary text-foreground hover:bg-accent/10"
+                      ? "bg-accent text-primary shadow-gold"
+                      : "bg-card text-foreground border border-border hover:border-accent/50"
                   }`}
                 >
                   {status}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -152,24 +96,27 @@ const Properties = () => {
         {/* Properties Grid */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              layout
+            >
               {filteredProperties.map((property, index) => (
                 <motion.div
                   key={property.id}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   layout
                   className="group"
                 >
-                  <div className="bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border">
+                  <AnimatedBorderCard className="overflow-hidden h-full">
                     <div className="relative h-[250px] overflow-hidden">
                       <img
-                        src={property.image}
+                        src={imageMap[property.image]}
                         alt={property.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                      <span className={`absolute top-4 left-4 px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded ${getStatusColor(property.status)}`}>
+                      <span className={`absolute top-4 left-4 px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${getStatusColor(property.status)}`}>
                         {property.status}
                       </span>
                     </div>
@@ -178,13 +125,13 @@ const Properties = () => {
                         {property.name}
                       </h3>
                       <div className="flex items-center gap-2 text-muted-foreground mb-4">
-                        <MapPin size={14} />
+                        <MapPin size={14} className="text-accent" />
                         <span className="text-sm">{property.location}</span>
                       </div>
                       
                       <div className="flex items-center justify-between py-4 border-t border-b border-border mb-4">
-                        <div className="flex items-center gap-2">
-                          <DollarSign size={16} className="text-accent" />
+                        <div className="flex items-center gap-1">
+                          <IndianRupee size={16} className="text-accent" />
                           <span className="font-semibold text-foreground">{property.price}</span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -210,10 +157,10 @@ const Properties = () => {
                         </Button>
                       </div>
                     </div>
-                  </div>
+                  </AnimatedBorderCard>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
       </Layout>
