@@ -1,28 +1,29 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, ArrowUpRight, Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
+import { MapPin, Phone, Mail, ArrowUpRight, Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
+import brixxspaceLogo from "@/assets/brixxspace-logo.png";
 
 const footerLinks = {
   company: [
     { name: "About Us", path: "/about" },
-    { name: "Our Projects", path: "/projects" },
-    { name: "Properties", path: "/properties" },
+    { name: "Our Services", path: "/services" },
+    { name: "Projects", path: "/projects" },
     { name: "Blog", path: "/blog" },
-    { name: "Careers", path: "/careers" },
+    { name: "Contact", path: "/contact" },
   ],
   services: [
-    { name: "Residential Construction", path: "/projects?category=residential" },
-    { name: "Commercial Projects", path: "/projects?category=commercial" },
-    { name: "Infrastructure", path: "/projects?category=infrastructure" },
-    { name: "Renovation", path: "/projects?category=renovation" },
+    { name: "Construction Management", path: "/services#construction" },
+    { name: "Project Consultancy", path: "/services#consultancy" },
+    { name: "Structural Engineering", path: "/services#engineering" },
+    { name: "Planning & Execution", path: "/services#planning" },
   ],
 };
 
 const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Twitter, href: "#", label: "Twitter" },
+  { icon: Facebook, href: "https://facebook.com/brixxspace", label: "Facebook" },
+  { icon: Instagram, href: "https://instagram.com/brixxspace", label: "Instagram" },
+  { icon: Linkedin, href: "https://linkedin.com/company/brixxspace", label: "LinkedIn" },
+  { icon: Youtube, href: "https://youtube.com/@brixxspace", label: "YouTube" },
 ];
 
 export const Footer = () => {
@@ -39,10 +40,10 @@ export const Footer = () => {
               transition={{ duration: 0.6 }}
             >
               <h2 className="font-display text-3xl md:text-4xl font-semibold mb-2">
-                Ready to Build Your Vision?
+                Ready to Build Nellai's Future?
               </h2>
               <p className="text-cream/60">
-                Let's discuss your next project and bring your ideas to life.
+                Let's discuss your next project and transform your vision into reality.
               </p>
             </motion.div>
             <motion.div
@@ -69,22 +70,14 @@ export const Footer = () => {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-accent rounded-sm flex items-center justify-center">
-                  <span className="font-display text-2xl font-bold text-primary">A</span>
-                </div>
-                <div>
-                  <h2 className="font-display text-2xl font-semibold tracking-wide">
-                    APEX
-                  </h2>
-                  <p className="text-xs uppercase tracking-[0.3em] text-cream/60">
-                    Construction
-                  </p>
-                </div>
-              </div>
+              <img 
+                src={brixxspaceLogo} 
+                alt="BRIXXSPACE" 
+                className="h-16 w-auto"
+              />
             </Link>
             <p className="text-cream/60 mb-6 leading-relaxed">
-              Building excellence since 1985. We transform visions into 
+              Nellai's Future, Built by Us. We transform ambitious visions into 
               architectural masterpieces that stand the test of time.
             </p>
             <div className="flex gap-4">
@@ -92,6 +85,8 @@ export const Footer = () => {
                 <a
                   key={social.label}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={social.label}
                   className="w-10 h-10 rounded-full border border-cream/20 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300"
                 >
@@ -141,31 +136,31 @@ export const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="https://maps.google.com"
+                  href="https://maps.google.com/?q=Tirunelveli,Tamil+Nadu"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-start gap-3 text-cream/60 hover:text-accent transition-colors duration-300"
                 >
                   <MapPin size={20} className="mt-0.5 shrink-0" />
-                  <span>123 Construction Ave,<br />New York, NY 10001</span>
+                  <span>No. 45, VOC Road,<br />Tirunelveli, Tamil Nadu 627001</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+12345678900"
+                  href="tel:+919876543210"
                   className="flex items-center gap-3 text-cream/60 hover:text-accent transition-colors duration-300"
                 >
                   <Phone size={20} className="shrink-0" />
-                  <span>+1 (234) 567-8900</span>
+                  <span>+91 98765 43210</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:info@apexconstruction.com"
+                  href="mailto:info@brixxspace.com"
                   className="flex items-center gap-3 text-cream/60 hover:text-accent transition-colors duration-300"
                 >
                   <Mail size={20} className="shrink-0" />
-                  <span>info@apexconstruction.com</span>
+                  <span>info@brixxspace.com</span>
                 </a>
               </li>
             </ul>
@@ -177,7 +172,7 @@ export const Footer = () => {
       <div className="border-t border-cream/10">
         <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-cream/40">
-            <p>© 2024 Apex Construction. All rights reserved.</p>
+            <p>© 2024 BRIXXSPACE. All rights reserved.</p>
             <div className="flex gap-6">
               <Link to="/privacy" className="hover:text-cream transition-colors">
                 Privacy Policy

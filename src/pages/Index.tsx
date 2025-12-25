@@ -9,13 +9,13 @@ const Index = () => {
   return (
     <>
       <Helmet>
-        <title>Apex Construction | Premium Construction & Infrastructure Company</title>
+        <title>BRIXXSPACE | Premium Construction & Infrastructure Company in Tirunelveli</title>
         <meta 
           name="description" 
-          content="Apex Construction - Building tomorrow's landmarks today. 35+ years of excellence in residential, commercial, and infrastructure construction projects." 
+          content="BRIXXSPACE - Nellai's Future, Built by Us. Leading construction and infrastructure company in Tirunelveli offering premium residential, commercial, and infrastructure projects." 
         />
-        <meta name="keywords" content="construction company, building contractor, commercial construction, residential construction, infrastructure" />
-        <link rel="canonical" href="https://apexconstruction.com" />
+        <meta name="keywords" content="construction company Tirunelveli, building contractor Tamil Nadu, commercial construction, residential construction, infrastructure Nellai" />
+        <link rel="canonical" href="https://brixxspace.com" />
       </Helmet>
       <Layout>
         <HeroSection />

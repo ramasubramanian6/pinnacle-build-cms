@@ -21,22 +21,22 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Visit Us",
-    details: ["123 Construction Ave", "New York, NY 10001"],
+    details: ["No. 45, VOC Road", "Tirunelveli, Tamil Nadu 627001"],
   },
   {
     icon: Phone,
     title: "Call Us",
-    details: ["+1 (234) 567-8900", "+1 (234) 567-8901"],
+    details: ["+91 98765 43210", "+91 98765 43211"],
   },
   {
     icon: Mail,
     title: "Email Us",
-    details: ["info@apexconstruction.com", "sales@apexconstruction.com"],
+    details: ["info@brixxspace.com", "projects@brixxspace.com"],
   },
   {
     icon: Clock,
     title: "Working Hours",
-    details: ["Mon - Fri: 8:00 AM - 6:00 PM", "Sat: 9:00 AM - 2:00 PM"],
+    details: ["Mon - Sat: 9:00 AM - 6:00 PM", "Sun: Closed"],
   },
 ];
 
@@ -85,15 +85,15 @@ const Contact = () => {
     setIsSubmitting(false);
   };
 
-  const whatsappMessage = encodeURIComponent("Hello! I'm interested in learning more about Apex Construction services.");
+  const whatsappMessage = encodeURIComponent("Hello! I'm interested in learning more about BRIXXSPACE construction services.");
 
   return (
     <>
       <Helmet>
-        <title>Contact Us | Apex Construction - Get a Free Quote</title>
+        <title>Contact Us | BRIXXSPACE - Get Free Consultation in Tirunelveli</title>
         <meta 
           name="description" 
-          content="Contact Apex Construction for your next project. Get a free consultation and quote. Call us at +1 (234) 567-8900 or visit our office in New York." 
+          content="Contact BRIXXSPACE for your next construction project in Tirunelveli. Get a free consultation and quote. Call us at +91 98765 43210 or visit our office." 
         />
       </Helmet>
       <Layout>
@@ -175,7 +175,7 @@ const Contact = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="John Doe"
+                        placeholder="Your Name"
                         className={errors.name ? "border-destructive" : ""}
                       />
                       {errors.name && <p className="text-destructive text-sm mt-1">{errors.name}</p>}
@@ -190,7 +190,7 @@ const Contact = () => {
                         type="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="john@example.com"
+                        placeholder="your@email.com"
                         className={errors.email ? "border-destructive" : ""}
                       />
                       {errors.email && <p className="text-destructive text-sm mt-1">{errors.email}</p>}
@@ -206,7 +206,7 @@ const Contact = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="+1 (234) 567-8900"
+                        placeholder="+91 98765 43210"
                         className={errors.phone ? "border-destructive" : ""}
                       />
                       {errors.phone && <p className="text-destructive text-sm mt-1">{errors.phone}</p>}
@@ -253,7 +253,7 @@ const Contact = () => {
                       )}
                     </Button>
                     <a
-                      href={`https://wa.me/12345678900?text=${whatsappMessage}`}
+                      href={`https://wa.me/919876543210?text=${whatsappMessage}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -275,14 +275,14 @@ const Contact = () => {
                 className="h-[500px] rounded-lg overflow-hidden"
               >
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.11976397304903!3d40.69766374874431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1703000000000!5m2!1sen!2s"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125743.24682972699!2d77.61095395!3d8.7139497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b04125cfbe2c4a7%3A0x5c8b7d93e2e1d5df!2sTirunelveli%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1703000000000!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Apex Construction Location"
+                  title="BRIXXSPACE Location - Tirunelveli"
                 />
               </motion.div>
             </div>
