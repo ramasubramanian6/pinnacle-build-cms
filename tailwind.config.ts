@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         display: ['Playfair Display', 'serif'],
-        body: ['Inter', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,15 +51,22 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        gold: {
-          DEFAULT: "hsl(var(--gold))",
-          light: "hsl(var(--gold-light))",
-          dark: "hsl(var(--gold-dark))",
+        // South TN Earthy Palette
+        sand: {
+          DEFAULT: "hsl(var(--sand))",
+          light: "hsl(var(--sand-light))",
+          dark: "hsl(var(--sand-dark))",
         },
-        slate: {
-          dark: "hsl(var(--slate-dark))",
-          DEFAULT: "hsl(var(--slate))",
+        concrete: {
+          DEFAULT: "hsl(var(--concrete))",
+          dark: "hsl(var(--concrete-dark))",
         },
+        "deep-blue": {
+          DEFAULT: "hsl(var(--deep-blue))",
+          light: "hsl(var(--deep-blue-light))",
+        },
+        "earth-green": "hsl(var(--earth-green))",
+        terracotta: "hsl(var(--terracotta))",
         cream: {
           DEFAULT: "hsl(var(--cream))",
           dark: "hsl(var(--cream-dark))",
@@ -105,6 +112,18 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 20px hsl(35 75% 55% / 0.3)" },
+          "50%": { boxShadow: "0 0 40px hsl(35 75% 55% / 0.5)" },
+        },
+        "draw-line": {
+          "0%": { strokeDashoffset: "1000" },
+          "100%": { strokeDashoffset: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -113,6 +132,9 @@ export default {
         "fade-in": "fade-in 0.6s ease-out forwards",
         "slide-in-right": "slide-in-right 0.6s ease-out forwards",
         "scale-up": "scale-up 0.5s ease-out forwards",
+        "float": "float 6s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
+        "draw-line": "draw-line 2s ease-out forwards",
       },
     },
   },
