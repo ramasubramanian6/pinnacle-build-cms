@@ -1,34 +1,40 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
-import { MapPin, ArrowUpRight, Calendar } from "lucide-react";
+import { MapPin, ArrowUpRight, Calendar, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
 import { GlassmorphismCard } from "@/components/premium/GlassmorphismCard";
 import { GradientText } from "@/components/premium/AnimatedText";
 import { AnimatedCounter } from "@/components/premium/ProgressRing";
-import { projects, projectCategories, projectStats } from "@/data/projects";
+import { useProjects, useProjectStats } from "@/hooks/useProjects";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 import projectOngoing from "@/assets/project-ongoing.jpg";
 
-const imageMap: Record<string, string> = {
-  "project-residential": projectResidential,
-  "project-commercial": projectCommercial,
-  "project-ongoing": projectOngoing,
-};
+const projectCategories = ["All", "Residential", "Commercial", "Infrastructure", "Ongoing", "Completed"];
+
+const fallbackImages = [projectResidential, projectCommercial, projectOngoing];
 
 const Projects = () => {
   const [activeCategory, setActiveCategory] = useState("All");
+  const { data: projects = [], isLoading } = useProjects(activeCategory);
+  const { data: stats } = useProjectStats();
 
-  const filteredProjects = projects.filter((project) => {
-    if (activeCategory === "All") return true;
-    if (activeCategory === "Ongoing" || activeCategory === "Completed") {
-      return project.status === activeCategory;
+  const getProjectYear = (project: { start_date: string | null; estimated_completion: string | null }) => {
+    if (project.estimated_completion) {
+      return new Date(project.estimated_completion).getFullYear();
     }
-    return project.category === activeCategory;
-  });
+    if (project.start_date) {
+      return new Date(project.start_date).getFullYear();
+    }
+    return new Date().getFullYear();
+  };
+
+  const getProjectImage = (project: { image_url: string | null }, index: number) => {
+    return project.image_url || fallbackImages[index % fallbackImages.length];
+  };
 
   return (
     <>
@@ -89,66 +95,76 @@ const Projects = () => {
         {/* Projects Grid */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-6">
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              layout
-            >
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  layout
-                >
-                  <Link to={`/projects/${project.id}`} className="group block">
-                    <GlassmorphismCard hover className="overflow-hidden">
-                      <div className="relative h-[280px] overflow-hidden">
-                        <img
-                          src={imageMap[project.image]}
-                          alt={project.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <div className="absolute top-4 left-4 flex gap-2">
-                          <span className="px-3 py-1 bg-accent text-primary text-xs font-semibold uppercase tracking-wider rounded-full">
-                            {project.category}
-                          </span>
-                          <span className={`px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${
-                            project.status === "Completed" 
-                              ? "bg-green-500/90 text-white" 
-                              : "bg-blue-500/90 text-white"
-                          }`}>
-                            {project.status}
-                          </span>
-                        </div>
-                        <div className="absolute bottom-4 right-4 w-10 h-10 bg-accent rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                          <ArrowUpRight className="text-primary" size={20} />
-                        </div>
-                      </div>
-                      <div className="p-6">
-                        <h3 className="font-display text-xl font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
-                          {project.title}
-                        </h3>
-                        <div className="flex items-center gap-4 text-muted-foreground mb-3">
-                          <div className="flex items-center gap-1">
-                            <MapPin size={14} className="text-accent" />
-                            <span className="text-sm">{project.location}</span>
+            {isLoading ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-accent" />
+              </div>
+            ) : projects.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="text-muted-foreground text-lg">No projects found in this category.</p>
+              </div>
+            ) : (
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                layout
+              >
+                {projects.map((project, index) => (
+                  <motion.div
+                    key={project.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    layout
+                  >
+                    <Link to={`/projects/${project.id}`} className="group block">
+                      <GlassmorphismCard hover className="overflow-hidden">
+                        <div className="relative h-[280px] overflow-hidden">
+                          <img
+                            src={getProjectImage(project, index)}
+                            alt={project.title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute top-4 left-4 flex gap-2">
+                            <span className="px-3 py-1 bg-accent text-primary text-xs font-semibold uppercase tracking-wider rounded-full">
+                              {project.category}
+                            </span>
+                            <span className={`px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${
+                              project.status === "completed" 
+                                ? "bg-green-500/90 text-white" 
+                                : "bg-blue-500/90 text-white"
+                            }`}>
+                              {project.status}
+                            </span>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Calendar size={14} className="text-accent" />
-                            <span className="text-sm">{project.year}</span>
+                          <div className="absolute bottom-4 right-4 w-10 h-10 bg-accent rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <ArrowUpRight className="text-primary" size={20} />
                           </div>
                         </div>
-                        <p className="text-muted-foreground text-sm line-clamp-2">
-                          {project.description}
-                        </p>
-                      </div>
-                    </GlassmorphismCard>
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
+                        <div className="p-6">
+                          <h3 className="font-display text-xl font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
+                            {project.title}
+                          </h3>
+                          <div className="flex items-center gap-4 text-muted-foreground mb-3">
+                            <div className="flex items-center gap-1">
+                              <MapPin size={14} className="text-accent" />
+                              <span className="text-sm">{project.location}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Calendar size={14} className="text-accent" />
+                              <span className="text-sm">{getProjectYear(project)}</span>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground text-sm line-clamp-2">
+                            {project.description}
+                          </p>
+                        </div>
+                      </GlassmorphismCard>
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </div>
         </section>
 
@@ -156,10 +172,15 @@ const Projects = () => {
         <section className="py-20 bg-primary">
           <div className="container mx-auto px-6">
             <StaggerReveal className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              {projectStats.map((stat) => (
+              {[
+                { label: "Total Projects", value: stats?.total || 0, suffix: "+" },
+                { label: "Completed", value: stats?.completed || 0, suffix: "" },
+                { label: "Ongoing", value: stats?.ongoing || 0, suffix: "" },
+                { label: "Happy Clients", value: 200, suffix: "+" },
+              ].map((stat) => (
                 <div key={stat.label}>
                   <p className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-accent mb-2">
-                    <AnimatedCounter value={parseInt(stat.value.replace(/[^0-9]/g, ''))} suffix={stat.value.replace(/[0-9]/g, '')} />
+                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                   </p>
                   <p className="text-cream/60 text-sm uppercase tracking-wider">
                     {stat.label}
