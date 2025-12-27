@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
-import { MapPin, Maximize2, Phone, Mail, IndianRupee, Loader2 } from "lucide-react";
+import { MapPin, Maximize2, Phone, Mail, IndianRupee, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { ScrollReveal } from "@/components/premium/ScrollReveal";
 import { AnimatedBorderCard } from "@/components/premium/GlassmorphismCard";
 import { GradientText } from "@/components/premium/AnimatedText";
 import { useProperties, formatPrice } from "@/hooks/useProperties";
+import { useAuth } from "@/contexts/AuthContext";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 
@@ -17,6 +19,7 @@ const fallbackImages = [projectResidential, projectCommercial];
 const Properties = () => {
   const [activeStatus, setActiveStatus] = useState("All");
   const { data: properties = [], isLoading } = useProperties(activeStatus);
+  const { user } = useAuth();
 
   const getPropertyImage = (property: { image_url: string | null }, index: number) => {
     return property.image_url || fallbackImages[index % fallbackImages.length];
@@ -137,33 +140,52 @@ const Properties = () => {
                           <span className="text-sm">{property.location}</span>
                         </div>
                         
-                        <div className="flex items-center justify-between py-4 border-t border-b border-border mb-4">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
                           <div className="flex items-center gap-1">
-                            <IndianRupee size={16} className="text-accent" />
-                            <span className="font-semibold text-foreground">{formatPrice(property.price)}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Maximize2 size={16} className="text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">{property.area_sqft} sq.ft</span>
+                            <Maximize2 size={16} className="text-accent" />
+                            <span>{property.area_sqft} sq.ft</span>
                           </div>
                         </div>
 
-                        {property.bedrooms && (
-                          <div className="flex gap-4 text-sm text-muted-foreground mb-4">
-                            <span>{property.bedrooms} Beds</span>
-                            <span>{property.bathrooms} Baths</span>
+                        {user ? (
+                          <>
+                            <div className="flex items-center justify-between py-4 border-t border-b border-border mb-4">
+                              <div className="flex items-center gap-1">
+                                <IndianRupee size={16} className="text-accent" />
+                                <span className="font-semibold text-foreground">{formatPrice(property.price)}</span>
+                              </div>
+                            </div>
+
+                            {property.bedrooms && (
+                              <div className="flex gap-4 text-sm text-muted-foreground mb-4">
+                                <span>{property.bedrooms} Beds</span>
+                                <span>{property.bathrooms} Baths</span>
+                              </div>
+                            )}
+
+                            <div className="flex gap-3">
+                              <Button variant="gold" className="flex-1">
+                                <Phone size={16} className="mr-2" />
+                                Enquire
+                              </Button>
+                              <Button variant="outline" size="icon">
+                                <Mail size={16} />
+                              </Button>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="pt-4 border-t border-border">
+                            <div className="flex items-center gap-2 text-muted-foreground mb-4">
+                              <Lock size={14} />
+                              <span className="text-sm">Login to view price, contact & more details</span>
+                            </div>
+                            <Link to="/auth">
+                              <Button variant="gold" className="w-full">
+                                Login to View Details
+                              </Button>
+                            </Link>
                           </div>
                         )}
-
-                        <div className="flex gap-3">
-                          <Button variant="gold" className="flex-1">
-                            <Phone size={16} className="mr-2" />
-                            Enquire
-                          </Button>
-                          <Button variant="outline" size="icon">
-                            <Mail size={16} />
-                          </Button>
-                        </div>
                       </div>
                     </AnimatedBorderCard>
                   </motion.div>
