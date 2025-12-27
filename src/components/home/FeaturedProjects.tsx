@@ -1,38 +1,34 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowUpRight, MapPin, Loader2 } from "lucide-react";
+import { useFeaturedProjects } from "@/hooks/useProjects";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 import projectOngoing from "@/assets/project-ongoing.jpg";
 
-const projects = [
-  {
-    id: 1,
-    title: "Luxury Villas",
-    category: "Residential",
-    location: "Palayamkottai, Tirunelveli",
-    image: projectCommercial,
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "BRIXX Commercial Plaza",
-    category: "Commercial",
-    location: "Junction Road, Tirunelveli",
-    image: projectResidential,
-    featured: false,
-  },
-  {
-    id: 3,
-    title: "Thamiraparani Bridge",
-    category: "Infrastructure",
-    location: "Tirunelveli",
-    image: projectOngoing,
-    featured: false,
-  },
-];
+const fallbackImages = [projectCommercial, projectResidential, projectOngoing];
 
 export const FeaturedProjects = () => {
+  const { data: projects = [], isLoading } = useFeaturedProjects();
+
+  const getProjectImage = (index: number, imageUrl: string | null) => {
+    return imageUrl || fallbackImages[index % fallbackImages.length];
+  };
+
+  if (isLoading) {
+    return (
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-6 flex justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-accent" />
+        </div>
+      </section>
+    );
+  }
+
+  if (projects.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-24 bg-background relative overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
@@ -74,35 +70,37 @@ export const FeaturedProjects = () => {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Featured Large Project */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="lg:row-span-2"
-          >
-            <Link to={`/projects/${projects[0].id}`} className="group block h-full">
-              <div className="relative h-full min-h-[500px] lg:min-h-full rounded-lg overflow-hidden">
-                <img
-                  src={projects[0].image}
-                  alt={projects[0].title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-8">
-                  <span className="inline-block px-4 py-1.5 bg-accent text-accent-foreground text-xs font-semibold uppercase tracking-wider rounded mb-4">
-                    {projects[0].category}
-                  </span>
-                  <h3 className="font-display text-3xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors duration-300">
-                    {projects[0].title}
-                  </h3>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <MapPin size={16} />
-                    <span className="text-sm">{projects[0].location}</span>
+          {projects[0] && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="lg:row-span-2"
+            >
+              <Link to={`/projects/${projects[0].id}`} className="group block h-full">
+                <div className="relative h-full min-h-[500px] lg:min-h-full rounded-lg overflow-hidden">
+                  <img
+                    src={getProjectImage(0, projects[0].image_url)}
+                    alt={projects[0].title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-8">
+                    <span className="inline-block px-4 py-1.5 bg-accent text-accent-foreground text-xs font-semibold uppercase tracking-wider rounded mb-4">
+                      {projects[0].category}
+                    </span>
+                    <h3 className="font-display text-3xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors duration-300">
+                      {projects[0].title}
+                    </h3>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <MapPin size={16} />
+                      <span className="text-sm">{projects[0].location}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          </motion.div>
+              </Link>
+            </motion.div>
+          )}
 
           {/* Smaller Projects */}
           {projects.slice(1).map((project, index) => (
@@ -116,7 +114,7 @@ export const FeaturedProjects = () => {
               <Link to={`/projects/${project.id}`} className="group block">
                 <div className="relative h-[280px] rounded-lg overflow-hidden">
                   <img
-                    src={project.image}
+                    src={getProjectImage(index + 1, project.image_url)}
                     alt={project.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />

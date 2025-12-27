@@ -1,36 +1,35 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
-import { MapPin, Maximize2, Phone, Mail, IndianRupee } from "lucide-react";
+import { MapPin, Maximize2, Phone, Mail, IndianRupee, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
-import { GlassmorphismCard, AnimatedBorderCard } from "@/components/premium/GlassmorphismCard";
+import { ScrollReveal } from "@/components/premium/ScrollReveal";
+import { AnimatedBorderCard } from "@/components/premium/GlassmorphismCard";
 import { GradientText } from "@/components/premium/AnimatedText";
-import { properties, propertyStatuses } from "@/data/properties";
+import { useProperties, formatPrice } from "@/hooks/useProperties";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 
-const imageMap: Record<string, string> = {
-  "project-residential": projectResidential,
-  "project-commercial": projectCommercial,
-};
+const propertyStatuses = ["All", "Available", "Sold", "Upcoming"];
+const fallbackImages = [projectResidential, projectCommercial];
 
 const Properties = () => {
   const [activeStatus, setActiveStatus] = useState("All");
+  const { data: properties = [], isLoading } = useProperties(activeStatus);
 
-  const filteredProperties = properties.filter((property) => {
-    if (activeStatus === "All") return true;
-    return property.status === activeStatus;
-  });
+  const getPropertyImage = (property: { image_url: string | null }, index: number) => {
+    return property.image_url || fallbackImages[index % fallbackImages.length];
+  };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Available":
+    const statusLower = status.toLowerCase();
+    switch (statusLower) {
+      case "available":
         return "bg-green-500/90 text-white";
-      case "Sold":
+      case "sold":
         return "bg-red-500/90 text-white";
-      case "Upcoming":
+      case "upcoming":
         return "bg-blue-500/90 text-white";
       default:
         return "bg-muted text-muted-foreground";
@@ -96,71 +95,81 @@ const Properties = () => {
         {/* Properties Grid */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-6">
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              layout
-            >
-              {filteredProperties.map((property, index) => (
-                <motion.div
-                  key={property.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  layout
-                  className="group"
-                >
-                  <AnimatedBorderCard className="overflow-hidden h-full">
-                    <div className="relative h-[250px] overflow-hidden">
-                      <img
-                        src={imageMap[property.image]}
-                        alt={property.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <span className={`absolute top-4 left-4 px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${getStatusColor(property.status)}`}>
-                        {property.status}
-                      </span>
-                    </div>
-                    <div className="p-6">
-                      <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                        {property.name}
-                      </h3>
-                      <div className="flex items-center gap-2 text-muted-foreground mb-4">
-                        <MapPin size={14} className="text-accent" />
-                        <span className="text-sm">{property.location}</span>
+            {isLoading ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-accent" />
+              </div>
+            ) : properties.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="text-muted-foreground text-lg">No properties found in this category.</p>
+              </div>
+            ) : (
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                layout
+              >
+                {properties.map((property, index) => (
+                  <motion.div
+                    key={property.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    layout
+                    className="group"
+                  >
+                    <AnimatedBorderCard className="overflow-hidden h-full">
+                      <div className="relative h-[250px] overflow-hidden">
+                        <img
+                          src={getPropertyImage(property, index)}
+                          alt={property.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <span className={`absolute top-4 left-4 px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${getStatusColor(property.status)}`}>
+                          {property.status}
+                        </span>
                       </div>
-                      
-                      <div className="flex items-center justify-between py-4 border-t border-b border-border mb-4">
-                        <div className="flex items-center gap-1">
-                          <IndianRupee size={16} className="text-accent" />
-                          <span className="font-semibold text-foreground">{property.price}</span>
+                      <div className="p-6">
+                        <h3 className="font-display text-xl font-semibold text-foreground mb-2">
+                          {property.title}
+                        </h3>
+                        <div className="flex items-center gap-2 text-muted-foreground mb-4">
+                          <MapPin size={14} className="text-accent" />
+                          <span className="text-sm">{property.location}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Maximize2 size={16} className="text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">{property.area}</span>
+                        
+                        <div className="flex items-center justify-between py-4 border-t border-b border-border mb-4">
+                          <div className="flex items-center gap-1">
+                            <IndianRupee size={16} className="text-accent" />
+                            <span className="font-semibold text-foreground">{formatPrice(property.price)}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Maximize2 size={16} className="text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">{property.area_sqft} sq.ft</span>
+                          </div>
                         </div>
-                      </div>
 
-                      {property.bedrooms && (
-                        <div className="flex gap-4 text-sm text-muted-foreground mb-4">
-                          <span>{property.bedrooms} Beds</span>
-                          <span>{property.bathrooms} Baths</span>
-                        </div>
-                      )}
+                        {property.bedrooms && (
+                          <div className="flex gap-4 text-sm text-muted-foreground mb-4">
+                            <span>{property.bedrooms} Beds</span>
+                            <span>{property.bathrooms} Baths</span>
+                          </div>
+                        )}
 
-                      <div className="flex gap-3">
-                        <Button variant="gold" className="flex-1">
-                          <Phone size={16} className="mr-2" />
-                          Enquire
-                        </Button>
-                        <Button variant="outline" size="icon">
-                          <Mail size={16} />
-                        </Button>
+                        <div className="flex gap-3">
+                          <Button variant="gold" className="flex-1">
+                            <Phone size={16} className="mr-2" />
+                            Enquire
+                          </Button>
+                          <Button variant="outline" size="icon">
+                            <Mail size={16} />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  </AnimatedBorderCard>
-                </motion.div>
-              ))}
-            </motion.div>
+                    </AnimatedBorderCard>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </div>
         </section>
       </Layout>
