@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
 import { Send, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { z } from "zod";
 import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
 import { GlassmorphismCard, GradientBorderCard } from "@/components/premium/GlassmorphismCard";
@@ -12,6 +11,7 @@ import { AnimatedInput, AnimatedTextarea } from "@/components/premium/AnimatedIn
 import { RippleButton } from "@/components/premium/MagneticButton";
 import { contactInfo, mapEmbedUrl } from "@/data/contact";
 import { siteConfig } from "@/data/site";
+import { useSubmitContact } from "@/hooks/useContact";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -30,7 +30,7 @@ const Contact = () => {
     message: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submitContact = useSubmitContact();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -56,14 +56,15 @@ const Contact = () => {
       return;
     }
 
-    setIsSubmitting(true);
+    await submitContact.mutateAsync({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || undefined,
+      subject: formData.subject || undefined,
+      message: formData.message,
+    });
     
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    toast.success("Message sent successfully! We'll get back to you soon.");
     setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-    setIsSubmitting(false);
   };
 
   const whatsappMessage = encodeURIComponent("Hello! I'm interested in learning more about BRIXXSPACE construction services.");
@@ -180,7 +181,7 @@ const Contact = () => {
                         onClick={() => {}}
                         className="bg-accent text-primary-foreground px-8 py-3 rounded-lg font-semibold disabled:opacity-50"
                       >
-                        {isSubmitting ? (
+                        {submitContact.isPending ? (
                           "Sending..."
                         ) : (
                           <>

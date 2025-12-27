@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_submissions: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          status: string
+          subject: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          status?: string
+          subject?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          status?: string
+          subject?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -46,6 +79,182 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      projects: {
+        Row: {
+          amenities: string[] | null
+          category: string
+          created_at: string
+          description: string | null
+          estimated_completion: string | null
+          featured: boolean | null
+          id: string
+          image_url: string | null
+          location: string
+          progress: number | null
+          sold_units: number | null
+          start_date: string | null
+          status: string
+          title: string
+          total_units: number | null
+          updated_at: string
+        }
+        Insert: {
+          amenities?: string[] | null
+          category: string
+          created_at?: string
+          description?: string | null
+          estimated_completion?: string | null
+          featured?: boolean | null
+          id?: string
+          image_url?: string | null
+          location: string
+          progress?: number | null
+          sold_units?: number | null
+          start_date?: string | null
+          status?: string
+          title: string
+          total_units?: number | null
+          updated_at?: string
+        }
+        Update: {
+          amenities?: string[] | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          estimated_completion?: string | null
+          featured?: boolean | null
+          id?: string
+          image_url?: string | null
+          location?: string
+          progress?: number | null
+          sold_units?: number | null
+          start_date?: string | null
+          status?: string
+          title?: string
+          total_units?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      properties: {
+        Row: {
+          address: string | null
+          amenities: string[] | null
+          area_sqft: number
+          bathrooms: number | null
+          bedrooms: number | null
+          created_at: string
+          description: string | null
+          featured: boolean | null
+          gallery: string[] | null
+          id: string
+          image_url: string | null
+          location: string
+          price: number
+          project_id: string | null
+          property_type: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          amenities?: string[] | null
+          area_sqft: number
+          bathrooms?: number | null
+          bedrooms?: number | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean | null
+          gallery?: string[] | null
+          id?: string
+          image_url?: string | null
+          location: string
+          price: number
+          project_id?: string | null
+          property_type: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          amenities?: string[] | null
+          area_sqft?: number
+          bathrooms?: number | null
+          bedrooms?: number | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean | null
+          gallery?: string[] | null
+          id?: string
+          image_url?: string | null
+          location?: string
+          price?: number
+          project_id?: string | null
+          property_type?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "properties_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_projects: {
+        Row: {
+          created_at: string
+          documents_count: number | null
+          id: string
+          next_milestone: string | null
+          next_milestone_date: string | null
+          project_id: string
+          role: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          documents_count?: number | null
+          id?: string
+          next_milestone?: string | null
+          next_milestone_date?: string | null
+          project_id: string
+          role?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          documents_count?: number | null
+          id?: string
+          next_milestone?: string | null
+          next_milestone_date?: string | null
+          project_id?: string
+          role?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_projects_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_projects_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
