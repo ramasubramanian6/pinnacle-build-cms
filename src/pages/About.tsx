@@ -13,9 +13,9 @@ const About = () => {
     <>
       <Helmet>
         <title>About Us | BRIXXSPACE - Leading Construction Company in Tirunelveli</title>
-        <meta 
-          name="description" 
-          content="Learn about BRIXXSPACE's 15+ year journey of building excellence in Tirunelveli. Our vision, mission, values, and the team behind iconic construction projects in Tamil Nadu." 
+        <meta
+          name="description"
+          content="Learn about BRIXXSPACE's 15+ year journey of building excellence in Tirunelveli. Our vision, mission, values, and the team behind iconic construction projects in Tamil Nadu."
         />
       </Helmet>
       <Layout>
@@ -38,7 +38,7 @@ const About = () => {
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
               <p className="text-muted-foreground text-lg max-w-2xl">
-                For over 15 years, BRIXXSPACE has been at the forefront of transforming 
+                For over 15 years, BRIXXSPACE has been at the forefront of transforming
                 the construction landscape of Tirunelveli and South Tamil Nadu.
               </p>
             </ScrollReveal>
@@ -51,9 +51,9 @@ const About = () => {
             <StaggerReveal className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {aboutStats.map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <ProgressRing 
-                    progress={85} 
-                    size={100} 
+                  <ProgressRing
+                    progress={85}
+                    size={100}
                     strokeWidth={6}
                     showPercentage={false}
                     label=""
@@ -74,9 +74,9 @@ const About = () => {
           <div className="container mx-auto px-6">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <ScrollReveal direction="left">
-                <img 
-                  src={brixxspaceLogo} 
-                  alt="BRIXXSPACE" 
+                <img
+                  src={brixxspaceLogo}
+                  alt="BRIXXSPACE"
                   className="h-20 w-auto mb-8"
                 />
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
@@ -91,9 +91,9 @@ const About = () => {
 
               <ScrollReveal direction="right" delay={0.2}>
                 <div className="relative h-[500px] rounded-2xl overflow-hidden">
-                  <img 
-                    src={heroImage} 
-                    alt="BRIXXSPACE Construction Site" 
+                  <img
+                    src={heroImage}
+                    alt="BRIXXSPACE Construction Site"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
@@ -152,9 +152,9 @@ const About = () => {
 
             <StaggerReveal className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {coreValues.map((value) => (
-                <GlassmorphismCard 
-                  key={value.title} 
-                  hover 
+                <GlassmorphismCard
+                  key={value.title}
+                  hover
                   className="p-8 text-center"
                 >
                   <div className="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -173,20 +173,20 @@ const About = () => {
         </section>
 
         {/* Founder Quote */}
-        <section className="py-24 bg-primary">
+        <section className="py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
               <ScrollReveal>
-                <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
+                <span className="text-[#FFB800] font-medium uppercase tracking-wider text-sm mb-4 block">
                   Leadership Message
                 </span>
-                <h2 className="font-display text-3xl md:text-4xl font-bold text-cream mb-8">
+                <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-8">
                   A Word From Our Founder
                 </h2>
-                <blockquote className="text-cream/80 text-lg md:text-xl leading-relaxed italic mb-8">
+                <blockquote className="text-slate-300 text-lg md:text-xl leading-relaxed italic mb-8">
                   "{founderQuote.quote}"
                 </blockquote>
-                <p className="text-accent font-semibold">— {founderQuote.author}</p>
+                <p className="text-[#FFB800] font-semibold">— {founderQuote.author}</p>
               </ScrollReveal>
             </div>
           </div>
@@ -210,45 +210,51 @@ const About = () => {
 
               <div className="space-y-12">
                 {milestones.map((milestone, index) => (
-                  <ScrollReveal 
+                  <ScrollReveal
                     key={milestone.year}
                     direction={index % 2 === 0 ? "left" : "right"}
                     delay={index * 0.1}
                   >
-                    <div className={`flex flex-col md:flex-row gap-8 ${
-                      index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                    }`}>
-                      <div className="flex-1 md:text-right">
-                        {index % 2 === 0 && (
-                          <GlassmorphismCard hover className="p-6">
-                            <span className="text-accent font-display text-2xl font-bold">
-                              {milestone.year}
-                            </span>
-                            <h3 className="font-display text-xl font-semibold text-foreground mt-2 mb-2">
-                              {milestone.title}
-                            </h3>
-                            <p className="text-muted-foreground text-sm">
-                              {milestone.description}
-                            </p>
-                          </GlassmorphismCard>
+                    <div className="flex flex-col md:flex-row gap-8">
+                      <div className="flex-1 md:pr-8">
+                        {index % 2 === 0 ? (
+                          <div className="md:text-right">
+                            <GlassmorphismCard hover className="p-6">
+                              <span className="text-accent font-display text-2xl font-bold">
+                                {milestone.year}
+                              </span>
+                              <h3 className="font-display text-xl font-semibold text-foreground mt-2 mb-2">
+                                {milestone.title}
+                              </h3>
+                              <p className="text-muted-foreground text-sm">
+                                {milestone.description}
+                              </p>
+                            </GlassmorphismCard>
+                          </div>
+                        ) : (
+                          <div className="hidden md:block" />
                         )}
                       </div>
-                      <div className="hidden md:flex items-center justify-center">
+                      <div className="hidden md:flex items-center justify-center flex-shrink-0">
                         <div className="w-4 h-4 bg-accent rounded-full ring-4 ring-accent/20" />
                       </div>
-                      <div className="flex-1">
-                        {index % 2 !== 0 && (
-                          <GlassmorphismCard hover className="p-6">
-                            <span className="text-accent font-display text-2xl font-bold">
-                              {milestone.year}
-                            </span>
-                            <h3 className="font-display text-xl font-semibold text-foreground mt-2 mb-2">
-                              {milestone.title}
-                            </h3>
-                            <p className="text-muted-foreground text-sm">
-                              {milestone.description}
-                            </p>
-                          </GlassmorphismCard>
+                      <div className="flex-1 md:pl-8">
+                        {index % 2 !== 0 ? (
+                          <div className="md:text-left">
+                            <GlassmorphismCard hover className="p-6">
+                              <span className="text-accent font-display text-2xl font-bold">
+                                {milestone.year}
+                              </span>
+                              <h3 className="font-display text-xl font-semibold text-foreground mt-2 mb-2">
+                                {milestone.title}
+                              </h3>
+                              <p className="text-muted-foreground text-sm">
+                                {milestone.description}
+                              </p>
+                            </GlassmorphismCard>
+                          </div>
+                        ) : (
+                          <div className="hidden md:block" />
                         )}
                       </div>
                     </div>

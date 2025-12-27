@@ -1,27 +1,29 @@
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
 import { HeroSection } from "@/components/home/HeroSection";
-import { FeaturedProjects } from "@/components/home/FeaturedProjects";
-import { WhyChooseUs } from "@/components/home/WhyChooseUs";
-import { CTASection } from "@/components/home/CTASection";
+import { AboutSection } from "@/components/home/AboutSection";
+import { PackagesSection } from "@/components/home/PackagesSection";
+import { PropertiesSection } from "@/components/home/PropertiesSection";
+import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 
 const Index = () => {
   return (
     <>
       <Helmet>
-        <title>BRIXXSPACE | Premium Construction & Infrastructure Company in Tirunelveli</title>
-        <meta 
-          name="description" 
-          content="BRIXXSPACE - Nellai's Future, Built by Us. Leading construction and infrastructure company in Tirunelveli offering premium residential, commercial, and infrastructure projects." 
+        <title>Brixx Space | Professional Construction Consultation & Advisory in Tirunelveli</title>
+        <meta
+          name="description"
+          content="Brixx Space - Professional construction consultation and project advisory firm backed by 30+ years of industry expertise. Expert services in Tirunelveli, Tamil Nadu."
         />
-        <meta name="keywords" content="construction company Tirunelveli, building contractor Tamil Nadu, commercial construction, residential construction, infrastructure Nellai" />
+        <meta name="keywords" content="construction consultation Tirunelveli, project advisory Tamil Nadu, civil engineering, construction planning, Brixx Space" />
         <link rel="canonical" href="https://brixxspace.com" />
       </Helmet>
       <Layout>
         <HeroSection />
-        <FeaturedProjects />
-        <WhyChooseUs />
-        <CTASection />
+        <AboutSection />
+        <PackagesSection />
+        <PropertiesSection />
+        <TestimonialsSection />
       </Layout>
     </>
   );

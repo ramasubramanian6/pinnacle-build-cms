@@ -43,9 +43,9 @@ const Properties = () => {
     <>
       <Helmet>
         <title>Properties for Sale | BRIXXSPACE Real Estate Tirunelveli</title>
-        <meta 
-          name="description" 
-          content="Browse premium properties for sale by BRIXXSPACE. Luxury residences, commercial spaces, and exclusive developments in Tirunelveli." 
+        <meta
+          name="description"
+          content="Browse premium properties for sale by BRIXXSPACE. Luxury residences, commercial spaces, and exclusive developments in Tirunelveli."
         />
       </Helmet>
       <Layout>
@@ -65,7 +65,7 @@ const Properties = () => {
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
               <p className="text-muted-foreground text-lg max-w-2xl">
-                Discover exclusive properties developed by BRIXXSPACE. 
+                Discover exclusive properties developed by BRIXXSPACE.
                 From luxury residences to prime commercial spaces in Tirunelveli.
               </p>
             </ScrollReveal>
@@ -82,11 +82,10 @@ const Properties = () => {
                   onClick={() => setActiveStatus(status)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                    activeStatus === status
-                      ? "bg-accent text-primary shadow-gold"
-                      : "bg-card text-foreground border border-border hover:border-accent/50"
-                  }`}
+                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${activeStatus === status
+                    ? "bg-accent text-primary shadow-gold"
+                    : "bg-card text-foreground border border-border hover:border-accent/50"
+                    }`}
                 >
                   {status}
                 </motion.button>
@@ -107,7 +106,7 @@ const Properties = () => {
                 <p className="text-muted-foreground text-lg">No properties found in this category.</p>
               </div>
             ) : (
-              <motion.div 
+              <motion.div
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                 layout
               >
@@ -139,7 +138,7 @@ const Properties = () => {
                           <MapPin size={14} className="text-accent" />
                           <span className="text-sm">{property.location}</span>
                         </div>
-                        
+
                         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
                           <div className="flex items-center gap-1">
                             <Maximize2 size={16} className="text-accent" />
@@ -175,13 +174,9 @@ const Properties = () => {
                           </>
                         ) : (
                           <div className="pt-4 border-t border-border">
-                            <div className="flex items-center gap-2 text-muted-foreground mb-4">
-                              <Lock size={14} />
-                              <span className="text-sm">Login to view price, contact & more details</span>
-                            </div>
-                            <Link to="/auth">
+                            <Link to={user ? `/properties/${property.id}` : "/auth"}>
                               <Button variant="gold" className="w-full">
-                                Login to View Details
+                                View More Details
                               </Button>
                             </Link>
                           </div>

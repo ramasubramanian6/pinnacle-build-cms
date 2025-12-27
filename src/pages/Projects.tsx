@@ -43,9 +43,9 @@ const Projects = () => {
     <>
       <Helmet>
         <title>Our Projects | BRIXXSPACE - Construction Portfolio in Tirunelveli</title>
-        <meta 
-          name="description" 
-          content="Explore BRIXXSPACE's portfolio of residential, commercial, and infrastructure projects in Tirunelveli. View our completed and ongoing developments." 
+        <meta
+          name="description"
+          content="Explore BRIXXSPACE's portfolio of residential, commercial, and infrastructure projects in Tirunelveli. View our completed and ongoing developments."
         />
       </Helmet>
       <Layout>
@@ -65,7 +65,7 @@ const Projects = () => {
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
               <p className="text-muted-foreground text-lg max-w-2xl">
-                Discover our extensive portfolio of completed and ongoing projects 
+                Discover our extensive portfolio of completed and ongoing projects
                 that showcase our commitment to excellence in construction across South Tamil Nadu.
               </p>
             </ScrollReveal>
@@ -82,11 +82,10 @@ const Projects = () => {
                   onClick={() => setActiveCategory(category)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                    activeCategory === category
+                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === category
                       ? "bg-accent text-primary shadow-gold"
                       : "bg-card text-foreground border border-border hover:border-accent/50"
-                  }`}
+                    }`}
                 >
                   {category}
                 </motion.button>
@@ -107,7 +106,7 @@ const Projects = () => {
                 <p className="text-muted-foreground text-lg">No projects found in this category.</p>
               </div>
             ) : (
-              <motion.div 
+              <motion.div
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                 layout
               >
@@ -132,11 +131,10 @@ const Projects = () => {
                             <span className="px-3 py-1 bg-accent text-primary text-xs font-semibold uppercase tracking-wider rounded-full">
                               {project.category}
                             </span>
-                            <span className={`px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${
-                              project.status === "completed" 
-                                ? "bg-green-500/90 text-white" 
+                            <span className={`px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${project.status === "completed"
+                                ? "bg-green-500/90 text-white"
                                 : "bg-blue-500/90 text-white"
-                            }`}>
+                              }`}>
                               {project.status}
                             </span>
                           </div>
@@ -160,7 +158,7 @@ const Projects = () => {
                               </div>
                             )}
                           </div>
-                          
+
                           {user ? (
                             <>
                               <div className="flex items-center gap-1 text-muted-foreground mb-3">
@@ -195,7 +193,7 @@ const Projects = () => {
         </section>
 
         {/* Stats Section */}
-        <section className="py-20 bg-primary">
+        <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
           <div className="container mx-auto px-6">
             <StaggerReveal className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               {[
@@ -205,10 +203,10 @@ const Projects = () => {
                 { label: "Happy Clients", value: 200, suffix: "+" },
               ].map((stat) => (
                 <div key={stat.label}>
-                  <p className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-accent mb-2">
+                  <p className="font-display text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#FFB800] to-[#FFA500] bg-clip-text text-transparent mb-2">
                     <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                   </p>
-                  <p className="text-cream/60 text-sm uppercase tracking-wider">
+                  <p className="text-slate-400 text-sm uppercase tracking-wider font-semibold">
                     {stat.label}
                   </p>
                 </div>

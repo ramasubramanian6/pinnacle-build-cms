@@ -38,7 +38,7 @@ const Auth = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  
+
   const { user, loading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
@@ -147,12 +147,12 @@ const Auth = () => {
       <div className="min-h-screen bg-background flex relative overflow-hidden">
         {/* Background Image - Left Side */}
         <div className="hidden lg:block lg:w-1/2 relative">
-          <img 
-            src={heroImage} 
-            alt="Construction" 
+          <img
+            src={heroImage}
+            alt="Construction"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 to-slate-800/90" />
           <div className="absolute inset-0 flex flex-col justify-center p-16">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -160,31 +160,43 @@ const Auth = () => {
               transition={{ duration: 0.8 }}
             >
               <img src={brixxspaceLogo} alt="BRIXXSPACE" className="h-16 w-auto mb-8" />
-              <h1 className="font-display text-4xl xl:text-5xl font-bold text-cream mb-6">
-                Exclusive Client Portal
+              <h1 className="font-display text-4xl xl:text-5xl font-bold mb-6 leading-tight">
+                <span className="text-white">Welcome to Your</span>
+                <span className="block bg-gradient-to-r from-[#FFB800] to-[#FFA500] bg-clip-text text-transparent mt-2">
+                  Client Portal
+                </span>
               </h1>
-              <p className="text-cream/70 text-lg max-w-md">
-                Track your projects in real-time, access documents, and stay connected 
-                with your construction team. Your premium experience starts here.
+              <p className="text-slate-300 text-lg max-w-md leading-relaxed mb-10">
+                Experience seamless project management with real-time updates,
+                secure document access, and direct team collaboration.
               </p>
-              <div className="mt-12 space-y-4">
+              <div className="space-y-5">
                 {[
-                  "Real-time project tracking",
-                  "Direct communication with your team",
-                  "Access documents & blueprints",
-                  "View progress photos & updates",
+                  { icon: "📊", text: "Real-time project tracking & analytics" },
+                  { icon: "💬", text: "Direct communication with your team" },
+                  { icon: "📁", text: "Secure document & blueprint access" },
+                  { icon: "📸", text: "Progress photos & milestone updates" },
                 ].map((feature, index) => (
                   <motion.div
-                    key={feature}
+                    key={index}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 + index * 0.1 }}
-                    className="flex items-center gap-3 text-cream/80"
+                    className="flex items-start gap-4 group"
                   >
-                    <div className="w-2 h-2 bg-accent rounded-full" />
-                    <span>{feature}</span>
+                    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-[#FFB800]/20 to-[#FFA500]/10 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                      {feature.icon}
+                    </div>
+                    <span className="text-slate-200 leading-relaxed pt-1.5">{feature.text}</span>
                   </motion.div>
                 ))}
+              </div>
+
+              {/* Trust Badge */}
+              <div className="mt-12 pt-8 border-t border-white/10">
+                <p className="text-sm text-slate-400">
+                  Trusted by <span className="text-[#FFB800] font-semibold">500+</span> clients across Tamil Nadu
+                </p>
               </div>
             </motion.div>
           </div>
@@ -224,8 +236,8 @@ const Auth = () => {
                   )}
                 </h2>
                 <p className="text-muted-foreground text-sm">
-                  {isLogin 
-                    ? "Sign in to access your client portal" 
+                  {isLogin
+                    ? "Sign in to access your client portal"
                     : "Join the exclusive BRIXXSPACE community"
                   }
                 </p>
@@ -248,9 +260,8 @@ const Auth = () => {
                           value={formData.fullName}
                           onChange={handleChange}
                           placeholder="Full Name"
-                          className={`w-full pl-12 pr-4 py-3 bg-background/50 border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${
-                            errors.fullName ? "border-destructive" : "border-border"
-                          }`}
+                          className={`w-full pl-12 pr-4 py-3 bg-background/50 border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${errors.fullName ? "border-destructive" : "border-border"
+                            }`}
                         />
                       </div>
                       {errors.fullName && (
@@ -269,9 +280,8 @@ const Auth = () => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="Email Address"
-                      className={`w-full pl-12 pr-4 py-3 bg-background/50 border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${
-                        errors.email ? "border-destructive" : "border-border"
-                      }`}
+                      className={`w-full pl-12 pr-4 py-3 bg-background/50 border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${errors.email ? "border-destructive" : "border-border"
+                        }`}
                     />
                   </div>
                   {errors.email && (
@@ -288,9 +298,8 @@ const Auth = () => {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="Password"
-                      className={`w-full pl-12 pr-12 py-3 bg-background/50 border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${
-                        errors.password ? "border-destructive" : "border-border"
-                      }`}
+                      className={`w-full pl-12 pr-12 py-3 bg-background/50 border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${errors.password ? "border-destructive" : "border-border"
+                        }`}
                     />
                     <button
                       type="button"
@@ -321,9 +330,8 @@ const Auth = () => {
                           value={formData.confirmPassword}
                           onChange={handleChange}
                           placeholder="Confirm Password"
-                          className={`w-full pl-12 pr-4 py-3 bg-background/50 border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${
-                            errors.confirmPassword ? "border-destructive" : "border-border"
-                          }`}
+                          className={`w-full pl-12 pr-4 py-3 bg-background/50 border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all ${errors.confirmPassword ? "border-destructive" : "border-border"
+                            }`}
                         />
                       </div>
                       {errors.confirmPassword && (
@@ -334,7 +342,7 @@ const Auth = () => {
                 </AnimatePresence>
 
                 <RippleButton
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className="w-full bg-accent text-primary-foreground py-3 rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {isLoading ? (

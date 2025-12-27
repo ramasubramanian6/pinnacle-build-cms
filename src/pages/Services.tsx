@@ -1,154 +1,311 @@
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
+import { motion } from "framer-motion";
+import {
+  Building2,
+  Calculator,
+  ClipboardCheck,
+  FileText,
+  Shield,
+  Users,
+  CheckCircle2,
+  ArrowRight,
+  Phone
+} from "lucide-react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
-import { GlassmorphismCard, GradientBorderCard } from "@/components/premium/GlassmorphismCard";
-import { AnimatedText, GradientText } from "@/components/premium/AnimatedText";
-import { RippleButton } from "@/components/premium/MagneticButton";
-import { services, servicesCTA } from "@/data/services";
+
+const services = [
+  {
+    icon: Building2,
+    title: "Design Coordination",
+    description: "Expert architectural and structural design coordination ensuring seamless project execution",
+    features: ["3D Visualization", "Technical Drawings", "Design Optimization", "Compliance Review"]
+  },
+  {
+    icon: Calculator,
+    title: "Budget Management",
+    description: "Comprehensive cost estimation and budget control for optimal resource allocation",
+    features: ["Cost Analysis", "Budget Planning", "Value Engineering", "Financial Reporting"]
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Scheduling & Planning",
+    description: "Strategic project scheduling and timeline management for timely delivery",
+    features: ["Project Timeline", "Resource Planning", "Milestone Tracking", "Risk Management"]
+  },
+  {
+    icon: FileText,
+    title: "Contract Administration",
+    description: "Professional contract management and documentation services",
+    features: ["Contract Review", "Documentation", "Compliance", "Legal Support"]
+  },
+  {
+    icon: Shield,
+    title: "Quality Assurance",
+    description: "Rigorous quality control and inspection throughout project lifecycle",
+    features: ["Site Inspections", "Quality Testing", "Standards Compliance", "Performance Monitoring"]
+  },
+  {
+    icon: Users,
+    title: "Site Supervision",
+    description: "On-site project supervision and coordination with all stakeholders",
+    features: ["Daily Monitoring", "Team Coordination", "Safety Management", "Progress Reporting"]
+  }
+];
+
+const phases = [
+  {
+    number: "01",
+    title: "Pre-Construction",
+    description: "Planning, design, and feasibility studies"
+  },
+  {
+    number: "02",
+    title: "Construction",
+    description: "Execution, supervision, and quality control"
+  },
+  {
+    number: "03",
+    title: "Post-Construction",
+    description: "Handover, documentation, and support"
+  }
+];
 
 const Services = () => {
   return (
     <>
       <Helmet>
-        <title>Our Services | BRIXXSPACE - Construction & Infrastructure Solutions</title>
-        <meta 
-          name="description" 
-          content="BRIXXSPACE offers comprehensive construction services including construction management, project consultancy, structural engineering, and quality assurance in Tirunelveli." 
+        <title>Professional Services | Brixx Space Construction Consultation</title>
+        <meta
+          name="description"
+          content="Expert construction consultation services backed by 30+ years of experience. Design coordination, budget management, quality assurance, and more."
         />
       </Helmet>
       <Layout>
         {/* Hero Section */}
-        <section className="pt-32 pb-20 bg-background relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
+        <section className="relative py-24 md:py-32 bg-slate-900 overflow-hidden">
+          <div className="absolute inset-0">
+            <img
+              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&h=1080&fit=crop"
+              alt="Construction services"
+              className="w-full h-full object-cover opacity-20"
+            />
+          </div>
+
           <div className="container mx-auto px-6 relative z-10">
-            <ScrollReveal>
-              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
-                Our Services
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-4xl mx-auto text-center"
+            >
+              <span className="inline-block px-4 py-2 rounded-full bg-[#FFB800]/10 border border-[#FFB800]/20 text-[#FFB800] text-sm font-semibold mb-6">
+                Professional Services
               </span>
-            </ScrollReveal>
-            <ScrollReveal delay={0.1}>
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                <GradientText>Comprehensive</GradientText> Construction Solutions
+
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+                Expert Construction Consultation Services
               </h1>
-            </ScrollReveal>
-            <ScrollReveal delay={0.2}>
-              <p className="text-muted-foreground text-lg max-w-2xl">
-                From concept to completion, we offer a full spectrum of construction and 
-                infrastructure services tailored to meet your unique project requirements.
+
+              <p className="text-xl text-slate-300 leading-relaxed mb-8">
+                Comprehensive project advisory backed by 30+ years of industry expertise. From concept to completion, we ensure excellence at every stage.
               </p>
-            </ScrollReveal>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link to="/contact">
+                  <Button className="h-12 px-8 bg-[#FFB800] hover:bg-[#FFA500] text-slate-900 font-semibold">
+                    Get Started
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </Link>
+                <a href="tel:+919894948011">
+                  <Button variant="outline" className="h-12 px-8 border-white/20 text-white hover:bg-white/10">
+                    <Phone className="mr-2 w-4 h-4" />
+                    Call Us
+                  </Button>
+                </a>
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* Services Quick Links */}
-        <section className="py-12 bg-secondary border-b border-border">
+        {/* Services Grid */}
+        <section className="py-20 bg-white">
           <div className="container mx-auto px-6">
-            <StaggerReveal className="grid md:grid-cols-5 gap-4">
-              {services.map((service) => (
-                <a
-                  key={service.id}
-                  href={`#${service.id}`}
+            <div className="text-center mb-16">
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Our Core Services
+              </h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                End-to-end construction consultation services tailored to your project needs
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              {services.map((service, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="group"
                 >
-                  <GlassmorphismCard hover className="p-6 text-center h-full">
-                    <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-accent transition-colors duration-300">
-                      <service.icon className="w-6 h-6 text-accent group-hover:text-primary transition-colors duration-300" />
+                  <div className="h-full p-8 rounded-2xl bg-white border border-slate-200 hover:border-[#FFB800]/50 hover:shadow-xl transition-all duration-300">
+                    {/* Icon */}
+                    <div className="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center mb-6 group-hover:bg-[#FFB800]/10 transition-colors">
+                      <service.icon className="w-7 h-7 text-slate-700 group-hover:text-[#FFB800] transition-colors" />
                     </div>
-                    <h3 className="font-display text-sm font-semibold text-foreground">
+
+                    {/* Title */}
+                    <h3 className="font-display text-xl font-bold text-slate-900 mb-3">
                       {service.title}
                     </h3>
-                  </GlassmorphismCard>
-                </a>
+
+                    {/* Description */}
+                    <p className="text-slate-600 leading-relaxed mb-6 text-sm">
+                      {service.description}
+                    </p>
+
+                    {/* Features */}
+                    <ul className="space-y-2">
+                      {service.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                          <CheckCircle2 className="w-4 h-4 text-[#FFB800] flex-shrink-0 mt-0.5" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
               ))}
-            </StaggerReveal>
+            </div>
           </div>
         </section>
 
-        {/* Detailed Services */}
-        <section className="py-16 bg-background">
+        {/* Project Phases */}
+        <section className="py-20 bg-slate-50">
           <div className="container mx-auto px-6">
-            {services.map((service, index) => (
-              <ScrollReveal
-                key={service.id}
-                direction={index % 2 === 0 ? "left" : "right"}
-              >
-                <div
-                  id={service.id}
-                  className={`py-16 ${index !== services.length - 1 ? 'border-b border-border' : ''}`}
+            <div className="text-center mb-16">
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Key Project Phases
+              </h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                Comprehensive support throughout your construction journey
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {phases.map((phase, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.15 }}
+                  className="relative"
                 >
-                  <div className={`grid lg:grid-cols-2 gap-12 items-center`}>
-                    <div className={index % 2 === 1 ? 'lg:order-2' : ''}>
-                      <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mb-6">
-                        <service.icon className="w-8 h-8 text-accent" />
-                      </div>
-                      <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-                        <AnimatedText>{service.title}</AnimatedText>
-                      </h2>
-                      <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                        {service.description}
-                      </p>
-                      <Link to="/contact">
-                        <RippleButton className="bg-accent text-primary-foreground px-8 py-3 rounded-lg font-semibold">
-                          Get Started
-                          <ArrowRight className="ml-2 inline" size={18} />
-                        </RippleButton>
-                      </Link>
+                  <div className="p-8 rounded-2xl bg-white border border-slate-200 hover:border-[#FFB800]/50 hover:shadow-lg transition-all duration-300">
+                    {/* Number */}
+                    <div className="text-6xl font-bold text-[#FFB800]/20 mb-4">
+                      {phase.number}
                     </div>
-                    <div className={index % 2 === 1 ? 'lg:order-1' : ''}>
-                      <GradientBorderCard className="p-8">
-                        <h3 className="font-display text-lg font-semibold text-foreground mb-6">
-                          What's Included
-                        </h3>
-                        <ul className="space-y-4">
-                          {service.features.map((feature, i) => (
-                            <li
-                              key={i}
-                              className="flex items-start gap-3"
-                            >
-                              <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 shrink-0" />
-                              <span className="text-foreground">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </GradientBorderCard>
-                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-display text-xl font-bold text-slate-900 mb-3">
+                      {phase.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-slate-600 leading-relaxed">
+                      {phase.description}
+                    </p>
                   </div>
-                </div>
-              </ScrollReveal>
-            ))}
+
+                  {/* Connector Line */}
+                  {index < phases.length - 1 && (
+                    <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-slate-200" />
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Why Choose Us */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-6">
+            <div className="max-w-5xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+                    Why Choose Brixx Space?
+                  </h2>
+                  <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                    With over three decades of experience in the construction industry, we bring unparalleled expertise and dedication to every project.
+                  </p>
+                  <ul className="space-y-4">
+                    {[
+                      "30+ years of industry experience",
+                      "500+ successful projects delivered",
+                      "Expert team of qualified professionals",
+                      "Commitment to quality and timely delivery",
+                      "Comprehensive end-to-end solutions"
+                    ].map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-[#FFB800] flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-700">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="relative"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=600&fit=crop"
+                    alt="Construction expertise"
+                    className="rounded-2xl shadow-2xl"
+                  />
+                </motion.div>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-primary relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-radial from-accent/10 via-transparent to-transparent" />
-          <div className="container mx-auto px-6 text-center relative z-10">
-            <ScrollReveal>
-              <div className="max-w-3xl mx-auto">
-                <h2 className="font-display text-3xl md:text-4xl font-bold text-cream mb-6">
-                  {servicesCTA.title}
-                </h2>
-                <p className="text-cream/70 text-lg mb-8">
-                  {servicesCTA.description}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/contact">
-                    <Button variant="hero" size="xl">
-                      Get Free Consultation
-                      <ArrowRight className="ml-2" />
-                    </Button>
-                  </Link>
-                  <Link to="/projects">
-                    <Button variant="hero-outline" size="xl">
-                      View Our Projects
-                    </Button>
-                  </Link>
-                </div>
+        <section className="py-20 bg-slate-900">
+          <div className="container mx-auto px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Start Your Project?
+              </h2>
+              <p className="text-xl text-slate-300 mb-8">
+                Let's discuss how our expert consultation services can bring your vision to life
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link to="/contact">
+                  <Button className="h-12 px-8 bg-[#FFB800] hover:bg-[#FFA500] text-slate-900 font-semibold">
+                    Contact Us Today
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </Link>
+                <Link to="/projects">
+                  <Button variant="outline" className="h-12 px-8 border-white/20 text-white hover:bg-white/10">
+                    View Our Projects
+                  </Button>
+                </Link>
               </div>
-            </ScrollReveal>
+            </div>
           </div>
         </section>
       </Layout>

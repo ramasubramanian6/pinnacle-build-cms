@@ -70,15 +70,14 @@ export const Footer = () => {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-6">
-              <img 
-                src={brixxspaceLogo} 
-                alt="BRIXXSPACE" 
-                className="h-14 w-auto"
+              <img
+                src={brixxspaceLogo}
+                alt="Brixx Space"
+                className="h-16 w-auto"
               />
             </Link>
             <p className="text-muted-foreground mb-6 leading-relaxed">
-              Building Dreams Into Reality. Premium real estate development 
-              and infrastructure solutions you can trust.
+              Professional construction consultation and project advisory firm backed by 30+ years of industry expertise.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social) => (
@@ -136,31 +135,31 @@ export const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="https://maps.google.com/?q=Tirunelveli,Tamil+Nadu"
+                  href="https://maps.google.com/?q=Krishnapuram,Tirunelveli,Tamil+Nadu"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-start gap-3 text-muted-foreground hover:text-accent transition-colors duration-300"
                 >
                   <MapPin size={20} className="mt-0.5 shrink-0" />
-                  <span>No. 45, VOC Road,<br />Tirunelveli, Tamil Nadu 627001</span>
+                  <span>Krishnapuram,<br />Tirunelveli, Tamil Nadu 627011</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+919894948011"
                   className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors duration-300"
                 >
                   <Phone size={20} className="shrink-0" />
-                  <span>+91 98765 43210</span>
+                  <span>+91 9894948011</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:info@brixxspace.com"
+                  href="mailto:brixxspace@gmail.com"
                   className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors duration-300"
                 >
                   <Mail size={20} className="shrink-0" />
-                  <span>info@brixxspace.com</span>
+                  <span>brixxspace@gmail.com</span>
                 </a>
               </li>
             </ul>
@@ -172,7 +171,7 @@ export const Footer = () => {
       <div className="border-t border-border">
         <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <p>© 2024 BRIXXSPACE. All rights reserved.</p>
+            <p>© 2024 Brixx Space. All rights reserved.</p>
             <div className="flex gap-6">
               <Link to="/privacy" className="hover:text-foreground transition-colors">
                 Privacy Policy
