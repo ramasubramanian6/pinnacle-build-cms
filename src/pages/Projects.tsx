@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
-import { MapPin, ArrowUpRight, Calendar, Loader2 } from "lucide-react";
+import { MapPin, ArrowUpRight, Calendar, Loader2, Lock, Maximize2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
@@ -9,6 +9,8 @@ import { GlassmorphismCard } from "@/components/premium/GlassmorphismCard";
 import { GradientText } from "@/components/premium/AnimatedText";
 import { AnimatedCounter } from "@/components/premium/ProgressRing";
 import { useProjects, useProjectStats } from "@/hooks/useProjects";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 import projectOngoing from "@/assets/project-ongoing.jpg";
@@ -21,6 +23,7 @@ const Projects = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const { data: projects = [], isLoading } = useProjects(activeCategory);
   const { data: stats } = useProjectStats();
+  const { user } = useAuth();
 
   const getProjectYear = (project: { start_date: string | null; estimated_completion: string | null }) => {
     if (project.estimated_completion) {
@@ -150,14 +153,37 @@ const Projects = () => {
                               <MapPin size={14} className="text-accent" />
                               <span className="text-sm">{project.location}</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <Calendar size={14} className="text-accent" />
-                              <span className="text-sm">{getProjectYear(project)}</span>
-                            </div>
+                            {project.total_units && (
+                              <div className="flex items-center gap-1">
+                                <Maximize2 size={14} className="text-accent" />
+                                <span className="text-sm">{project.total_units} Units</span>
+                              </div>
+                            )}
                           </div>
-                          <p className="text-muted-foreground text-sm line-clamp-2">
-                            {project.description}
-                          </p>
+                          
+                          {user ? (
+                            <>
+                              <div className="flex items-center gap-1 text-muted-foreground mb-3">
+                                <Calendar size={14} className="text-accent" />
+                                <span className="text-sm">{getProjectYear(project)}</span>
+                              </div>
+                              <p className="text-muted-foreground text-sm line-clamp-2">
+                                {project.description}
+                              </p>
+                            </>
+                          ) : (
+                            <div className="pt-3 border-t border-border">
+                              <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                                <Lock size={14} />
+                                <span className="text-sm">Login to view full details</span>
+                              </div>
+                              <Link to="/auth" onClick={(e) => e.stopPropagation()}>
+                                <Button variant="gold" size="sm" className="w-full">
+                                  Login to View
+                                </Button>
+                              </Link>
+                            </div>
+                          )}
                         </div>
                       </GlassmorphismCard>
                     </Link>
