@@ -12,10 +12,10 @@ const footerLinks = {
     { name: "Contact", path: "/contact" },
   ],
   services: [
-    { name: "Construction Management", path: "/services#construction" },
-    { name: "Project Consultancy", path: "/services#consultancy" },
-    { name: "Structural Engineering", path: "/services#engineering" },
-    { name: "Planning & Execution", path: "/services#planning" },
+    { name: "Residential Development", path: "/services" },
+    { name: "Commercial Spaces", path: "/services" },
+    { name: "Investment & Consulting", path: "/services" },
+    { name: "Project Management", path: "/services" },
   ],
 };
 
@@ -28,9 +28,9 @@ const socialLinks = [
 
 export const Footer = () => {
   return (
-    <footer className="bg-slate-dark text-cream">
+    <footer className="bg-card text-foreground">
       {/* CTA Section */}
-      <div className="border-b border-cream/10">
+      <div className="border-b border-border">
         <div className="container mx-auto px-6 py-16">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <motion.div
@@ -40,9 +40,9 @@ export const Footer = () => {
               transition={{ duration: 0.6 }}
             >
               <h2 className="font-display text-3xl md:text-4xl font-semibold mb-2">
-                Ready to Build Nellai's Future?
+                Ready to Build Your Dreams?
               </h2>
-              <p className="text-cream/60">
+              <p className="text-muted-foreground">
                 Let's discuss your next project and transform your vision into reality.
               </p>
             </motion.div>
@@ -54,7 +54,7 @@ export const Footer = () => {
             >
               <Link
                 to="/contact"
-                className="group inline-flex items-center gap-3 bg-accent text-primary px-8 py-4 rounded font-semibold uppercase tracking-wider hover:bg-gold-dark transition-all duration-300 shadow-gold"
+                className="group inline-flex items-center gap-3 bg-accent text-accent-foreground px-8 py-4 rounded font-semibold hover:bg-gold-dark transition-all duration-300 shadow-gold"
               >
                 Start a Project
                 <ArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -73,12 +73,12 @@ export const Footer = () => {
               <img 
                 src={brixxspaceLogo} 
                 alt="BRIXXSPACE" 
-                className="h-16 w-auto"
+                className="h-14 w-auto"
               />
             </Link>
-            <p className="text-cream/60 mb-6 leading-relaxed">
-              Nellai's Future, Built by Us. We transform ambitious visions into 
-              architectural masterpieces that stand the test of time.
+            <p className="text-muted-foreground mb-6 leading-relaxed">
+              Building Dreams Into Reality. Premium real estate development 
+              and infrastructure solutions you can trust.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social) => (
@@ -88,7 +88,7 @@ export const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="w-10 h-10 rounded-full border border-cream/20 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300"
+                  className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-accent hover:border-accent hover:text-accent-foreground transition-all duration-300"
                 >
                   <social.icon size={18} />
                 </a>
@@ -104,7 +104,7 @@ export const Footer = () => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-cream/60 hover:text-accent transition-colors duration-300"
+                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
                   >
                     {link.name}
                   </Link>
@@ -121,7 +121,7 @@ export const Footer = () => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-cream/60 hover:text-accent transition-colors duration-300"
+                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
                   >
                     {link.name}
                   </Link>
@@ -139,7 +139,7 @@ export const Footer = () => {
                   href="https://maps.google.com/?q=Tirunelveli,Tamil+Nadu"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-3 text-cream/60 hover:text-accent transition-colors duration-300"
+                  className="flex items-start gap-3 text-muted-foreground hover:text-accent transition-colors duration-300"
                 >
                   <MapPin size={20} className="mt-0.5 shrink-0" />
                   <span>No. 45, VOC Road,<br />Tirunelveli, Tamil Nadu 627001</span>
@@ -148,7 +148,7 @@ export const Footer = () => {
               <li>
                 <a
                   href="tel:+919876543210"
-                  className="flex items-center gap-3 text-cream/60 hover:text-accent transition-colors duration-300"
+                  className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors duration-300"
                 >
                   <Phone size={20} className="shrink-0" />
                   <span>+91 98765 43210</span>
@@ -157,7 +157,7 @@ export const Footer = () => {
               <li>
                 <a
                   href="mailto:info@brixxspace.com"
-                  className="flex items-center gap-3 text-cream/60 hover:text-accent transition-colors duration-300"
+                  className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors duration-300"
                 >
                   <Mail size={20} className="shrink-0" />
                   <span>info@brixxspace.com</span>
@@ -169,15 +169,15 @@ export const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-cream/10">
+      <div className="border-t border-border">
         <div className="container mx-auto px-6 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-cream/40">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <p>© 2024 BRIXXSPACE. All rights reserved.</p>
             <div className="flex gap-6">
-              <Link to="/privacy" className="hover:text-cream transition-colors">
+              <Link to="/privacy" className="hover:text-foreground transition-colors">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="hover:text-cream transition-colors">
+              <Link to="/terms" className="hover:text-foreground transition-colors">
                 Terms of Service
               </Link>
             </div>
