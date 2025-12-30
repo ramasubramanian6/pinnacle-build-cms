@@ -8,7 +8,7 @@ import { useProperties } from "@/hooks/useProperties";
 import { useContactSubmissions } from "@/hooks/useAdmin";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, FolderKanban, Mail, TrendingUp, Users, CheckCircle2 } from "lucide-react";
+import { Building2, FolderKanban, Mail, TrendingUp, Users, CheckCircle2, Settings } from "lucide-react";
 import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
 
 export default function AdminDashboard() {
@@ -116,26 +116,94 @@ export default function AdminDashboard() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="bg-card border-border">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="bg-card border-border hover:border-accent/50 transition-colors cursor-pointer" onClick={() => navigate("/admin/projects")}>
               <CardHeader>
-                <CardTitle className="text-foreground">Recent Projects</CardTitle>
+                <CardTitle className="text-foreground flex items-center gap-2">
+                  <FolderKanban className="w-5 h-5 text-accent" />
+                  Projects
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">
-                  Manage your projects from the Projects tab
+                <p className="text-muted-foreground text-sm mb-4">
+                  Manage construction projects, updates, and galleries.
                 </p>
+                <div className="text-2xl font-bold text-foreground">{projectStats?.total || 0}</div>
               </CardContent>
             </Card>
 
-            <Card className="bg-card border-border">
+            <Card className="bg-card border-border hover:border-accent/50 transition-colors cursor-pointer" onClick={() => navigate("/admin/properties")}>
               <CardHeader>
-                <CardTitle className="text-foreground">Recent Inquiries</CardTitle>
+                <CardTitle className="text-foreground flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-accent" />
+                  Properties
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">
-                  View contact submissions from the Contacts tab
+                <p className="text-muted-foreground text-sm mb-4">
+                  Manage real estate listings, pricing, and availability.
                 </p>
+                <div className="text-2xl font-bold text-foreground">{properties?.length || 0}</div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:border-accent/50 transition-colors cursor-pointer" onClick={() => navigate("/admin/services")}>
+              <CardHeader>
+                <CardTitle className="text-foreground flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-accent" />
+                  Services
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Update service offerings and descriptions.
+                </p>
+                <p className="text-sm font-medium text-accent">Manage Services →</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:border-accent/50 transition-colors cursor-pointer" onClick={() => navigate("/admin/blogs")}>
+              <CardHeader>
+                <CardTitle className="text-foreground flex items-center gap-2">
+                  <FolderKanban className="w-5 h-5 text-accent" />
+                  Blogs
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Publish news, articles, and updates.
+                </p>
+                <p className="text-sm font-medium text-accent">Manage Blogs →</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:border-accent/50 transition-colors cursor-pointer" onClick={() => navigate("/admin/testimonials")}>
+              <CardHeader>
+                <CardTitle className="text-foreground flex items-center gap-2">
+                  <Users className="w-5 h-5 text-accent" />
+                  Testimonials
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Manage client reviews and featured testimonials.
+                </p>
+                <p className="text-sm font-medium text-accent">Manage Testimonials →</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:border-accent/50 transition-colors cursor-pointer" onClick={() => navigate("/admin/contacts")}>
+              <CardHeader>
+                <CardTitle className="text-foreground flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-accent" />
+                  Inquiries
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm mb-4">
+                  View and respond to customer messages.
+                </p>
+                <div className="text-2xl font-bold text-foreground">{contacts?.length || 0}</div>
               </CardContent>
             </Card>
           </div>

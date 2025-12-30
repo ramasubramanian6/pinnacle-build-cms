@@ -25,7 +25,7 @@ export const useProjects = (category?: string) => {
     queryKey: ["projects", category],
     queryFn: async () => {
       let query = supabase.from("projects").select("*").order("created_at", { ascending: false });
-      
+
       if (category && category !== "All") {
         if (category === "Ongoing" || category === "Completed") {
           query = query.eq("status", category.toLowerCase());
@@ -38,6 +38,23 @@ export const useProjects = (category?: string) => {
       if (error) throw error;
       return data as Project[];
     },
+  });
+};
+
+export const useProject = (id: string) => {
+  return useQuery({
+    queryKey: ["projects", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) throw error;
+      return data as Project;
+    },
+    enabled: !!id,
   });
 };
 
@@ -64,10 +81,10 @@ export const useProjectStats = () => {
     queryFn: async () => {
       const { data, error } = await supabase.from("projects").select("status");
       if (error) throw error;
-      
+
       const completed = data.filter(p => p.status === "completed").length;
       const ongoing = data.filter(p => p.status === "ongoing").length;
-      
+
       return {
         total: data.length,
         completed,

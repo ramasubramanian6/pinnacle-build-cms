@@ -42,6 +42,9 @@ export default function AdminProperties() {
     address: "",
     image_url: "",
     featured: false,
+    dimensions: "",
+    facing: "",
+    zoning: "Residential",
   });
 
   useEffect(() => {
@@ -66,6 +69,9 @@ export default function AdminProperties() {
       address: "",
       image_url: "",
       featured: false,
+      dimensions: "",
+      facing: "",
+      zoning: "Residential",
     });
     setEditingProperty(null);
   };
@@ -85,6 +91,9 @@ export default function AdminProperties() {
       address: property.address || "",
       image_url: property.image_url || "",
       featured: property.featured || false,
+      dimensions: property.dimensions || "",
+      facing: property.facing || "",
+      zoning: property.zoning || "Residential",
     });
     setIsDialogOpen(true);
   };
@@ -253,6 +262,53 @@ export default function AdminProperties() {
                       onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                     />
                   </div>
+
+                  {/* New Fields Section */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="dimensions">Dimensions</Label>
+                      <Input
+                        id="dimensions"
+                        value={formData.dimensions}
+                        onChange={(e) => setFormData({ ...formData, dimensions: e.target.value })}
+                        placeholder="e.g. 40x60"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="facing">Facing</Label>
+                      <Select value={formData.facing} onValueChange={(v) => setFormData({ ...formData, facing: v })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="North">North</SelectItem>
+                          <SelectItem value="South">South</SelectItem>
+                          <SelectItem value="East">East</SelectItem>
+                          <SelectItem value="West">West</SelectItem>
+                          <SelectItem value="North-East">North-East</SelectItem>
+                          <SelectItem value="North-West">North-West</SelectItem>
+                          <SelectItem value="South-East">South-East</SelectItem>
+                          <SelectItem value="South-West">South-West</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="zoning">Zoning</Label>
+                      <Select value={formData.zoning} onValueChange={(v) => setFormData({ ...formData, zoning: v })}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Residential">Residential</SelectItem>
+                          <SelectItem value="Commercial">Commercial</SelectItem>
+                          <SelectItem value="Mixed Use">Mixed Use</SelectItem>
+                          <SelectItem value="Agricultural">Agricultural</SelectItem>
+                          <SelectItem value="Industrial">Industrial</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
                   <div className="flex justify-end gap-2">
                     <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                       Cancel
@@ -299,8 +355,8 @@ export default function AdminProperties() {
                               property.status === "available"
                                 ? "bg-green-500/10 text-green-400"
                                 : property.status === "sold"
-                                ? "bg-red-500/10 text-red-400"
-                                : "bg-orange-500/10 text-orange-400"
+                                  ? "bg-red-500/10 text-red-400"
+                                  : "bg-orange-500/10 text-orange-400"
                             }
                           >
                             {property.status}

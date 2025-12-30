@@ -19,11 +19,78 @@ const projectCategories = ["All", "Residential", "Commercial", "Infrastructure",
 
 const fallbackImages = [projectResidential, projectCommercial, projectOngoing];
 
+// Static projects data (fallback)
+const staticProjects = [
+  {
+    id: "1",
+    title: "Luxury Villa Complex",
+    description: "Modern luxury residential complex with state-of-the-art amenities and sustainable design.",
+    location: "Tirunelveli, TN",
+    category: "Residential",
+    status: "ongoing",
+    image_url: projectResidential,
+    total_units: 12,
+    start_date: "2024-01-01",
+    estimated_completion: "2025-06-30"
+  },
+  {
+    id: "2",
+    title: "Tech Park One",
+    description: "Premium commercial space designed for modern IT and business operations.",
+    location: "Madurai, TN",
+    category: "Commercial",
+    status: "ongoing",
+    image_url: projectCommercial,
+    total_units: 45,
+    start_date: "2023-11-15",
+    estimated_completion: "2025-12-31"
+  },
+  {
+    id: "3",
+    title: "City Center Mall",
+    description: "A landmark shopping and entertainment destination in the heart of the city.",
+    location: "Tirunelveli, TN",
+    category: "Commercial",
+    status: "completed",
+    image_url: projectOngoing,
+    total_units: 120,
+    start_date: "2022-03-01",
+    estimated_completion: "2024-01-15"
+  },
+  {
+    id: "4",
+    title: "Riverside Apartments",
+    description: "Scenic riverside residential apartments offering peaceful living with city connectivity.",
+    location: "Tirunelveli, TN",
+    category: "Residential",
+    status: "completed",
+    image_url: projectResidential,
+    total_units: 36,
+    start_date: "2022-06-01",
+    estimated_completion: "2023-12-01"
+  }
+];
+
 const Projects = () => {
   const [activeCategory, setActiveCategory] = useState("All");
-  const { data: projects = [], isLoading } = useProjects(activeCategory);
+  const { data: fetchedProjects = [], isLoading } = useProjects("All"); // Always fetch "All" initially to handle client-side filtering better with fallback
   const { data: stats } = useProjectStats();
   const { user } = useAuth();
+
+  // Combine logic: Use fetched projects if available, else static
+  const allProjects = fetchedProjects.length > 0 ? fetchedProjects : staticProjects;
+
+  // Filter projects based on category locally if we are using static data or if we fetched all
+  const filteredProjects = activeCategory === "All"
+    ? allProjects
+    : allProjects.filter(p => {
+      if (activeCategory === "Ongoing" || activeCategory === "Completed") {
+        return p.status === activeCategory.toLowerCase();
+      }
+      return p.category === activeCategory;
+    });
+
+
 
   const getProjectYear = (project: { start_date: string | null; estimated_completion: string | null }) => {
     if (project.estimated_completion) {
@@ -83,8 +150,8 @@ const Projects = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === category
-                      ? "bg-accent text-primary shadow-gold"
-                      : "bg-card text-foreground border border-border hover:border-accent/50"
+                    ? "bg-accent text-primary shadow-gold"
+                    : "bg-card text-foreground border border-border hover:border-accent/50"
                     }`}
                 >
                   {category}
@@ -97,11 +164,11 @@ const Projects = () => {
         {/* Projects Grid */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-6">
-            {isLoading ? (
+            {isLoading && fetchedProjects.length === 0 ? (
               <div className="flex justify-center py-20">
                 <Loader2 className="w-8 h-8 animate-spin text-accent" />
               </div>
-            ) : projects.length === 0 ? (
+            ) : filteredProjects.length === 0 ? (
               <div className="text-center py-20">
                 <p className="text-muted-foreground text-lg">No projects found in this category.</p>
               </div>
@@ -110,7 +177,7 @@ const Projects = () => {
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                 layout
               >
-                {projects.map((project, index) => (
+                {filteredProjects.map((project, index) => (
                   <motion.div
                     key={project.id}
                     initial={{ opacity: 0, y: 30 }}
@@ -132,8 +199,8 @@ const Projects = () => {
                               {project.category}
                             </span>
                             <span className={`px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${project.status === "completed"
-                                ? "bg-green-500/90 text-white"
-                                : "bg-blue-500/90 text-white"
+                              ? "bg-green-500/90 text-white"
+                              : "bg-blue-500/90 text-white"
                               }`}>
                               {project.status}
                             </span>

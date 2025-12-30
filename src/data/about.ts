@@ -8,58 +8,58 @@ export const aboutStats = [
 ];
 
 export const milestones = [
-  { 
-    year: "2010", 
-    title: "Company Founded", 
-    description: "BRIXXSPACE was established in Tirunelveli with a vision to transform the construction landscape of South Tamil Nadu." 
+  {
+    year: "2010",
+    title: "Company Founded",
+    description: "BRIXXSPACE was established in Tirunelveli with a vision to transform the construction landscape of South Tamil Nadu."
   },
-  { 
-    year: "2013", 
-    title: "First Major Project", 
-    description: "Completed our first large-scale residential complex, establishing our reputation for quality." 
+  {
+    year: "2013",
+    title: "First Major Project",
+    description: "Completed our first large-scale residential complex, establishing our reputation for quality."
   },
-  { 
-    year: "2016", 
-    title: "Commercial Expansion", 
-    description: "Expanded into commercial construction with landmark office and retail projects." 
+  {
+    year: "2016",
+    title: "Commercial Expansion",
+    description: "Expanded into commercial construction with landmark office and retail projects."
   },
-  { 
-    year: "2019", 
-    title: "Infrastructure Division", 
-    description: "Launched dedicated infrastructure division for roads, bridges, and public works." 
+  {
+    year: "2019",
+    title: "Infrastructure Division",
+    description: "Launched dedicated infrastructure division for roads, bridges, and public works."
   },
-  { 
-    year: "2022", 
-    title: "200th Project Milestone", 
-    description: "Celebrated the completion of our 200th successful project across Tamil Nadu." 
+  {
+    year: "2022",
+    title: "200th Project Milestone",
+    description: "Celebrated the completion of our 200th successful project across Tamil Nadu."
   },
-  { 
-    year: "2024", 
-    title: "Regional Leadership", 
-    description: "Recognized as the leading construction company in the Tirunelveli-Nellai region." 
+  {
+    year: "2024",
+    title: "Regional Leadership",
+    description: "Recognized as the leading construction company in the Tirunelveli-Nellai region."
   },
 ];
 
 export const coreValues = [
-  { 
-    icon: Shield, 
-    title: "Integrity", 
-    description: "We uphold the highest ethical standards in every project and interaction." 
+  {
+    icon: Shield,
+    title: "Integrity",
+    description: "We uphold the highest ethical standards in every project and interaction."
   },
-  { 
-    icon: Award, 
-    title: "Excellence", 
-    description: "We strive for excellence in design, execution, and client service." 
+  {
+    icon: Award,
+    title: "Excellence",
+    description: "We strive for excellence in design, execution, and client service."
   },
-  { 
-    icon: Heart, 
-    title: "Commitment", 
-    description: "We are committed to delivering projects on time and within budget." 
+  {
+    icon: Heart,
+    title: "Commitment",
+    description: "We are committed to delivering projects on time and within budget."
   },
-  { 
-    icon: Users, 
-    title: "Collaboration", 
-    description: "We believe in collaborative partnerships with clients and stakeholders." 
+  {
+    icon: Users,
+    title: "Collaboration",
+    description: "We believe in collaborative partnerships with clients and stakeholders."
   },
 ];
 
@@ -89,3 +89,18 @@ export const companyIntro = {
     "With a team of 50+ experienced professionals including architects, engineers, and skilled craftsmen, we have successfully completed over 200 projects across South Tamil Nadu, earning the trust of hundreds of satisfied clients.",
   ],
 };
+
+export const leadershipTeam = [
+  {
+    name: "Director Name",
+    role: "Founder & Managing Director",
+    bio: "With over 30 years of experience in the construction industry, leading the company with a vision for excellence and innovation.",
+    image: null // Placeholder
+  },
+  {
+    name: "Technical Lead Name",
+    role: "Technical Lead",
+    bio: "Expert in structural engineering and project management, ensuring every project meets the highest standards of safety and quality.",
+    image: null // Placeholder
+  }
+];

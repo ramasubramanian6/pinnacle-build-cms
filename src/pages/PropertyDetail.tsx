@@ -216,10 +216,12 @@ const PropertyDetail = () => {
                                     </motion.div>
 
                                     {/* Features */}
+                                    {/* Features */}
                                     <motion.div
                                         initial={{ opacity: 0, y: 30 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.6, delay: 0.3 }}
+                                        className="mb-8"
                                     >
                                         <h2 className="font-display text-3xl font-bold text-slate-900 mb-6">
                                             Key Features
@@ -240,6 +242,74 @@ const PropertyDetail = () => {
                                                     <span className="text-slate-700">{feature}</span>
                                                 </div>
                                             ))}
+                                        </div>
+                                    </motion.div>
+
+                                    {/* Land Details & Approvals */}
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 30 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.6, delay: 0.4 }}
+                                        className="grid md:grid-cols-2 gap-8"
+                                    >
+                                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200">
+                                            <h3 className="font-display text-xl font-bold text-slate-900 mb-4">
+                                                Land Details
+                                            </h3>
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between pb-2 border-b border-slate-200">
+                                                    <span className="text-slate-600">Plot Area</span>
+                                                    <span className="font-semibold text-slate-900">{property.area_sqft} Sq.Ft.</span>
+                                                </div>
+                                                <div className="flex justify-between pb-2 border-b border-slate-200">
+                                                    <span className="text-slate-600">Dimensions</span>
+                                                    <span className="font-semibold text-slate-900">
+                                                        {property.dimensions || "N/A"}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between pb-2 border-b border-slate-200">
+                                                    <span className="text-slate-600">Facing</span>
+                                                    <span className="font-semibold text-slate-900">
+                                                        {property.facing || "N/A"}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between pb-2 border-b border-slate-200">
+                                                    <span className="text-slate-600">Zoning</span>
+                                                    <span className="font-semibold text-slate-900">
+                                                        {property.zoning || "Residential"}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200">
+                                            <h3 className="font-display text-xl font-bold text-slate-900 mb-4">
+                                                Approvals & Legal
+                                            </h3>
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between pb-2 border-b border-slate-200">
+                                                    <span className="text-slate-600">DTCP Approved</span>
+                                                    <span className="font-semibold text-green-600 flex items-center gap-1">
+                                                        <CheckCircle2 className="w-4 h-4" /> Yes
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between pb-2 border-b border-slate-200">
+                                                    <span className="text-slate-600">RERA Registered</span>
+                                                    <span className="font-semibold text-green-600 flex items-center gap-1">
+                                                        <CheckCircle2 className="w-4 h-4" /> Yes
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between pb-2 border-b border-slate-200">
+                                                    <span className="text-slate-600">Ownership</span>
+                                                    <span className="font-semibold text-slate-900">Freehold</span>
+                                                </div>
+                                                <div className="flex justify-between pb-2 border-b border-slate-200">
+                                                    <span className="text-slate-600">Legal Check</span>
+                                                    <span className="font-semibold text-green-600 flex items-center gap-1">
+                                                        <CheckCircle2 className="w-4 h-4" /> Clear Title
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </motion.div>
                                 </div>

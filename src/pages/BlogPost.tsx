@@ -2,8 +2,10 @@ import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
 
 // Static blog data (matches Blog.tsx)
 const blogPosts = [
@@ -82,6 +84,17 @@ const blogPosts = [
 const BlogPost = () => {
     const { slug } = useParams<{ slug: string }>();
     const post = blogPosts.find(p => p.slug === slug);
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    // Redirect to login if not authenticated
+    useEffect(() => {
+        if (!user) {
+            navigate("/auth", { state: { from: `/blog/${slug}` } });
+        }
+    }, [user, navigate, slug]);
+
+    if (!user) return null;
 
     if (!post) {
         return (

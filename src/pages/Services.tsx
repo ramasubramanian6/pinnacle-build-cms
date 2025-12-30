@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
@@ -14,8 +15,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useServices } from "@/hooks/useServices";
+import * as LucideIcons from "lucide-react";
 
-const services = [
+const staticServices = [
   {
     icon: Building2,
     title: "Design Coordination",
@@ -73,6 +76,24 @@ const phases = [
 ];
 
 const Services = () => {
+  const { data: fetchedServices, isLoading } = useServices();
+
+  // Use fetched services if available, otherwise fall back to static data
+  // Map fetched services to match the display structure (converting icon string to component)
+  const displayServices = fetchedServices && fetchedServices.length > 0
+    ? fetchedServices.map(s => {
+      // Dynamically get icon component from Lucide
+      // @ts-ignore
+      const IconComponent = LucideIcons[s.icon] || Building2;
+      return {
+        icon: IconComponent,
+        title: s.title,
+        description: s.description || "",
+        features: s.features || []
+      };
+    })
+    : staticServices;
+
   return (
     <>
       <Helmet>
@@ -143,7 +164,7 @@ const Services = () => {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              {services.map((service, index) => (
+              {displayServices.map((service, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}

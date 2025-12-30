@@ -18,6 +18,9 @@ export interface Property {
   amenities: string[] | null;
   featured: boolean | null;
   project_id: string | null;
+  dimensions: string | null;
+  facing: string | null;
+  zoning: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -27,7 +30,7 @@ export const useProperties = (status?: string) => {
     queryKey: ["properties", status],
     queryFn: async () => {
       let query = supabase.from("properties").select("*").order("created_at", { ascending: false });
-      
+
       if (status && status !== "All") {
         query = query.eq("status", status.toLowerCase());
       }

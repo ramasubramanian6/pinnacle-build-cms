@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
 import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
 import Blog from "./pages/Blog";
@@ -23,6 +24,8 @@ import AdminContacts from "./pages/admin/AdminContacts";
 import AdminWorkers from "./pages/admin/AdminWorkers";
 import AdminPackages from "./pages/admin/AdminPackages";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
+import AdminServices from "./pages/admin/AdminServices";
+import AdminBlogs from "./pages/admin/AdminBlogs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +43,7 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
               <Route path="/projects" element={<Projects />} />
+              <Route path="/projects/:id" element={<ProjectDetail />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/properties/:id" element={<PropertyDetail />} />
               <Route path="/blog" element={<Blog />} />
@@ -54,6 +58,8 @@ const App = () => (
               <Route path="/admin/workers" element={<AdminWorkers />} />
               <Route path="/admin/packages" element={<AdminPackages />} />
               <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+              <Route path="/admin/services" element={<AdminServices />} />
+              <Route path="/admin/blogs" element={<AdminBlogs />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

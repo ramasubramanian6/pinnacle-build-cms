@@ -20,6 +20,8 @@ const menuItems = [
   { title: "Dashboard", url: "/admin", icon: Home },
   { title: "Projects", url: "/admin/projects", icon: FolderKanban },
   { title: "Properties", url: "/admin/properties", icon: Building2 },
+  { title: "Services", url: "/admin/services", icon: Settings },
+  { title: "Blogs", url: "/admin/blogs", icon: FolderKanban },
   { title: "Contacts", url: "/admin/contacts", icon: Mail },
 ];
 
@@ -56,8 +58,8 @@ export function AdminSidebar() {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink 
-                      to={item.url} 
+                    <NavLink
+                      to={item.url}
                       end={item.url === "/admin"}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                       activeClassName="bg-accent/10 text-accent"

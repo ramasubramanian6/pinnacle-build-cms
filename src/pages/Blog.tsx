@@ -1,13 +1,15 @@
+import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useBlogs } from "@/hooks/useBlogs";
 
-// Static blog data (will be replaced with backend data later)
-const blogPosts = [
+// Static blog data (fallback)
+const staticBlogPosts = [
   {
-    id: 1,
+    id: "1",
     slug: "future-sustainable-construction-tamil-nadu",
     title: "The Future of Sustainable Construction in Tamil Nadu",
     excerpt: "Exploring innovative green building practices and how they're shaping the future of the construction industry in South India.",
@@ -16,10 +18,11 @@ const blogPosts = [
     readTime: "5 min read",
     category: "Sustainability",
     featured: true,
-    image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop"
   },
   {
-    id: 2,
+    id: "2",
     slug: "commercial-real-estate-trends-2025",
     title: "5 Key Trends in Commercial Real Estate 2025",
     excerpt: "A comprehensive look at the emerging trends that will define commercial real estate development in Tamil Nadu.",
@@ -28,10 +31,11 @@ const blogPosts = [
     readTime: "7 min read",
     category: "Industry Insights",
     featured: false,
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop"
   },
   {
-    id: 3,
+    id: "3",
     slug: "building-nellai-heights",
     title: "Behind the Scenes: Building Nellai Heights",
     excerpt: "An exclusive look at the engineering marvels and challenges we overcame during the construction of Nellai Heights.",
@@ -40,10 +44,11 @@ const blogPosts = [
     readTime: "10 min read",
     category: "Project Stories",
     featured: false,
-    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop"
   },
   {
-    id: 4,
+    id: "4",
     slug: "smart-buildings-technology",
     title: "Smart Buildings: Integrating Technology in Construction",
     excerpt: "How IoT, AI, and automation are revolutionizing modern building design and construction processes.",
@@ -52,10 +57,11 @@ const blogPosts = [
     readTime: "6 min read",
     category: "Technology",
     featured: false,
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop"
   },
   {
-    id: 5,
+    id: "5",
     slug: "choosing-right-materials",
     title: "Choosing the Right Materials for Your Project",
     excerpt: "A guide to selecting construction materials that balance durability, cost-effectiveness, and sustainability.",
@@ -64,10 +70,11 @@ const blogPosts = [
     readTime: "8 min read",
     category: "Construction Tips",
     featured: false,
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop"
   },
   {
-    id: 6,
+    id: "6",
     slug: "importance-safety-construction",
     title: "The Importance of Safety in Construction",
     excerpt: "Why safety protocols are non-negotiable and how we maintain our perfect safety record at Brixx Space.",
@@ -76,13 +83,26 @@ const blogPosts = [
     readTime: "4 min read",
     category: "Safety",
     featured: false,
-    image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&h=600&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&h=600&fit=crop"
   }
 ];
 
 const Blog = () => {
-  const featuredPost = blogPosts.find(post => post.featured);
-  const regularPosts = blogPosts.filter(post => !post.featured);
+  const { data: fetchedBlogs, isLoading } = useBlogs();
+
+  // Use fetched blogs if available, otherwise fall back to static data
+  const posts = fetchedBlogs && fetchedBlogs.length > 0
+    ? fetchedBlogs.map(post => ({
+      ...post,
+      // Map database fields to UI expected fields if they differ, or utilize existing ones
+      readTime: post.read_time || "5 min read",
+      image: post.image_url || "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop"
+    }))
+    : staticBlogPosts;
+
+  const featuredPost = posts.find(post => post.featured);
+  const regularPosts = posts.filter(post => !post.featured);
 
   return (
     <>

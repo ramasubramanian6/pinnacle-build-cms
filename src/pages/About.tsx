@@ -1,10 +1,11 @@
 import { Helmet } from "react-helmet-async";
+import { Users } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
 import { GlassmorphismCard } from "@/components/premium/GlassmorphismCard";
 import { AnimatedText, GradientText } from "@/components/premium/AnimatedText";
 import { ProgressRing } from "@/components/premium/ProgressRing";
-import { aboutStats, milestones, coreValues, visionMission, founderQuote, companyIntro } from "@/data/about";
+import { aboutStats, milestones, coreValues, visionMission, founderQuote, companyIntro, leadershipTeam } from "@/data/about";
 import heroImage from "@/assets/hero-construction.jpg";
 import brixxspaceLogo from "@/assets/brixxspace-logo.png";
 
@@ -189,6 +190,54 @@ const About = () => {
                 <p className="text-[#FFB800] font-semibold">— {founderQuote.author}</p>
               </ScrollReveal>
             </div>
+          </div>
+        </section>
+
+        {/* Leadership Team */}
+        <section className="py-24 bg-background">
+          <div className="container mx-auto px-6">
+            <ScrollReveal className="text-center mb-16">
+              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
+                Our Leadership
+              </span>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground">
+                Meet The Team
+              </h2>
+            </ScrollReveal>
+
+            <StaggerReveal className="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+              {leadershipTeam.map((member) => (
+                <GlassmorphismCard
+                  key={member.name}
+                  hover
+                  className="p-0 overflow-hidden group"
+                >
+                  <div className="aspect-[4/3] bg-muted relative overflow-hidden">
+                    {member.image ? (
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-slate-800 text-slate-600">
+                        <Users className="w-20 h-20 opacity-20" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60" />
+                    <div className="absolute bottom-0 left-0 p-6">
+                      <h3 className="text-white font-display text-2xl font-bold mb-1">{member.name}</h3>
+                      <p className="text-[#FFB800] font-medium text-sm tracking-wide uppercase">{member.role}</p>
+                    </div>
+                  </div>
+                  <div className="p-8">
+                    <p className="text-muted-foreground leading-relaxed">
+                      {member.bio}
+                    </p>
+                  </div>
+                </GlassmorphismCard>
+              ))}
+            </StaggerReveal>
           </div>
         </section>
 

