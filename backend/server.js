@@ -15,7 +15,10 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:8080', 'https://brixxspace72.web.app', 'https://pinnacle-build-cms.onrender.com'],
+    credentials: true
+}));
 app.use(helmet());
 app.use(morgan('dev'));
 
