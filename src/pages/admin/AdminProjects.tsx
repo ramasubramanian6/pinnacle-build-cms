@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/contexts/AuthContext";
-import { useIsAdmin, useCreateProject, useUpdateProject, useDeleteProject } from "@/hooks/useAdmin";
-import { useProjects, Project } from "@/hooks/useProjects";
+import { useIsAdmin } from "@/hooks/useAdmin";
+import { useProjects, Project, useCreateProject, useUpdateProject, useDeleteProject } from "@/hooks/useProjects";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { LuxuryLoader, DotsLoader } from "@/components/premium/LuxuryLoader";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,8 @@ export default function AdminProjects() {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -65,6 +68,23 @@ export default function AdminProjects() {
       featured: false,
     });
     setEditingProject(null);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const url = await uploadImageToCloudinary(file);
+      setFormData(prev => ({ ...prev, image_url: url }));
+      toast.success("Image uploaded successfully");
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleEdit = (project: Project) => {
@@ -119,7 +139,7 @@ export default function AdminProjects() {
             </div>
             <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
               <DialogTrigger asChild>
-                <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+                <Button className="bg-accent text-accent-foreground hover:bg-accent/90" data-testid="add-project-btn">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Project
                 </Button>
@@ -219,12 +239,42 @@ export default function AdminProjects() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="image_url">Image URL</Label>
-                    <Input
-                      id="image_url"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    />
+                    <Label htmlFor="image">Project Image</Label>
+                    <div className="flex flex-col gap-4">
+                      <Input
+                        id="image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={uploading}
+                        ref={fileInputRef}
+                      />
+                      {uploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+                      {formData.image_url && (
+                        <div className="relative w-full h-40 rounded-lg overflow-hidden border border-border">
+                          <img
+                            src={formData.image_url}
+                            alt="Project Preview"
+                            className="w-full h-full object-cover"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 h-6 w-6"
+                            onClick={() => setFormData(prev => ({ ...prev, image_url: "" }))}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      )}
+                      {/* Hidden Input to store URL just in case */}
+                      <Input
+                        type="hidden"
+                        value={formData.image_url}
+                        readOnly
+                      />
+                    </div>
                   </div>
                   <div className="flex justify-end gap-2">
                     <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
@@ -271,8 +321,8 @@ export default function AdminProjects() {
                               project.status === "completed"
                                 ? "bg-green-500/10 text-green-400"
                                 : project.status === "ongoing"
-                                ? "bg-blue-500/10 text-blue-400"
-                                : "bg-orange-500/10 text-orange-400"
+                                  ? "bg-blue-500/10 text-blue-400"
+                                  : "bg-orange-500/10 text-orange-400"
                             }
                           >
                             {project.status}
@@ -281,12 +331,12 @@ export default function AdminProjects() {
                         <TableCell className="text-muted-foreground">{project.progress || 0}%</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
-                            <Button size="icon" variant="ghost" onClick={() => handleEdit(project)}>
+                            <Button size="icon" variant="ghost" onClick={() => handleEdit(project)} data-testid={`edit-project-${project.id}`}>
                               <Pencil className="h-4 w-4" />
                             </Button>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button size="icon" variant="ghost" className="text-destructive">
+                                <Button size="icon" variant="ghost" className="text-destructive" data-testid={`delete-project-${project.id}`}>
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </AlertDialogTrigger>
@@ -302,6 +352,7 @@ export default function AdminProjects() {
                                   <AlertDialogAction
                                     className="bg-destructive text-destructive-foreground"
                                     onClick={() => deleteProject.mutate(project.id)}
+                                    data-testid="confirm-delete-btn"
                                   >
                                     Delete
                                   </AlertDialogAction>

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import api from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 
 export interface UserProject {
@@ -25,23 +25,14 @@ export const useUserProjects = () => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ["user-projects", user?.id],
+    queryKey: ["user-projects", user?._id],
     queryFn: async () => {
-      if (!user?.id) return [];
-      
-      const { data, error } = await supabase
-        .from("user_projects")
-        .select(`
-          *,
-          project:projects(id, title, status, progress, image_url, location)
-        `)
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+      if (!user?._id) return [];
 
-      if (error) throw error;
-      return data as UserProject[];
+      const { data } = await api.get("/user-projects");
+      return data.map((up: any) => ({ ...up, id: up._id })) as UserProject[];
     },
-    enabled: !!user?.id,
+    enabled: !!user?._id,
   });
 };
 
@@ -49,36 +40,31 @@ export const useUserDashboardStats = () => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ["user-dashboard-stats", user?.id],
+    queryKey: ["user-dashboard-stats", user?._id],
     queryFn: async () => {
-      if (!user?.id) return { activeProjects: 0, documentsCount: 0, daysToMilestone: 0 };
-      
-      const { data, error } = await supabase
-        .from("user_projects")
-        .select("*, project:projects(status)")
-        .eq("user_id", user.id);
+      if (!user?._id) return { activeProjects: 0, documentsCount: 0, daysToMilestone: 0 };
 
-      if (error) throw error;
-      
-      const activeProjects = data.filter(up => up.project?.status === "ongoing").length;
-      const documentsCount = data.reduce((sum, up) => sum + (up.documents_count || 0), 0);
-      
+      const { data } = await api.get("/user-projects");
+
+      const activeProjects = data.filter((up: any) => up.project?.status === "ongoing").length;
+      const documentsCount = data.reduce((sum: number, up: any) => sum + (up.documents_count || 0), 0);
+
       // Calculate days to nearest milestone
       const today = new Date();
       let daysToMilestone = 0;
-      
+
       const upcomingMilestones = data
-        .filter(up => up.next_milestone_date)
-        .map(up => new Date(up.next_milestone_date!))
-        .filter(date => date > today)
-        .sort((a, b) => a.getTime() - b.getTime());
-      
+        .filter((up: any) => up.next_milestone_date)
+        .map((up: any) => new Date(up.next_milestone_date))
+        .filter((date: Date) => date > today)
+        .sort((a: Date, b: Date) => a.getTime() - b.getTime());
+
       if (upcomingMilestones.length > 0) {
         daysToMilestone = Math.ceil((upcomingMilestones[0].getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
       }
 
       return { activeProjects, documentsCount, daysToMilestone };
     },
-    enabled: !!user?.id,
+    enabled: !!user?._id,
   });
 };

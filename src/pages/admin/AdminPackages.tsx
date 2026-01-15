@@ -1,267 +1,298 @@
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { Layout } from "@/components/layout/Layout";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useAdmin";
+import { usePackages, useCreatePackage, useUpdatePackage, useDeletePackage, Package } from "@/hooks/usePackages";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { LuxuryLoader, DotsLoader } from "@/components/premium/LuxuryLoader";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit, Trash2, Save, X, Star } from "lucide-react";
-import type { Package } from "@/hooks/usePackages";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Plus, Pencil, Trash2, Star } from "lucide-react";
 
-const AdminPackages = () => {
-    const [isEditing, setIsEditing] = useState(false);
+export default function AdminPackages() {
+    const { user, loading: authLoading } = useAuth();
+    const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
+    const { data: packages, isLoading: packagesLoading } = usePackages();
+    const createPackage = useCreatePackage();
+    const updatePackage = useUpdatePackage();
+    const deletePackage = useDeletePackage();
+    const navigate = useNavigate();
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingPackage, setEditingPackage] = useState<Package | null>(null);
     const [formData, setFormData] = useState({
-        name: "",
+        title: "",
         description: "",
-        includes: [""],
-        price_info: "",
-        featured: false,
+        price: "",
+        features: [""],
+        is_popular: false,
         order_index: 0,
+        cta_text: "Get Started",
+        cta_link: "#contact",
     });
 
-    const { toast } = useToast();
-    const queryClient = useQueryClient();
+    useEffect(() => {
+        if (!authLoading && !user) navigate("/auth");
+    }, [user, authLoading, navigate]);
 
-    const { data: packages, isLoading } = useQuery({
-        queryKey: ["packages"],
-        queryFn: async () => {
-            const { data, error } = await supabase
-                .from("packages")
-                .select("*")
-                .order("order_index", { ascending: true });
-            if (error) throw error;
-            return data as Package[];
-        },
-    });
-
-    const createMutation = useMutation({
-        mutationFn: async (data: typeof formData) => {
-            const { error } = await supabase.from("packages").insert([data]);
-            if (error) throw error;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["packages"] });
-            toast({ title: "Package added successfully" });
-            resetForm();
-        },
-        onError: (error: any) => {
-            toast({ title: "Error", description: error.message, variant: "destructive" });
-        },
-    });
-
-    const updateMutation = useMutation({
-        mutationFn: async ({ id, data }: { id: string; data: Partial<Package> }) => {
-            const { error } = await supabase.from("packages").update(data).eq("id", id);
-            if (error) throw error;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["packages"] });
-            toast({ title: "Package updated successfully" });
-            resetForm();
-        },
-        onError: (error: any) => {
-            toast({ title: "Error", description: error.message, variant: "destructive" });
-        },
-    });
-
-    const deleteMutation = useMutation({
-        mutationFn: async (id: string) => {
-            const { error } = await supabase.from("packages").delete().eq("id", id);
-            if (error) throw error;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["packages"] });
-            toast({ title: "Package deleted successfully" });
-        },
-        onError: (error: any) => {
-            toast({ title: "Error", description: error.message, variant: "destructive" });
-        },
-    });
+    useEffect(() => {
+        if (!roleLoading && isAdmin === false) navigate("/dashboard");
+    }, [isAdmin, roleLoading, navigate]);
 
     const resetForm = () => {
-        setFormData({ name: "", description: "", includes: [""], price_info: "", featured: false, order_index: 0 });
-        setIsEditing(false);
+        setFormData({
+            title: "",
+            description: "",
+            price: "",
+            features: [""],
+            is_popular: false,
+            order_index: 0,
+            cta_text: "Get Started",
+            cta_link: "#contact",
+        });
         setEditingPackage(null);
     };
 
     const handleEdit = (pkg: Package) => {
         setEditingPackage(pkg);
         setFormData({
-            name: pkg.name,
+            title: pkg.title,
             description: pkg.description || "",
-            includes: pkg.includes || [""],
-            price_info: pkg.price_info || "",
-            featured: pkg.featured,
+            price: pkg.price || "",
+            features: pkg.features && pkg.features.length > 0 ? pkg.features : [""],
+            is_popular: pkg.is_popular,
             order_index: pkg.order_index,
+            cta_text: pkg.cta_text || "Get Started",
+            cta_link: pkg.cta_link || "#contact",
         });
-        setIsEditing(true);
+        setIsDialogOpen(true);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const cleanedIncludes = formData.includes.filter(item => item.trim() !== "");
+        const cleanedFeatures = formData.features.filter(item => item.trim() !== "");
+        const packageData = { ...formData, features: cleanedFeatures };
+
         if (editingPackage) {
-            updateMutation.mutate({ id: editingPackage.id, data: { ...formData, includes: cleanedIncludes } });
+            await updatePackage.mutateAsync({ id: editingPackage.id, ...packageData });
         } else {
-            createMutation.mutate({ ...formData, includes: cleanedIncludes });
+            await createPackage.mutateAsync(packageData);
         }
+        setIsDialogOpen(false);
+        resetForm();
     };
 
-    const addIncludeItem = () => {
-        setFormData({ ...formData, includes: [...formData.includes, ""] });
+    const addFeatureItem = () => {
+        setFormData({ ...formData, features: [...formData.features, ""] });
     };
 
-    const updateIncludeItem = (index: number, value: string) => {
-        const newIncludes = [...formData.includes];
-        newIncludes[index] = value;
-        setFormData({ ...formData, includes: newIncludes });
+    const updateFeatureItem = (index: number, value: string) => {
+        const newFeatures = [...formData.features];
+        newFeatures[index] = value;
+        setFormData({ ...formData, features: newFeatures });
     };
 
-    const removeIncludeItem = (index: number) => {
-        const newIncludes = formData.includes.filter((_, i) => i !== index);
-        setFormData({ ...formData, includes: newIncludes });
+    const removeFeatureItem = (index: number) => {
+        const newFeatures = formData.features.filter((_, i) => i !== index);
+        setFormData({ ...formData, features: newFeatures.length > 0 ? newFeatures : [""] });
     };
+
+    if (authLoading || roleLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <LuxuryLoader />
+            </div>
+        );
+    }
+
+    if (!isAdmin) return null;
 
     return (
-        <Layout>
-            <div className="container mx-auto px-6 py-12">
-                <div className="max-w-6xl mx-auto">
-                    <div className="flex items-center justify-between mb-8">
-                        <h1 className="text-4xl font-bold">Manage Service Packages</h1>
-                        <Button
-                            onClick={() => setIsEditing(!isEditing)}
-                            className="bg-gradient-to-r from-amber-500 to-yellow-600"
-                        >
-                            {isEditing ? <X className="mr-2" /> : <Plus className="mr-2" />}
-                            {isEditing ? "Cancel" : "Add Package"}
-                        </Button>
-                    </div>
-
-                    {isEditing && (
-                        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg mb-8">
-                            <h2 className="text-2xl font-bold mb-4">
-                                {editingPackage ? "Edit Package" : "Add New Package"}
-                            </h2>
-                            <div className="grid md:grid-cols-2 gap-4 mb-4">
-                                <Input
-                                    placeholder="Package Name"
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    required
-                                />
-                                <Input
-                                    placeholder="Price Info (e.g., Contact for pricing)"
-                                    value={formData.price_info}
-                                    onChange={(e) => setFormData({ ...formData, price_info: e.target.value })}
-                                />
-                                <Input
-                                    placeholder="Order Index"
-                                    type="number"
-                                    value={formData.order_index}
-                                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
-                                />
-                                <div className="flex items-center gap-2">
-                                    <Checkbox
-                                        checked={formData.featured}
-                                        onCheckedChange={(checked) => setFormData({ ...formData, featured: checked as boolean })}
-                                    />
-                                    <label className="text-sm font-medium">Featured Package</label>
-                                </div>
-                            </div>
-                            <Textarea
-                                placeholder="Description"
-                                value={formData.description}
-                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="mb-4"
-                                rows={3}
-                            />
-
-                            <div className="mb-4">
-                                <label className="text-sm font-medium mb-2 block">Includes:</label>
-                                {formData.includes.map((item, index) => (
-                                    <div key={index} className="flex gap-2 mb-2">
-                                        <Input
-                                            placeholder="Feature item"
-                                            value={item}
-                                            onChange={(e) => updateIncludeItem(index, e.target.value)}
-                                        />
-                                        <Button
-                                            type="button"
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={() => removeIncludeItem(index)}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                                <Button type="button" variant="outline" size="sm" onClick={addIncludeItem}>
-                                    <Plus className="w-4 h-4 mr-2" /> Add Item
+        <>
+            <Helmet>
+                <title>Manage Packages | BRIXXSPACE Admin</title>
+            </Helmet>
+            <AdminLayout>
+                <div className="space-y-6">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h1 className="text-2xl font-bold text-foreground">Service Packages</h1>
+                            <p className="text-muted-foreground">Manage your pricing plans and packages</p>
+                        </div>
+                        <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
+                            <DialogTrigger asChild>
+                                <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Package
                                 </Button>
-                            </div>
-
-                            <Button type="submit" className="bg-gradient-to-r from-amber-500 to-yellow-600">
-                                <Save className="mr-2" />
-                                {editingPackage ? "Update" : "Create"}
-                            </Button>
-                        </form>
-                    )}
-
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {isLoading ? (
-                            <p>Loading...</p>
-                        ) : packages && packages.length > 0 ? (
-                            packages.map((pkg) => (
-                                <div key={pkg.id} className="bg-white p-6 rounded-lg shadow-lg relative">
-                                    {pkg.featured && (
-                                        <div className="absolute -top-3 right-4 bg-gradient-to-r from-amber-500 to-yellow-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                                            <Star className="w-3 h-3 fill-white" /> Featured
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                                <DialogHeader>
+                                    <DialogTitle>{editingPackage ? "Edit Package" : "Add New Package"}</DialogTitle>
+                                </DialogHeader>
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="title">Package Name</Label>
+                                            <Input
+                                                id="title"
+                                                value={formData.title}
+                                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                                required
+                                            />
                                         </div>
-                                    )}
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2">{pkg.name}</h3>
-                                    <p className="text-slate-600 text-sm mb-4">{pkg.description}</p>
-                                    {pkg.price_info && (
-                                        <p className="text-amber-600 font-semibold mb-4">{pkg.price_info}</p>
-                                    )}
-                                    {pkg.includes && pkg.includes.length > 0 && (
-                                        <ul className="space-y-1 mb-4">
-                                            {pkg.includes.map((item, idx) => (
-                                                <li key={idx} className="text-sm text-slate-600 flex items-start gap-2">
-                                                    <span className="text-amber-500">✓</span>
-                                                    {item}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                    <div className="flex gap-2 mt-4">
-                                        <Button variant="outline" size="sm" onClick={() => handleEdit(pkg)}>
-                                            <Edit className="w-4 h-4" />
-                                        </Button>
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={() => {
-                                                if (confirm("Are you sure you want to delete this package?")) {
-                                                    deleteMutation.mutate(pkg.id);
-                                                }
-                                            }}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
+                                        <div className="space-y-2">
+                                            <Label htmlFor="price">Price Info</Label>
+                                            <Input
+                                                id="price"
+                                                value={formData.price}
+                                                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                                                placeholder="e.g., Contact for pricing"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="description">Description</Label>
+                                        <Textarea
+                                            id="description"
+                                            value={formData.description}
+                                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                            rows={3}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="order_index">Order Index</Label>
+                                            <Input
+                                                id="order_index"
+                                                type="number"
+                                                value={formData.order_index}
+                                                onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) || 0 })}
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-2 pt-8">
+                                            <Checkbox
+                                                id="is_popular"
+                                                checked={formData.is_popular}
+                                                onCheckedChange={(checked) => setFormData({ ...formData, is_popular: checked as boolean })}
+                                            />
+                                            <Label htmlFor="is_popular">Popular Package</Label>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label>Features Included</Label>
+                                        {formData.features.map((item, index) => (
+                                            <div key={index} className="flex gap-2 mb-2">
+                                                <Input
+                                                    placeholder="Feature item"
+                                                    value={item}
+                                                    onChange={(e) => updateFeatureItem(index, e.target.value)}
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="icon"
+                                                    onClick={() => removeFeatureItem(index)}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                        <Button type="button" variant="outline" size="sm" onClick={addFeatureItem}>
+                                            <Plus className="h-4 w-4 mr-2" /> Add Item
                                         </Button>
                                     </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-center text-slate-500 col-span-full">No packages found. Add your first package!</p>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </Layout>
-    );
-};
 
-export default AdminPackages;
+                                    <div className="flex justify-end gap-2 pt-4">
+                                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                                            Cancel
+                                        </Button>
+                                        <Button type="submit" className="bg-accent text-accent-foreground">
+                                            {editingPackage ? "Update" : "Create"}
+                                        </Button>
+                                    </div>
+                                </form>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
+
+                    <Card className="bg-card border-border">
+                        <CardContent className="p-0">
+                            {packagesLoading ? (
+                                <div className="p-8 text-center">
+                                    <DotsLoader />
+                                </div>
+                            ) : (
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow className="border-border">
+                                            <TableHead className="text-muted-foreground">Name</TableHead>
+                                            <TableHead className="text-muted-foreground">Price</TableHead>
+                                            <TableHead className="text-muted-foreground">Featured</TableHead>
+                                            <TableHead className="text-muted-foreground text-right">Actions</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {packages?.map((pkg) => (
+                                            <TableRow key={pkg.id} className="border-border">
+                                                <TableCell className="font-medium text-foreground">{pkg.title}</TableCell>
+                                                <TableCell className="text-muted-foreground">{pkg.price}</TableCell>
+                                                <TableCell>
+                                                    {pkg.is_popular && (
+                                                        <span className="inline-flex items-center gap-1 text-xs text-amber-500 font-medium bg-amber-500/10 px-2 py-1 rounded">
+                                                            <Star className="w-3 h-3 fill-amber-500" /> Popular
+                                                        </span>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell className="text-right">
+                                                    <div className="flex justify-end gap-2">
+                                                        <Button size="icon" variant="ghost" onClick={() => handleEdit(pkg)}>
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild>
+                                                                <Button size="icon" variant="ghost" className="text-destructive">
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle>Delete Package</AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        Are you sure you want to delete "{pkg.title}"? This action cannot be undone.
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                                    <AlertDialogAction
+                                                                        className="bg-destructive text-destructive-foreground"
+                                                                        onClick={() => deletePackage.mutate(pkg.id)}
+                                                                    >
+                                                                        Delete
+                                                                    </AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+            </AdminLayout>
+        </>
+    );
+}

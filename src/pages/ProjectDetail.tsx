@@ -1,4 +1,6 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import api from "@/lib/api";
+import { toast } from "sonner";
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
@@ -17,76 +19,9 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProject } from "@/hooks/useProjects";
-import projectResidential from "@/assets/project-residential.jpg";
-import projectCommercial from "@/assets/project-commercial.jpg";
-import projectOngoing from "@/assets/project-ongoing.jpg";
+const fallbackImages = ["/placeholder.svg"];
 
-// Duplicate of fallback data for static lookup if DB fails or is empty
-// Ideally this should be shared or imported, but defining here for robustness
-const fallbackImages = [projectResidential, projectCommercial, projectOngoing];
 
-const staticProjects: any[] = [
-    {
-        id: "1",
-        title: "Luxury Villa Complex",
-        description: "Modern luxury residential complex with state-of-the-art amenities and sustainable design. This sprawling estate features 12 exclusive villas, each with private gardens and swimming pools. The architecture blends contemporary aesthetics with traditional climate-responsive design.",
-        location: "Tirunelveli, TN",
-        category: "Residential",
-        status: "ongoing",
-        image_url: projectResidential,
-        total_units: 12,
-        sold_units: 8,
-        start_date: "2024-01-01",
-        estimated_completion: "2025-06-30",
-        amenities: ["Swimming Pool", "Clubhouse", "24/7 Security", "Solar Power", "Landscaped Gardens"],
-        progress: 65
-    },
-    {
-        id: "2",
-        title: "Tech Park One",
-        description: "Premium commercial space designed for modern IT and business operations. Located in the emerging tech corridor of Madurai, this project offers Grade A office spaces with world-class infrastructure.",
-        location: "Madurai, TN",
-        category: "Commercial",
-        status: "ongoing",
-        image_url: projectCommercial,
-        total_units: 45,
-        sold_units: 20,
-        start_date: "2023-11-15",
-        estimated_completion: "2025-12-31",
-        amenities: ["High-speed Internet", "Food Court", "Conference Hills", "Ample Parking"],
-        progress: 40
-    },
-    {
-        id: "3",
-        title: "City Center Mall",
-        description: "A landmark shopping and entertainment destination in the heart of the city. Featuring over 100 retail outlets, a multiplex cinema, and a diverse food court.",
-        location: "Tirunelveli, TN",
-        category: "Commercial",
-        status: "completed",
-        image_url: projectOngoing,
-        total_units: 120,
-        sold_units: 115,
-        start_date: "2022-03-01",
-        estimated_completion: "2024-01-15",
-        amenities: ["Multiplex", "Gaming Zone", "Food Court", "Hypermarket"],
-        progress: 100
-    },
-    {
-        id: "4",
-        title: "Riverside Apartments",
-        description: "Scenic riverside residential apartments offering peaceful living with city connectivity. These apartments offer panoramic views of the Thamirabarani river.",
-        location: "Tirunelveli, TN",
-        category: "Residential",
-        status: "completed",
-        image_url: projectResidential,
-        total_units: 36,
-        sold_units: 36,
-        start_date: "2022-06-01",
-        estimated_completion: "2023-12-01",
-        amenities: ["River View", "Walking Track", "Children's Play Area", "Gym"],
-        progress: 100
-    }
-];
 
 const ProjectDetail = () => {
     const { id } = useParams<{ id: string }>();
@@ -94,6 +29,10 @@ const ProjectDetail = () => {
     const navigate = useNavigate();
 
     // Redirect if not authenticated
+    // Check if already interested
+    const [interestSent, setInterestSent] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+
     useEffect(() => {
         if (!user) {
             navigate("/auth", { state: { from: `/projects/${id}` } });
@@ -102,8 +41,40 @@ const ProjectDetail = () => {
 
     const { data: fetchedProject, isLoading } = useProject(id || "");
 
-    // Fallback logic
-    const project = fetchedProject || staticProjects.find(p => p.id === id);
+    // Fallback logic removed
+    const project = fetchedProject;
+
+    useEffect(() => {
+        if (user && project) {
+            const checkInterest = async () => {
+                const { data } = await api.get('/contacts/user');
+                const hasInterest = data.some((c: any) => c.subject === `Project Interest: ${project.title}`);
+                if (hasInterest) setInterestSent(true);
+            };
+            checkInterest();
+        }
+    }, [user, project]);
+
+    const handleInterest = async () => {
+        if (!user || !project) return;
+        setSubmitting(true);
+        try {
+            await api.post('/contacts', {
+                name: user.user_metadata?.full_name || user.fullName || 'User',
+                email: user.email || '',
+                phone: user.phone || null,
+                subject: `Project Interest: ${project.title}`,
+                message: `User has expressed interest in this project.`,
+            });
+            setInterestSent(true);
+            toast.success("Interest registered! Our team will contact you soon.");
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to register interest. Please try again.");
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     if (!user) return null; // Will redirect
 
@@ -264,9 +235,22 @@ const ProjectDetail = () => {
                                                 Contact us for brochures, floor plans, and pricing details.
                                             </p>
                                             <div className="space-y-3">
-                                                <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white">
-                                                    <Phone className="w-4 h-4 mr-2" />
-                                                    Call Now
+                                                <Button
+                                                    className="w-full bg-slate-900 hover:bg-slate-800 text-white"
+                                                    onClick={handleInterest}
+                                                    disabled={interestSent || submitting}
+                                                >
+                                                    {interestSent ? (
+                                                        <>
+                                                            <CheckCircle2 className="w-4 h-4 mr-2" />
+                                                            Interest Sent
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Phone className="w-4 h-4 mr-2" />
+                                                            {submitting ? "Sending..." : "I'm Interested"}
+                                                        </>
+                                                    )}
                                                 </Button>
                                                 <Link to="/contact">
                                                     <Button className="w-full bg-white text-slate-900 hover:bg-slate-100">

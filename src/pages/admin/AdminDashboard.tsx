@@ -8,7 +8,7 @@ import { useProperties } from "@/hooks/useProperties";
 import { useContactSubmissions } from "@/hooks/useAdmin";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, FolderKanban, Mail, TrendingUp, Users, CheckCircle2, Settings } from "lucide-react";
+import { Building2, FolderKanban, Mail, TrendingUp, Users, CheckCircle2, Settings, Megaphone } from "lucide-react";
 import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
 
 export default function AdminDashboard() {
@@ -204,6 +204,21 @@ export default function AdminDashboard() {
                   View and respond to customer messages.
                 </p>
                 <div className="text-2xl font-bold text-foreground">{contacts?.length || 0}</div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:border-accent/50 transition-colors cursor-pointer" onClick={() => navigate("/admin/project-interests")}>
+              <CardHeader>
+                <CardTitle className="text-foreground flex items-center gap-2">
+                  <Megaphone className="w-5 h-5 text-accent" />
+                  Project Interests
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Manage users interested in projects. Call and follow up.
+                </p>
+                <p className="text-sm font-medium text-accent">View Interests →</p>
               </CardContent>
             </Card>
           </div>

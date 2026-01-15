@@ -2,60 +2,43 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import { 
-  Building2, 
-  Clock, 
-  FileText, 
-  MessageSquare, 
-  Bell, 
-  Settings, 
+import {
+  Building2,
+  Clock,
+  FileText,
+  MessageSquare,
+  Bell,
+  Settings,
   LogOut,
   ChevronRight,
   TrendingUp
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useAdmin";
 import { Layout } from "@/components/layout/Layout";
 import { GlassmorphismCard, GradientBorderCard } from "@/components/premium/GlassmorphismCard";
 import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
 import { GradientText } from "@/components/premium/AnimatedText";
 import { ProgressRing, AnimatedCounter } from "@/components/premium/ProgressRing";
 import { Button } from "@/components/ui/button";
-import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
+import { LuxuryLoader, DotsLoader } from "@/components/premium/LuxuryLoader";
+import { useUserProjects } from "@/hooks/useProjects";
 
-const mockProjects = [
-  {
-    id: 1,
-    name: "Nellai Heights - Unit 42",
-    progress: 75,
-    status: "In Progress",
-    nextMilestone: "Interior Finishing",
-    dueDate: "Feb 15, 2025",
-  },
-  {
-    id: 2,
-    name: "Green Valley Villa - Plot 12",
-    progress: 45,
-    status: "Foundation",
-    nextMilestone: "Ground Floor Structure",
-    dueDate: "Mar 20, 2025",
-  },
-];
 
-const recentUpdates = [
-  { id: 1, message: "Foundation work completed for Unit 42", time: "2 hours ago", type: "milestone" },
-  { id: 2, message: "New document uploaded: Floor Plan Rev.3", time: "1 day ago", type: "document" },
-  { id: 3, message: "Site inspection scheduled for tomorrow", time: "2 days ago", type: "notification" },
-];
 
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
+  const { data: isAdmin } = useIsAdmin();
+  const { data: userProjects, isLoading: projectsLoading } = useUserProjects();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading && !user) {
       navigate("/auth");
+    } else if (isAdmin) {
+      navigate("/admin");
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, isAdmin]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -101,6 +84,15 @@ const Dashboard = () => {
               </ScrollReveal>
               <ScrollReveal delay={0.2}>
                 <div className="flex gap-3">
+                  {isAdmin && (
+                    <Button
+                      className="bg-accent text-accent-foreground hover:bg-accent/90"
+                      onClick={() => navigate("/admin")}
+                    >
+                      <Settings className="w-5 h-5 mr-2" />
+                      Admin Panel
+                    </Button>
+                  )}
                   <Button variant="outline" size="icon">
                     <Bell className="w-5 h-5" />
                   </Button>
@@ -122,10 +114,10 @@ const Dashboard = () => {
           <div className="container mx-auto px-6">
             <StaggerReveal className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
-                { icon: Building2, label: "Active Projects", value: 2 },
-                { icon: Clock, label: "Days to Next Milestone", value: 12 },
-                { icon: FileText, label: "Documents", value: 8 },
-                { icon: MessageSquare, label: "Unread Messages", value: 3 },
+                { icon: Building2, label: "Active Projects", value: userProjects?.length || 0 },
+                { icon: Clock, label: "Days to Next Milestone", value: 0 }, // Calc from data if needed
+                { icon: FileText, label: "Documents", value: userProjects?.reduce((acc, curr) => acc + (curr.documents_count || 0), 0) || 0 },
+                { icon: MessageSquare, label: "Unread Messages", value: 0 },
               ].map((stat) => (
                 <GlassmorphismCard key={stat.label} className="p-6 text-center">
                   <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -153,47 +145,56 @@ const Dashboard = () => {
                   </h2>
                 </ScrollReveal>
 
-                {mockProjects.map((project, index) => (
-                  <ScrollReveal key={project.id} delay={index * 0.1}>
-                    <GradientBorderCard className="p-6">
-                      <div className="flex flex-col md:flex-row md:items-center gap-6">
-                        <ProgressRing 
-                          progress={project.progress} 
-                          size={100} 
-                          strokeWidth={8}
-                          showPercentage
-                        />
-                        <div className="flex-1">
-                          <div className="flex items-start justify-between mb-2">
-                            <h3 className="font-display text-xl font-semibold text-foreground">
-                              {project.name}
-                            </h3>
-                            <span className="px-3 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full">
-                              {project.status}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-4 mt-4">
-                            <div>
-                              <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">
-                                Next Milestone
-                              </p>
-                              <p className="text-foreground font-medium">{project.nextMilestone}</p>
+                {projectsLoading ? (
+                  <div className="py-10 text-center">
+                    <DotsLoader />
+                  </div>
+                ) : userProjects && userProjects.length > 0 ? (
+                  userProjects.map((userProject, index) => (
+                    <ScrollReveal key={userProject.id} delay={index * 0.1}>
+                      <GradientBorderCard className="p-6">
+                        <div className="flex flex-col md:flex-row md:items-center gap-6">
+                          <ProgressRing
+                            progress={userProject.project.progress || 0}
+                            size={100}
+                            strokeWidth={8}
+                            showPercentage
+                          />
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-2">
+                              <h3 className="font-display text-xl font-semibold text-foreground">
+                                {userProject.project.title}
+                              </h3>
+                              <span className="px-3 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full">
+                                {userProject.project.status}
+                              </span>
                             </div>
-                            <div>
-                              <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">
-                                Expected Date
-                              </p>
-                              <p className="text-foreground font-medium">{project.dueDate}</p>
+                            <div className="grid grid-cols-2 gap-4 mt-4">
+                              <div>
+                                <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">
+                                  Next Milestone
+                                </p>
+                                <p className="text-foreground font-medium">{userProject.next_milestone || "N/A"}</p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">
+                                  Expected Date
+                                </p>
+                                <p className="text-foreground font-medium">{userProject.next_milestone_date ? new Date(userProject.next_milestone_date).toLocaleDateString() : "TBD"}</p>
+                              </div>
                             </div>
                           </div>
+                          <Button variant="ghost" size="icon" onClick={() => navigate(`/projects/${userProject.project.id}`)}>
+                            <ChevronRight className="w-5 h-5" />
+                          </Button>
                         </div>
-                        <Button variant="ghost" size="icon">
-                          <ChevronRight className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    </GradientBorderCard>
-                  </ScrollReveal>
-                ))}
+                      </GradientBorderCard>
+                    </ScrollReveal>
+                  ))) : (
+                  <div className="text-center py-10 text-muted-foreground">
+                    No active projects found.
+                  </div>
+                )}
               </div>
 
               {/* Updates Column */}
@@ -206,24 +207,9 @@ const Dashboard = () => {
 
                 <GlassmorphismCard className="p-6">
                   <div className="space-y-4">
-                    {recentUpdates.map((update, index) => (
-                      <motion.div
-                        key={update.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.3 + index * 0.1 }}
-                        className="flex items-start gap-3 pb-4 border-b border-border last:border-0 last:pb-0"
-                      >
-                        <div className={`w-2 h-2 rounded-full mt-2 ${
-                          update.type === "milestone" ? "bg-green-500" :
-                          update.type === "document" ? "bg-blue-500" : "bg-accent"
-                        }`} />
-                        <div>
-                          <p className="text-foreground text-sm">{update.message}</p>
-                          <p className="text-muted-foreground text-xs mt-1">{update.time}</p>
-                        </div>
-                      </motion.div>
-                    ))}
+                    <div className="text-center py-4 text-muted-foreground text-sm">
+                      No recent updates.
+                    </div>
                   </div>
                 </GlassmorphismCard>
 
@@ -240,9 +226,9 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="flex justify-center">
-                    <ProgressRing 
-                      progress={60} 
-                      size={120} 
+                    <ProgressRing
+                      progress={60}
+                      size={120}
                       strokeWidth={10}
                       showPercentage
                       label="Complete"

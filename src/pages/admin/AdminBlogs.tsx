@@ -149,7 +149,7 @@ export default function AdminBlogs() {
                         </div>
                         <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
                             <DialogTrigger asChild>
-                                <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+                                <Button className="bg-accent text-accent-foreground hover:bg-accent/90" data-testid="add-blog-btn">
                                     <Plus className="h-4 w-4 mr-2" />
                                     Add Post
                                 </Button>
@@ -308,12 +308,12 @@ export default function AdminBlogs() {
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
-                                                        <Button size="icon" variant="ghost" onClick={() => handleEdit(blog)}>
+                                                        <Button size="icon" variant="ghost" onClick={() => handleEdit(blog)} data-testid={`edit-blog-${blog.id}`}>
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
                                                         <AlertDialog>
                                                             <AlertDialogTrigger asChild>
-                                                                <Button size="icon" variant="ghost" className="text-destructive">
+                                                                <Button size="icon" variant="ghost" className="text-destructive" data-testid={`delete-blog-${blog.id}`}>
                                                                     <Trash2 className="h-4 w-4" />
                                                                 </Button>
                                                             </AlertDialogTrigger>
@@ -329,6 +329,7 @@ export default function AdminBlogs() {
                                                                     <AlertDialogAction
                                                                         className="bg-destructive text-destructive-foreground"
                                                                         onClick={() => deleteBlog.mutate(blog.id)}
+                                                                        data-testid="confirm-delete-btn"
                                                                     >
                                                                         Delete
                                                                     </AlertDialogAction>

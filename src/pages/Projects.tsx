@@ -11,65 +11,12 @@ import { AnimatedCounter } from "@/components/premium/ProgressRing";
 import { useProjects, useProjectStats } from "@/hooks/useProjects";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import projectResidential from "@/assets/project-residential.jpg";
-import projectCommercial from "@/assets/project-commercial.jpg";
-import projectOngoing from "@/assets/project-ongoing.jpg";
+// Fallback images removed
+const fallbackImages = ["/placeholder.svg"];
 
 const projectCategories = ["All", "Residential", "Commercial", "Infrastructure", "Ongoing", "Completed"];
 
-const fallbackImages = [projectResidential, projectCommercial, projectOngoing];
 
-// Static projects data (fallback)
-const staticProjects = [
-  {
-    id: "1",
-    title: "Luxury Villa Complex",
-    description: "Modern luxury residential complex with state-of-the-art amenities and sustainable design.",
-    location: "Tirunelveli, TN",
-    category: "Residential",
-    status: "ongoing",
-    image_url: projectResidential,
-    total_units: 12,
-    start_date: "2024-01-01",
-    estimated_completion: "2025-06-30"
-  },
-  {
-    id: "2",
-    title: "Tech Park One",
-    description: "Premium commercial space designed for modern IT and business operations.",
-    location: "Madurai, TN",
-    category: "Commercial",
-    status: "ongoing",
-    image_url: projectCommercial,
-    total_units: 45,
-    start_date: "2023-11-15",
-    estimated_completion: "2025-12-31"
-  },
-  {
-    id: "3",
-    title: "City Center Mall",
-    description: "A landmark shopping and entertainment destination in the heart of the city.",
-    location: "Tirunelveli, TN",
-    category: "Commercial",
-    status: "completed",
-    image_url: projectOngoing,
-    total_units: 120,
-    start_date: "2022-03-01",
-    estimated_completion: "2024-01-15"
-  },
-  {
-    id: "4",
-    title: "Riverside Apartments",
-    description: "Scenic riverside residential apartments offering peaceful living with city connectivity.",
-    location: "Tirunelveli, TN",
-    category: "Residential",
-    status: "completed",
-    image_url: projectResidential,
-    total_units: 36,
-    start_date: "2022-06-01",
-    estimated_completion: "2023-12-01"
-  }
-];
 
 const Projects = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -77,8 +24,8 @@ const Projects = () => {
   const { data: stats } = useProjectStats();
   const { user } = useAuth();
 
-  // Combine logic: Use fetched projects if available, else static
-  const allProjects = fetchedProjects.length > 0 ? fetchedProjects : staticProjects;
+  // Use fetched projects only
+  const allProjects = fetchedProjects;
 
   // Filter projects based on category locally if we are using static data or if we fetched all
   const filteredProjects = activeCategory === "All"

@@ -13,8 +13,8 @@ export const TestimonialsSection = () => {
                     <Star
                         key={i}
                         className={`w-5 h-5 ${i < stars
-                                ? "text-amber-400 fill-amber-400"
-                                : "text-slate-300"
+                            ? "text-amber-400 fill-amber-400"
+                            : "text-slate-300"
                             }`}
                     />
                 ))}
@@ -45,7 +45,7 @@ export const TestimonialsSection = () => {
                             Clients Say
                         </span>
                     </h2>
-                    <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">
+                    <p className="text-lg md:text-xl text-black max-w-3xl mx-auto">
                         Trusted by hundreds of satisfied clients across Tamil Nadu
                     </p>
                 </motion.div>
@@ -76,26 +76,32 @@ export const TestimonialsSection = () => {
 
                                         {/* Testimonial Text */}
                                         <p className="text-slate-700 leading-relaxed mb-6 line-clamp-6">
-                                            "{testimonial.testimonial_text}"
+                                            "{testimonial.content}"
                                         </p>
 
                                         {/* Client Info */}
                                         <div className="flex items-center gap-4 pt-4 border-t border-slate-200">
                                             {/* Client Avatar */}
-                                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-amber-500/25">
-                                                {testimonial.client_name.charAt(0)}
-                                            </div>
+                                            {testimonial.avatar_url ? (
+                                                <img
+                                                    src={testimonial.avatar_url}
+                                                    alt={testimonial.name}
+                                                    className="w-12 h-12 rounded-full object-cover shadow-lg shadow-amber-500/25"
+                                                />
+                                            ) : (
+                                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-amber-500/25">
+                                                    {testimonial.name.charAt(0)}
+                                                </div>
+                                            )}
 
                                             {/* Client Details */}
                                             <div>
                                                 <h4 className="font-semibold text-slate-900">
-                                                    {testimonial.client_name}
+                                                    {testimonial.name}
                                                 </h4>
-                                                {testimonial.client_position && testimonial.company && (
-                                                    <p className="text-sm text-slate-600">
-                                                        {testimonial.client_position}, {testimonial.company}
-                                                    </p>
-                                                )}
+                                                <p className="text-sm text-slate-600">
+                                                    {testimonial.role}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>

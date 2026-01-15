@@ -1,244 +1,281 @@
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { Layout } from "@/components/layout/Layout";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useAdmin";
+import { useTestimonials, useCreateTestimonial, useUpdateTestimonial, useDeleteTestimonial, Testimonial } from "@/hooks/useTestimonials";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { LuxuryLoader, DotsLoader } from "@/components/premium/LuxuryLoader";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit, Trash2, Save, X, Star } from "lucide-react";
-import type { Testimonial } from "@/hooks/useTestimonials";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Plus, Pencil, Trash2, Star, Quote } from "lucide-react";
 
-const AdminTestimonials = () => {
-    const [isEditing, setIsEditing] = useState(false);
+export default function AdminTestimonials() {
+    const { user, loading: authLoading } = useAuth();
+    const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
+    const { data: testimonials, isLoading: testimonialsLoading } = useTestimonials();
+    const createTestimonial = useCreateTestimonial();
+    const updateTestimonial = useUpdateTestimonial();
+    const deleteTestimonial = useDeleteTestimonial();
+    const navigate = useNavigate();
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
     const [formData, setFormData] = useState({
-        client_name: "",
-        client_position: "",
-        company: "",
-        testimonial_text: "",
+        name: "",
+        role: "",
+        content: "",
         rating: 5,
+        avatar_url: "",
         featured: false,
     });
 
-    const { toast } = useToast();
-    const queryClient = useQueryClient();
+    useEffect(() => {
+        if (!authLoading && !user) navigate("/auth");
+    }, [user, authLoading, navigate]);
 
-    const { data: testimonials, isLoading } = useQuery({
-        queryKey: ["testimonials"],
-        queryFn: async () => {
-            const { data, error } = await supabase
-                .from("testimonials")
-                .select("*")
-                .order("created_at", { ascending: false });
-            if (error) throw error;
-            return data as Testimonial[];
-        },
-    });
-
-    const createMutation = useMutation({
-        mutationFn: async (data: typeof formData) => {
-            const { error } = await supabase.from("testimonials").insert([data]);
-            if (error) throw error;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["testimonials"] });
-            toast({ title: "Testimonial added successfully" });
-            resetForm();
-        },
-        onError: (error: any) => {
-            toast({ title: "Error", description: error.message, variant: "destructive" });
-        },
-    });
-
-    const updateMutation = useMutation({
-        mutationFn: async ({ id, data }: { id: string; data: Partial<Testimonial> }) => {
-            const { error } = await supabase.from("testimonials").update(data).eq("id", id);
-            if (error) throw error;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["testimonials"] });
-            toast({ title: "Testimonial updated successfully" });
-            resetForm();
-        },
-        onError: (error: any) => {
-            toast({ title: "Error", description: error.message, variant: "destructive" });
-        },
-    });
-
-    const deleteMutation = useMutation({
-        mutationFn: async (id: string) => {
-            const { error } = await supabase.from("testimonials").delete().eq("id", id);
-            if (error) throw error;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["testimonials"] });
-            toast({ title: "Testimonial deleted successfully" });
-        },
-        onError: (error: any) => {
-            toast({ title: "Error", description: error.message, variant: "destructive" });
-        },
-    });
+    useEffect(() => {
+        if (!roleLoading && isAdmin === false) navigate("/dashboard");
+    }, [isAdmin, roleLoading, navigate]);
 
     const resetForm = () => {
-        setFormData({ client_name: "", client_position: "", company: "", testimonial_text: "", rating: 5, featured: false });
-        setIsEditing(false);
+        setFormData({
+            name: "",
+            role: "",
+            content: "",
+            rating: 5,
+            avatar_url: "",
+            featured: false,
+        });
         setEditingTestimonial(null);
     };
 
-    const handleEdit = (testimonial: Testimonial) => {
-        setEditingTestimonial(testimonial);
+    const handleEdit = (t: Testimonial) => {
+        setEditingTestimonial(t);
         setFormData({
-            client_name: testimonial.client_name,
-            client_position: testimonial.client_position || "",
-            company: testimonial.company || "",
-            testimonial_text: testimonial.testimonial_text,
-            rating: testimonial.rating || 5,
-            featured: testimonial.featured,
+            name: t.name,
+            role: t.role,
+            content: t.content,
+            rating: t.rating,
+            avatar_url: t.avatar_url || "",
+            featured: t.featured,
         });
-        setIsEditing(true);
+        setIsDialogOpen(true);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (editingTestimonial) {
-            updateMutation.mutate({ id: editingTestimonial.id, data: formData });
+            await updateTestimonial.mutateAsync({ id: editingTestimonial.id, ...formData });
         } else {
-            createMutation.mutate(formData);
+            await createTestimonial.mutateAsync(formData);
         }
+        setIsDialogOpen(false);
+        resetForm();
     };
 
-    const renderStars = (rating: number) => {
-        return (
-            <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => (
+    const StarRating = ({ rating, onRatingChange, interactive = false }: { rating: number, onRatingChange?: (r: number) => void, interactive?: boolean }) => (
+        <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                    key={star}
+                    type="button"
+                    onClick={() => interactive && onRatingChange?.(star)}
+                    className={`${interactive ? 'cursor-pointer' : 'cursor-default'}`}
+                >
                     <Star
-                        key={i}
-                        className={`w-4 h-4 ${i < rating ? "text-amber-400 fill-amber-400" : "text-slate-300"}`}
+                        className={`w-5 h-5 ${star <= rating ? "fill-amber-500 text-amber-500" : "text-slate-300"}`}
                     />
-                ))}
+                </button>
+            ))}
+        </div>
+    );
+
+    if (authLoading || roleLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <LuxuryLoader />
             </div>
         );
-    };
+    }
+
+    if (!isAdmin) return null;
 
     return (
-        <Layout>
-            <div className="container mx-auto px-6 py-12">
-                <div className="max-w-6xl mx-auto">
-                    <div className="flex items-center justify-between mb-8">
-                        <h1 className="text-4xl font-bold">Manage Testimonials</h1>
-                        <Button
-                            onClick={() => setIsEditing(!isEditing)}
-                            className="bg-gradient-to-r from-amber-500 to-yellow-600"
-                        >
-                            {isEditing ? <X className="mr-2" /> : <Plus className="mr-2" />}
-                            {isEditing ? "Cancel" : "Add Testimonial"}
-                        </Button>
-                    </div>
-
-                    {isEditing && (
-                        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg mb-8">
-                            <h2 className="text-2xl font-bold mb-4">
-                                {editingTestimonial ? "Edit Testimonial" : "Add New Testimonial"}
-                            </h2>
-                            <div className="grid md:grid-cols-2 gap-4 mb-4">
-                                <Input
-                                    placeholder="Client Name"
-                                    value={formData.client_name}
-                                    onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
-                                    required
-                                />
-                                <Input
-                                    placeholder="Client Position"
-                                    value={formData.client_position}
-                                    onChange={(e) => setFormData({ ...formData, client_position: e.target.value })}
-                                />
-                                <Input
-                                    placeholder="Company"
-                                    value={formData.company}
-                                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                                />
-                                <div>
-                                    <label className="text-sm font-medium mb-2 block">Rating</label>
-                                    <Input
-                                        type="number"
-                                        min="1"
-                                        max="5"
-                                        value={formData.rating}
-                                        onChange={(e) => setFormData({ ...formData, rating: parseInt(e.target.value) })}
-                                    />
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Checkbox
-                                        checked={formData.featured}
-                                        onCheckedChange={(checked) => setFormData({ ...formData, featured: checked as boolean })}
-                                    />
-                                    <label className="text-sm font-medium">Featured Testimonial</label>
-                                </div>
-                            </div>
-                            <Textarea
-                                placeholder="Testimonial Text"
-                                value={formData.testimonial_text}
-                                onChange={(e) => setFormData({ ...formData, testimonial_text: e.target.value })}
-                                className="mb-4"
-                                rows={4}
-                                required
-                            />
-                            <Button type="submit" className="bg-gradient-to-r from-amber-500 to-yellow-600">
-                                <Save className="mr-2" />
-                                {editingTestimonial ? "Update" : "Create"}
-                            </Button>
-                        </form>
-                    )}
-
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {isLoading ? (
-                            <p>Loading...</p>
-                        ) : testimonials && testimonials.length > 0 ? (
-                            testimonials.map((testimonial) => (
-                                <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-lg relative">
-                                    {testimonial.featured && (
-                                        <div className="absolute -top-3 right-4 bg-gradient-to-r from-amber-500 to-yellow-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                                            <Star className="w-3 h-3 fill-white" /> Featured
+        <>
+            <Helmet>
+                <title>Manage Testimonials | BRIXXSPACE Admin</title>
+            </Helmet>
+            <AdminLayout>
+                <div className="space-y-6">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h1 className="text-2xl font-bold text-foreground">Client Testimonials</h1>
+                            <p className="text-muted-foreground">Manage client reviews and feedback</p>
+                        </div>
+                        <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
+                            <DialogTrigger asChild>
+                                <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Testimonial
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+                                <DialogHeader>
+                                    <DialogTitle>{editingTestimonial ? "Edit Testimonial" : "Add New Testimonial"}</DialogTitle>
+                                </DialogHeader>
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="name">Client Name</Label>
+                                            <Input
+                                                id="name"
+                                                value={formData.name}
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                required
+                                            />
                                         </div>
-                                    )}
-                                    <div className="mb-3">{renderStars(testimonial.rating || 5)}</div>
-                                    <p className="text-slate-700 mb-4 italic">"{testimonial.testimonial_text}"</p>
-                                    <div className="border-t pt-4">
-                                        <h4 className="font-semibold text-slate-900">{testimonial.client_name}</h4>
-                                        {testimonial.client_position && testimonial.company && (
-                                            <p className="text-sm text-slate-600">
-                                                {testimonial.client_position}, {testimonial.company}
-                                            </p>
-                                        )}
+                                        <div className="space-y-2">
+                                            <Label htmlFor="role">Role / Company</Label>
+                                            <Input
+                                                id="role"
+                                                value={formData.role}
+                                                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                                required
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="flex gap-2 mt-4">
-                                        <Button variant="outline" size="sm" onClick={() => handleEdit(testimonial)}>
-                                            <Edit className="w-4 h-4" />
+                                    <div className="space-y-2">
+                                        <Label htmlFor="content">Testimonial Content</Label>
+                                        <Textarea
+                                            id="content"
+                                            value={formData.content}
+                                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                            rows={4}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label>Rating</Label>
+                                            <StarRating
+                                                rating={formData.rating}
+                                                onRatingChange={(r) => setFormData({ ...formData, rating: r })}
+                                                interactive
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-2 pt-6">
+                                            <Checkbox
+                                                id="featured"
+                                                checked={formData.featured}
+                                                onCheckedChange={(checked) => setFormData({ ...formData, featured: checked as boolean })}
+                                            />
+                                            <Label htmlFor="featured">Featured Testimonial</Label>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="avatar_url">Avatar URL</Label>
+                                        <Input
+                                            id="avatar_url"
+                                            value={formData.avatar_url}
+                                            onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="flex justify-end gap-2 pt-4">
+                                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                                            Cancel
                                         </Button>
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={() => {
-                                                if (confirm("Are you sure you want to delete this testimonial?")) {
-                                                    deleteMutation.mutate(testimonial.id);
-                                                }
-                                            }}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
+                                        <Button type="submit" className="bg-accent text-accent-foreground">
+                                            {editingTestimonial ? "Update" : "Create"}
                                         </Button>
                                     </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-center text-slate-500 col-span-full">No testimonials found. Add your first testimonial!</p>
-                        )}
+                                </form>
+                            </DialogContent>
+                        </Dialog>
                     </div>
-                </div>
-            </div>
-        </Layout>
-    );
-};
 
-export default AdminTestimonials;
+                    <Card className="bg-card border-border">
+                        <CardContent className="p-0">
+                            {testimonialsLoading ? (
+                                <div className="p-8 text-center">
+                                    <DotsLoader />
+                                </div>
+                            ) : (
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow className="border-border">
+                                            <TableHead className="text-muted-foreground">Client</TableHead>
+                                            <TableHead className="text-muted-foreground">Rating</TableHead>
+                                            <TableHead className="text-muted-foreground">Featured</TableHead>
+                                            <TableHead className="text-muted-foreground text-right">Actions</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {testimonials?.map((t) => (
+                                            <TableRow key={t.id} className="border-border">
+                                                <TableCell className="font-medium">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-foreground">{t.name}</span>
+                                                        <span className="text-xs text-muted-foreground">{t.role}</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <StarRating rating={t.rating} />
+                                                </TableCell>
+                                                <TableCell>
+                                                    {t.featured && (
+                                                        <span className="inline-flex items-center gap-1 text-xs text-amber-500 font-medium bg-amber-500/10 px-2 py-1 rounded">
+                                                            <Star className="w-3 h-3 fill-amber-500" /> Featured
+                                                        </span>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell className="text-right">
+                                                    <div className="flex justify-end gap-2">
+                                                        <Button size="icon" variant="ghost" onClick={() => handleEdit(t)}>
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild>
+                                                                <Button size="icon" variant="ghost" className="text-destructive">
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle>Delete Testimonial</AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        Are you sure you want to delete "{t.name}"'s testimonial? This action cannot be undone.
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                                    <AlertDialogAction
+                                                                        className="bg-destructive text-destructive-foreground"
+                                                                        onClick={() => deleteTestimonial.mutate(t.id)}
+                                                                    >
+                                                                        Delete
+                                                                    </AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+            </AdminLayout>
+        </>
+    );
+}

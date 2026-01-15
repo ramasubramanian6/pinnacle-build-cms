@@ -7,91 +7,13 @@ import { Link } from "react-router-dom";
 import { useBlogs } from "@/hooks/useBlogs";
 
 // Static blog data (fallback)
-const staticBlogPosts = [
-  {
-    id: "1",
-    slug: "future-sustainable-construction-tamil-nadu",
-    title: "The Future of Sustainable Construction in Tamil Nadu",
-    excerpt: "Exploring innovative green building practices and how they're shaping the future of the construction industry in South India.",
-    author: "Rajesh Kumar",
-    date: "Dec 20, 2024",
-    readTime: "5 min read",
-    category: "Sustainability",
-    featured: true,
-    image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop",
-    image_url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop"
-  },
-  {
-    id: "2",
-    slug: "commercial-real-estate-trends-2025",
-    title: "5 Key Trends in Commercial Real Estate 2025",
-    excerpt: "A comprehensive look at the emerging trends that will define commercial real estate development in Tamil Nadu.",
-    author: "Brixx Space Team",
-    date: "Dec 18, 2024",
-    readTime: "7 min read",
-    category: "Industry Insights",
-    featured: false,
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop",
-    image_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop"
-  },
-  {
-    id: "3",
-    slug: "building-nellai-heights",
-    title: "Behind the Scenes: Building Nellai Heights",
-    excerpt: "An exclusive look at the engineering marvels and challenges we overcame during the construction of Nellai Heights.",
-    author: "Brixx Space Team",
-    date: "Dec 15, 2024",
-    readTime: "10 min read",
-    category: "Project Stories",
-    featured: false,
-    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop",
-    image_url: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop"
-  },
-  {
-    id: "4",
-    slug: "smart-buildings-technology",
-    title: "Smart Buildings: Integrating Technology in Construction",
-    excerpt: "How IoT, AI, and automation are revolutionizing modern building design and construction processes.",
-    author: "Brixx Space Team",
-    date: "Dec 12, 2024",
-    readTime: "6 min read",
-    category: "Technology",
-    featured: false,
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop",
-    image_url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop"
-  },
-  {
-    id: "5",
-    slug: "choosing-right-materials",
-    title: "Choosing the Right Materials for Your Project",
-    excerpt: "A guide to selecting construction materials that balance durability, cost-effectiveness, and sustainability.",
-    author: "Brixx Space Team",
-    date: "Dec 10, 2024",
-    readTime: "8 min read",
-    category: "Construction Tips",
-    featured: false,
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop",
-    image_url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop"
-  },
-  {
-    id: "6",
-    slug: "importance-safety-construction",
-    title: "The Importance of Safety in Construction",
-    excerpt: "Why safety protocols are non-negotiable and how we maintain our perfect safety record at Brixx Space.",
-    author: "Brixx Space Team",
-    date: "Dec 8, 2024",
-    readTime: "4 min read",
-    category: "Safety",
-    featured: false,
-    image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&h=600&fit=crop",
-    image_url: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&h=600&fit=crop"
-  }
-];
+// Static data removed
 
 const Blog = () => {
   const { data: fetchedBlogs, isLoading } = useBlogs();
 
   // Use fetched blogs if available, otherwise fall back to static data
+  // Use fetched blogs only
   const posts = fetchedBlogs && fetchedBlogs.length > 0
     ? fetchedBlogs.map(post => ({
       ...post,
@@ -99,7 +21,7 @@ const Blog = () => {
       readTime: post.read_time || "5 min read",
       image: post.image_url || "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop"
     }))
-    : staticBlogPosts;
+    : [];
 
   const featuredPost = posts.find(post => post.featured);
   const regularPosts = posts.filter(post => !post.featured);

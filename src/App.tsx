@@ -17,6 +17,8 @@ import BlogPost from "./pages/BlogPost";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import Interests from "./pages/Interests";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProjects from "./pages/admin/AdminProjects";
 import AdminProperties from "./pages/admin/AdminProperties";
@@ -26,6 +28,7 @@ import AdminPackages from "./pages/admin/AdminPackages";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminBlogs from "./pages/admin/AdminBlogs";
+import AdminProjectInterests from "./pages/admin/AdminProjectInterests";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -51,6 +54,8 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/interests" element={<Interests />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/projects" element={<AdminProjects />} />
               <Route path="/admin/properties" element={<AdminProperties />} />
@@ -60,6 +65,7 @@ const App = () => (
               <Route path="/admin/testimonials" element={<AdminTestimonials />} />
               <Route path="/admin/services" element={<AdminServices />} />
               <Route path="/admin/blogs" element={<AdminBlogs />} />
+              <Route path="/admin/project-interests" element={<AdminProjectInterests />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

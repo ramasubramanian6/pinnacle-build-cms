@@ -111,7 +111,20 @@ export default function AdminContacts() {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell className="text-foreground">{contact.subject || "-"}</TableCell>
+                        <TableCell className="text-foreground">
+                          {contact.subject?.startsWith("Project Interest:") ? (
+                            <div className="flex flex-col">
+                              <Badge variant="outline" className="w-fit mb-1 bg-accent/5 text-accent border-accent/20">
+                                Project Interest
+                              </Badge>
+                              <span className="font-medium">
+                                {contact.subject.replace("Project Interest: ", "")}
+                              </span>
+                            </div>
+                          ) : (
+                            contact.subject || "-"
+                          )}
+                        </TableCell>
                         <TableCell className="max-w-[200px]">
                           <p className="text-muted-foreground text-sm truncate" title={contact.message}>
                             {contact.message}

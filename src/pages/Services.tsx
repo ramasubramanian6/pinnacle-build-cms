@@ -18,44 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useServices } from "@/hooks/useServices";
 import * as LucideIcons from "lucide-react";
 
-const staticServices = [
-  {
-    icon: Building2,
-    title: "Design Coordination",
-    description: "Expert architectural and structural design coordination ensuring seamless project execution",
-    features: ["3D Visualization", "Technical Drawings", "Design Optimization", "Compliance Review"]
-  },
-  {
-    icon: Calculator,
-    title: "Budget Management",
-    description: "Comprehensive cost estimation and budget control for optimal resource allocation",
-    features: ["Cost Analysis", "Budget Planning", "Value Engineering", "Financial Reporting"]
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Scheduling & Planning",
-    description: "Strategic project scheduling and timeline management for timely delivery",
-    features: ["Project Timeline", "Resource Planning", "Milestone Tracking", "Risk Management"]
-  },
-  {
-    icon: FileText,
-    title: "Contract Administration",
-    description: "Professional contract management and documentation services",
-    features: ["Contract Review", "Documentation", "Compliance", "Legal Support"]
-  },
-  {
-    icon: Shield,
-    title: "Quality Assurance",
-    description: "Rigorous quality control and inspection throughout project lifecycle",
-    features: ["Site Inspections", "Quality Testing", "Standards Compliance", "Performance Monitoring"]
-  },
-  {
-    icon: Users,
-    title: "Site Supervision",
-    description: "On-site project supervision and coordination with all stakeholders",
-    features: ["Daily Monitoring", "Team Coordination", "Safety Management", "Progress Reporting"]
-  }
-];
+// Static services removed
 
 const phases = [
   {
@@ -80,6 +43,7 @@ const Services = () => {
 
   // Use fetched services if available, otherwise fall back to static data
   // Map fetched services to match the display structure (converting icon string to component)
+  // Use fetched services only
   const displayServices = fetchedServices && fetchedServices.length > 0
     ? fetchedServices.map(s => {
       // Dynamically get icon component from Lucide
@@ -92,7 +56,7 @@ const Services = () => {
         features: s.features || []
       };
     })
-    : staticServices;
+    : [];
 
   return (
     <>

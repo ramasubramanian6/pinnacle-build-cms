@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/contexts/AuthContext";
-import { useIsAdmin, useCreateProperty, useUpdateProperty, useDeleteProperty } from "@/hooks/useAdmin";
-import { useProperties, Property, formatPrice } from "@/hooks/useProperties";
+import { useIsAdmin } from "@/hooks/useAdmin";
+import { useProperties, Property, formatPrice, useCreateProperty, useUpdateProperty, useDeleteProperty } from "@/hooks/useProperties";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { LuxuryLoader, DotsLoader } from "@/components/premium/LuxuryLoader";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,9 @@ export default function AdminProperties() {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -74,6 +79,23 @@ export default function AdminProperties() {
       zoning: "Residential",
     });
     setEditingProperty(null);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const url = await uploadImageToCloudinary(file);
+      setFormData(prev => ({ ...prev, image_url: url }));
+      toast.success("Image uploaded successfully");
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleEdit = (property: Property) => {
@@ -133,7 +155,7 @@ export default function AdminProperties() {
             </div>
             <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
               <DialogTrigger asChild>
-                <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+                <Button className="bg-accent text-accent-foreground hover:bg-accent/90" data-testid="add-property-btn">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Property
                 </Button>
@@ -255,12 +277,42 @@ export default function AdminProperties() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="image_url">Image URL</Label>
-                    <Input
-                      id="image_url"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    />
+                    <Label htmlFor="image">Property Image</Label>
+                    <div className="flex flex-col gap-4">
+                      <Input
+                        id="image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={uploading}
+                        ref={fileInputRef}
+                      />
+                      {uploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+                      {formData.image_url && (
+                        <div className="relative w-full h-40 rounded-lg overflow-hidden border border-border">
+                          <img
+                            src={formData.image_url}
+                            alt="Property Preview"
+                            className="w-full h-full object-cover"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 h-6 w-6"
+                            onClick={() => setFormData(prev => ({ ...prev, image_url: "" }))}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      )}
+                      {/* Hidden Input to store URL just in case */}
+                      <Input
+                        type="hidden"
+                        value={formData.image_url}
+                        readOnly
+                      />
+                    </div>
                   </div>
 
                   {/* New Fields Section */}
@@ -364,12 +416,12 @@ export default function AdminProperties() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
-                            <Button size="icon" variant="ghost" onClick={() => handleEdit(property)}>
+                            <Button size="icon" variant="ghost" onClick={() => handleEdit(property)} data-testid={`edit-property-${property.id}`}>
                               <Pencil className="h-4 w-4" />
                             </Button>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button size="icon" variant="ghost" className="text-destructive">
+                                <Button size="icon" variant="ghost" className="text-destructive" data-testid={`delete-property-${property.id}`}>
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </AlertDialogTrigger>
@@ -385,6 +437,7 @@ export default function AdminProperties() {
                                   <AlertDialogAction
                                     className="bg-destructive text-destructive-foreground"
                                     onClick={() => deleteProperty.mutate(property.id)}
+                                    data-testid="confirm-delete-btn"
                                   >
                                     Delete
                                   </AlertDialogAction>

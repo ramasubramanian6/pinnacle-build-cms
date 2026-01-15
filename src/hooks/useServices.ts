@@ -1,12 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import api from "@/lib/api";
+import { toast } from "sonner";
 
 export interface Service {
     id: string;
     title: string;
-    description: string | null;
-    icon: string | null;
+    description: string;
+    icon: string;
     features: string[] | null;
+    image_url: string | null;
     created_at?: string;
     updated_at?: string;
 }
@@ -15,81 +17,61 @@ export const useServices = () => {
     return useQuery({
         queryKey: ["services"],
         queryFn: async () => {
-            const { data, error } = await supabase
-                .from("services" as any) // Typecast as any until table exists in types
-                .select("*")
-                .order("created_at", { ascending: false });
-
-            if (error) {
-                console.error("Error fetching services:", error);
-                throw error;
-            }
-            return data as unknown as Service[];
+            const { data } = await api.get("/services");
+            return data.map((s: any) => ({ ...s, id: s._id })) as Service[];
         },
     });
 };
 
 export const useCreateService = () => {
     const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: async (service: Omit<Service, "id" | "created_at" | "updated_at">) => {
-            const { data, error } = await supabase
-                .from("services" as any)
-                .insert([service])
-                .select()
-                .single();
 
-            if (error) {
-                console.error("Error creating service:", error);
-                throw error;
-            }
+    return useMutation({
+        mutationFn: async (service: any) => {
+            const { data } = await api.post("/services", service);
             return data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["services"] });
+            toast.success("Service created");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message || "Failed to create service");
         },
     });
 };
 
 export const useUpdateService = () => {
     const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: async ({ id, ...updates }: Partial<Service> & { id: string }) => {
-            const { data, error } = await supabase
-                .from("services" as any)
-                .update(updates)
-                .eq("id", id)
-                .select()
-                .single();
 
-            if (error) {
-                console.error("Error updating service:", error);
-                throw error;
-            }
+    return useMutation({
+        mutationFn: async ({ id, ...updates }: { id: string;[key: string]: any }) => {
+            const { data } = await api.put(`/services/${id}`, updates);
             return data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["services"] });
+            toast.success("Service updated");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message || "Failed to update service");
         },
     });
 };
 
 export const useDeleteService = () => {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: async (id: string) => {
-            const { error } = await supabase
-                .from("services" as any)
-                .delete()
-                .eq("id", id);
-
-            if (error) {
-                console.error("Error deleting service:", error);
-                throw error;
-            }
+            await api.delete(`/services/${id}`);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["services"] });
+            toast.success("Service deleted");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message || "Failed to delete service");
         },
     });
 };

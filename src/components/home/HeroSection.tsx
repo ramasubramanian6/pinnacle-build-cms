@@ -1,139 +1,146 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, Building2, Shield, BarChart3, Clock } from "lucide-react";
+import { ArrowRight, MousePointer2, ShieldCheck, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import brixxspaceLogo from "@/assets/brixxspace-logo.png";
-import heroBg from "@/assets/hero-construction.jpg"; // Using reliable existing image
-
-const ServiceItem = ({ icon: Icon, title, text }: { icon: any, title: string, text: string }) => (
-  <div className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-    <div className="bg-[#FFB800] p-2.5 rounded-lg flex-shrink-0 text-black">
-      <Icon size={20} strokeWidth={2.5} />
-    </div>
-    <div>
-      <h3 className="text-white font-semibold text-base mb-1">{title}</h3>
-      <p className="text-slate-400 text-sm leading-relaxed">{text}</p>
-    </div>
-  </div>
-);
+import heroBg from "@/assets/hero-construction.jpg";
+import { useRef } from "react";
 
 export const HeroSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   return (
-    <section className="relative min-h-[90vh] flex items-center bg-[#050505] overflow-hidden pt-28 pb-20">
-      {/* Background Layer - Clean and Stable */}
-      <div className="absolute inset-0 z-0">
+    <section
+      ref={containerRef}
+      className="relative min-h-screen flex items-center bg-[#080808] overflow-hidden"
+    >
+      {/* Dynamic Background Layer */}
+      <motion.div
+        style={{ y: y1 }}
+        className="absolute inset-0 z-0"
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080808]/40 via-transparent to-[#080808] z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#080808] via-[#080808]/80 to-transparent z-10" />
         <img
           src={heroBg}
-          alt="Construction Site"
-          className="w-full h-full object-cover"
+          alt="Premium Construction"
+          className="w-full h-full object-cover opacity-60 scale-110"
         />
-        {/* Professional Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/40" />
-      </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-16 items-center">
+        {/* Subtle Decorative Grid */}
+        <div className="absolute inset-0 z-10 opacity-10 bg-[linear-gradient(rgba(255,184,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,184,0,0.1)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      </motion.div>
 
-          {/* Content Column */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="lg:w-1/2 space-y-8"
-          >
-            {/* Brand Tag */}
-            <div className="inline-flex items-center gap-2 border-l-4 border-[#FFB800] pl-4">
-              <span className="text-[#FFB800] font-bold tracking-widest uppercase text-sm">Since 1993</span>
-              <span className="text-slate-500 text-sm">|</span>
-              <span className="text-slate-300 text-sm tracking-wide uppercase">Pinnacle Build</span>
-            </div>
+      <div className="container mx-auto px-6 relative z-20">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-8">
+            {/* Premium Badge */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="inline-flex items-center gap-3 px-4 py-2 mb-8 bg-white/5 border border-white/10 backdrop-blur-md rounded-full"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
+              </span>
+              <span className="text-xs font-semibold text-white/80 uppercase tracking-[0.3em]">
+                Excellence since 1993
+              </span>
+            </motion.div>
 
-            {/* Main Headline */}
-            <h1 className="font-display text-5xl lg:text-7xl font-bold text-white leading-[1.1]">
-              Building Your <br />
-              <span className="text-[#FFB800]">Legacy</span> With <br />
-              Precision
-            </h1>
+            {/* Title with Playfair Display */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <h1 className="font-display text-6xl md:text-8xl lg:text-9xl text-white font-bold leading-[0.9] tracking-tighter mb-8">
+                Building <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-gold-light to-gold-dark italic pr-4">
+                  Masterpieces
+                </span>
+              </h1>
+            </motion.div>
 
-            <p className="text-lg text-slate-300 max-w-lg leading-relaxed border-l border-white/10 pl-6 py-2">
-              Brixx Space delivers tire-1 construction consultation and project advisory. We transform complex engineering challenges into seamless execution using data-driven insights.
-            </p>
+            {/* Refined Description */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="max-w-xl"
+            >
+              <p className="text-lg md:text-xl text-white/60 leading-relaxed mb-10 font-body">
+                Redefining the landscape of South Tamil Nadu with architectural precision and engineering excellence. We don't just build structures; we create landmarks.
+              </p>
+            </motion.div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex flex-wrap gap-6"
+            >
               <Link to="/contact">
-                <Button className="h-14 px-8 bg-[#FFB800] hover:bg-[#E5A500] text-black font-bold text-base uppercase tracking-wider rounded-sm transition-all w-full sm:w-auto">
-                  Get Consultation
+                <Button className="h-16 px-10 bg-gold hover:bg-gold-dark text-black font-bold text-base uppercase tracking-widest rounded-none group relative overflow-hidden transition-all duration-500">
+                  <span className="relative z-10 flex items-center gap-2">
+                    Start Your Project
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </Button>
               </Link>
+
               <Link to="/projects">
-                <Button variant="outline" className="h-14 px-8 border-white/20 text-white hover:bg-white text-base uppercase tracking-wider rounded-sm w-full sm:w-auto hover:text-black transition-all">
-                  View Portfolio
+                <Button
+                  variant="outline"
+                  className="h-16 px-10 border-white/20 text-white hover:bg-white hover:text-black hover:border-white font-medium text-base uppercase tracking-widest rounded-none transition-all duration-300 backdrop-blur-sm"
+                >
+                  Discover Portfolio
                 </Button>
               </Link>
-            </div>
+            </motion.div>
+          </div>
 
-            {/* Trust Metrics */}
-            <div className="flex items-center gap-12 pt-8 border-t border-white/10 mt-8">
-              <div>
-                <h4 className="text-3xl font-bold text-white">500+</h4>
-                <p className="text-slate-400 text-sm uppercase tracking-wider">Projects</p>
-              </div>
-              <div>
-                <h4 className="text-3xl font-bold text-white">30+</h4>
-                <p className="text-slate-400 text-sm uppercase tracking-wider">Years Exp.</p>
-              </div>
-              <div>
-                <h4 className="text-3xl font-bold text-white">100%</h4>
-                <p className="text-slate-400 text-sm uppercase tracking-wider">Compliance</p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Services/Feature Column - Clean Corporate List */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="lg:w-1/2 w-full"
-          >
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-8 lg:p-10 shadow-2xl">
-              <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider flex items-center gap-3">
-                <Building2 className="text-[#FFB800]" />
-                Our Expertise
-              </h3>
-
-              <div className="space-y-2">
-                <ServiceItem
-                  icon={Shield}
-                  title="Risk Management"
-                  text="Comprehensive analysis to foresee and mitigate construction risks before they occur."
-                />
-                <div className="h-px bg-white/5 mx-4" />
-                <ServiceItem
-                  icon={BarChart3}
-                  title="Cost Optimization"
-                  text="Strategic financial planning to maximize value engineering and reduce waste."
-                />
-                <div className="h-px bg-white/5 mx-4" />
-                <ServiceItem
-                  icon={Clock}
-                  title="Project Scheduling"
-                  text="Advanced timeline management ensuring rapid, predictable delivery milestones."
-                />
+          {/* Right Column - Highlight Cards */}
+          <div className="lg:col-span-4 hidden lg:block">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.8 }}
+              className="space-y-6"
+            >
+              <div className="p-8 bg-white/5 border border-white/10 backdrop-blur-xl hover:border-gold/50 transition-colors duration-500">
+                <Trophy className="w-10 h-10 text-gold mb-4" />
+                <h3 className="text-3xl font-bold text-white mb-2 font-display">500+</h3>
+                <p className="text-white/40 uppercase text-xs tracking-widest font-semibold">Iconic Projects Completed</p>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-white/10 text-center">
-                <Link to="/services" className="inline-flex items-center text-[#FFB800] hover:text-white transition-colors text-sm font-semibold uppercase tracking-widest group">
-                  Explore All Services
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
+              <div className="p-8 bg-white/5 border border-white/10 backdrop-blur-xl hover:border-gold/50 transition-colors duration-500">
+                <ShieldCheck className="w-10 h-10 text-gold mb-4" />
+                <h3 className="text-3xl font-bold text-white mb-2 font-display">30+</h3>
+                <p className="text-white/40 uppercase text-xs tracking-widest font-semibold">Years of Engineering Mastery</p>
               </div>
-            </div>
-          </motion.div>
-
+            </motion.div>
+          </div>
         </div>
       </div>
+
+      {/* Modern Scroll Indicator */}
+      <motion.div
+        style={{ opacity }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-3"
+      >
+        <span className="text-[10px] text-white/40 uppercase tracking-[0.4em] font-bold">Scroll to Explore</span>
+        <div className="w-px h-16 bg-gradient-to-b from-gold via-gold/50 to-transparent" />
+      </motion.div>
+
+      {/* Corner Accent */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gold/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 blur-[150px] rounded-full pointer-events-none" />
     </section>
   );
 };

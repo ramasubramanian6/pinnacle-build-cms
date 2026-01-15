@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import api from "@/lib/api";
 
 const contactInfo = [
   {
@@ -62,17 +62,13 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.from("contact_submissions").insert([
-        {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject,
-          message: formData.message,
-        },
-      ]);
-
-      if (error) throw error;
+      await api.post("/contacts", {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message,
+      });
 
       toast({
         title: "Message sent successfully!",
@@ -83,7 +79,7 @@ const Contact = () => {
     } catch (error: any) {
       toast({
         title: "Error sending message",
-        description: error.message || "Please try again later.",
+        description: error.response?.data?.message || "Please try again later.",
         variant: "destructive",
       });
     } finally {

@@ -22,6 +22,7 @@ const menuItems = [
   { title: "Properties", url: "/admin/properties", icon: Building2 },
   { title: "Services", url: "/admin/services", icon: Settings },
   { title: "Blogs", url: "/admin/blogs", icon: FolderKanban },
+  { title: "Testimonials", url: "/admin/testimonials", icon: Mail },
   { title: "Contacts", url: "/admin/contacts", icon: Mail },
 ];
 

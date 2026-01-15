@@ -133,7 +133,7 @@ export default function AdminServices() {
                         </div>
                         <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
                             <DialogTrigger asChild>
-                                <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+                                <Button className="bg-accent text-accent-foreground hover:bg-accent/90" data-testid="add-service-btn">
                                     <Plus className="h-4 w-4 mr-2" />
                                     Add Service
                                 </Button>
@@ -243,12 +243,12 @@ export default function AdminServices() {
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
-                                                        <Button size="icon" variant="ghost" onClick={() => handleEdit(service)}>
+                                                        <Button size="icon" variant="ghost" onClick={() => handleEdit(service)} data-testid={`edit-service-${service.id}`}>
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
                                                         <AlertDialog>
                                                             <AlertDialogTrigger asChild>
-                                                                <Button size="icon" variant="ghost" className="text-destructive">
+                                                                <Button size="icon" variant="ghost" className="text-destructive" data-testid={`delete-service-${service.id}`}>
                                                                     <Trash2 className="h-4 w-4" />
                                                                 </Button>
                                                             </AlertDialogTrigger>
@@ -264,6 +264,7 @@ export default function AdminServices() {
                                                                     <AlertDialogAction
                                                                         className="bg-destructive text-destructive-foreground"
                                                                         onClick={() => deleteService.mutate(service.id)}
+                                                                        data-testid="confirm-delete-btn"
                                                                     >
                                                                         Delete
                                                                     </AlertDialogAction>

@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import api from "@/lib/api";
+import { toast } from "sonner";
 
 export interface Blog {
     id: string;
@@ -21,17 +22,22 @@ export const useBlogs = () => {
     return useQuery({
         queryKey: ["blogs"],
         queryFn: async () => {
-            const { data, error } = await supabase
-                .from("blogs" as any)
-                .select("*")
-                .order("created_at", { ascending: false });
-
-            if (error) {
-                console.error("Error fetching blogs:", error);
-                throw error;
-            }
-            return data as unknown as Blog[];
+            const { data } = await api.get("/blogs");
+            // Map _id to id
+            return data.map((b: any) => ({ ...b, id: b._id })) as Blog[];
         },
+    });
+};
+
+export const useBlog = (slug: string) => {
+    return useQuery({
+        queryKey: ["blogs", slug],
+        queryFn: async () => {
+            if (!slug) return null;
+            const { data } = await api.get(`/blogs/${slug}`);
+            return { ...data, id: data._id } as Blog;
+        },
+        enabled: !!slug
     });
 };
 
@@ -39,21 +45,16 @@ export const useCreateBlog = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (blog: Omit<Blog, "id" | "created_at" | "updated_at">) => {
-            const { data, error } = await supabase
-                .from("blogs" as any)
-                .insert([blog])
-                .select()
-                .single();
-
-            if (error) {
-                console.error("Error creating blog:", error);
-                throw error;
-            }
+            const { data } = await api.post("/blogs", blog);
             return data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["blogs"] });
+            toast.success("Blog created");
         },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message || "Failed to create blog");
+        }
     });
 };
 
@@ -61,22 +62,16 @@ export const useUpdateBlog = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ id, ...updates }: Partial<Blog> & { id: string }) => {
-            const { data, error } = await supabase
-                .from("blogs" as any)
-                .update(updates)
-                .eq("id", id)
-                .select()
-                .single();
-
-            if (error) {
-                console.error("Error updating blog:", error);
-                throw error;
-            }
+            const { data } = await api.put(`/blogs/${id}`, updates);
             return data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["blogs"] });
+            toast.success("Blog updated");
         },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message || "Failed to update blog");
+        }
     });
 };
 
@@ -84,18 +79,14 @@ export const useDeleteBlog = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (id: string) => {
-            const { error } = await supabase
-                .from("blogs" as any)
-                .delete()
-                .eq("id", id);
-
-            if (error) {
-                console.error("Error deleting blog:", error);
-                throw error;
-            }
+            await api.delete(`/blogs/${id}`);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["blogs"] });
+            toast.success("Blog deleted");
         },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message || "Failed to delete blog");
+        }
     });
 };

@@ -14,7 +14,8 @@ import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 
 const propertyStatuses = ["All", "Available", "Sold", "Upcoming"];
-const fallbackImages = [projectResidential, projectCommercial];
+// Fallback removed
+const fallbackImages = ["/placeholder.svg"];
 
 const Properties = () => {
   const [activeStatus, setActiveStatus] = useState("All");
@@ -22,7 +23,7 @@ const Properties = () => {
   const { user } = useAuth();
 
   const getPropertyImage = (property: { image_url: string | null }, index: number) => {
-    return property.image_url || fallbackImages[index % fallbackImages.length];
+    return property.image_url || "/placeholder.svg";
   };
 
   const getStatusColor = (status: string) => {

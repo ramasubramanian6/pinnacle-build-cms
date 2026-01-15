@@ -18,8 +18,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useProperty } from "@/hooks/useProperties";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 
@@ -38,20 +37,7 @@ const PropertyDetail = () => {
     }, [user, navigate, id]);
 
     // Fetch property details
-    const { data: property, isLoading } = useQuery({
-        queryKey: ["property", id],
-        queryFn: async () => {
-            const { data, error } = await supabase
-                .from("properties")
-                .select("*")
-                .eq("id", id)
-                .single();
-
-            if (error) throw error;
-            return data;
-        },
-        enabled: !!user && !!id,
-    });
+    const { data: property, isLoading } = useProperty(id || "");
 
     if (!user) {
         return null; // Will redirect
