@@ -94,7 +94,13 @@ export default function AdminContacts() {
                     {contacts?.map((contact) => (
                       <TableRow key={contact.id} className="border-border">
                         <TableCell className="text-muted-foreground text-sm">
-                          {format(new Date(contact.created_at), "MMM d, yyyy")}
+                          {(() => {
+                            try {
+                              return contact.created_at ? format(new Date(contact.created_at), "MMM d, yyyy") : "N/A";
+                            } catch {
+                              return "Invalid Date";
+                            }
+                          })()}
                         </TableCell>
                         <TableCell className="font-medium text-foreground">{contact.name}</TableCell>
                         <TableCell>
