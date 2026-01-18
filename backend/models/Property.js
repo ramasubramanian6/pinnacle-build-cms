@@ -41,6 +41,15 @@ const propertySchema = mongoose.Schema(
         image_url: {
             type: String,
         },
+        dimensions: {
+            type: String,
+        },
+        facing: {
+            type: String,
+        },
+        zoning: {
+            type: String,
+        },
         amenities: [String],
         featured: {
             type: Boolean,

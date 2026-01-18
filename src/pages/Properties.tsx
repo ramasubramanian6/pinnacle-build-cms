@@ -8,18 +8,23 @@ import { Link } from "react-router-dom";
 import { ScrollReveal } from "@/components/premium/ScrollReveal";
 import { AnimatedBorderCard } from "@/components/premium/GlassmorphismCard";
 import { GradientText } from "@/components/premium/AnimatedText";
+import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
 import { useProperties, formatPrice } from "@/hooks/useProperties";
 import { useAuth } from "@/contexts/AuthContext";
 import projectResidential from "@/assets/project-residential.jpg";
 import projectCommercial from "@/assets/project-commercial.jpg";
 
-const propertyStatuses = ["All", "Available", "Sold", "Upcoming"];
+const propertyStatuses = ["All", "Seeking Properties", "Sold", "Upcoming"];
 // Fallback removed
 const fallbackImages = ["/placeholder.svg"];
 
 const Properties = () => {
   const [activeStatus, setActiveStatus] = useState("All");
-  const { data: properties = [], isLoading } = useProperties(activeStatus);
+
+  // Map "Seeking Properties" to "available" for the data query
+  const queryStatus = activeStatus === "Seeking Properties" ? "available" : activeStatus;
+
+  const { data: properties = [], isLoading } = useProperties(queryStatus);
   const { user } = useAuth();
 
   const getPropertyImage = (property: { image_url: string | null }, index: number) => {
@@ -100,7 +105,7 @@ const Properties = () => {
           <div className="container mx-auto px-6">
             {isLoading ? (
               <div className="flex justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                <LuxuryLoader />
               </div>
             ) : properties.length === 0 ? (
               <div className="text-center py-20">
@@ -128,7 +133,7 @@ const Properties = () => {
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                         <span className={`absolute top-4 left-4 px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${getStatusColor(property.status)}`}>
-                          {property.status}
+                          {property.status === "available" ? "Seeking Properties" : property.status}
                         </span>
                       </div>
                       <div className="p-6">
@@ -147,41 +152,27 @@ const Properties = () => {
                           </div>
                         </div>
 
-                        {user ? (
-                          <>
-                            <div className="flex items-center justify-between py-4 border-t border-b border-border mb-4">
-                              <div className="flex items-center gap-1">
-                                <IndianRupee size={16} className="text-accent" />
-                                <span className="font-semibold text-foreground">{formatPrice(property.price)}</span>
-                              </div>
-                            </div>
+                        <div className="flex items-center justify-between py-4 border-t border-b border-border mb-4">
+                          <div className="flex items-center gap-1">
+                            <IndianRupee size={16} className="text-accent" />
+                            <span className="font-semibold text-foreground">{formatPrice(property.price)}</span>
+                          </div>
+                        </div>
 
-                            {property.bedrooms && (
-                              <div className="flex gap-4 text-sm text-muted-foreground mb-4">
-                                <span>{property.bedrooms} Beds</span>
-                                <span>{property.bathrooms} Baths</span>
-                              </div>
-                            )}
-
-                            <div className="flex gap-3">
-                              <Button variant="gold" className="flex-1">
-                                <Phone size={16} className="mr-2" />
-                                Enquire
-                              </Button>
-                              <Button variant="outline" size="icon">
-                                <Mail size={16} />
-                              </Button>
-                            </div>
-                          </>
-                        ) : (
-                          <div className="pt-4 border-t border-border">
-                            <Link to={user ? `/properties/${property.id}` : "/auth"}>
-                              <Button variant="gold" className="w-full">
-                                View More Details
-                              </Button>
-                            </Link>
+                        {property.bedrooms && (
+                          <div className="flex gap-4 text-sm text-muted-foreground mb-4">
+                            <span>{property.bedrooms} Beds</span>
+                            <span>{property.bathrooms} Baths</span>
                           </div>
                         )}
+
+                        <div className="pt-4 border-t border-border">
+                          <Link to={`/properties/${property.id}`}>
+                            <Button variant="gold" className="w-full">
+                              View Details
+                            </Button>
+                          </Link>
+                        </div>
                       </div>
                     </AnimatedBorderCard>
                   </motion.div>

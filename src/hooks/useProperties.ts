@@ -99,8 +99,12 @@ export const useUpdateProperty = () => {
       const { data } = await api.put(`/properties/${id}`, updates);
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["properties"] });
+      // Also invalidate specific property query if needed
+      if (variables.id) {
+        queryClient.invalidateQueries({ queryKey: ["properties", variables.id] });
+      }
       toast.success("Property updated");
     },
     onError: (error: any) => {

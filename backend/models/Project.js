@@ -39,6 +39,9 @@ const projectSchema = mongoose.Schema(
         estimated_completion: {
             type: Date,
         },
+        start_date: {
+            type: Date,
+        },
         features: [String],
         amenities: [String],
         documents_count: {

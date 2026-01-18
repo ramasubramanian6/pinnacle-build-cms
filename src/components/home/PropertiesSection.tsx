@@ -29,16 +29,12 @@ export const PropertiesSection = () => {
                         <span className="text-sm font-semibold text-amber-400">Properties</span>
                     </div>
                     <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                        Available
                         <span className="block bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
-                            Land & Properties
+                            Seeking Properties
                         </span>
                     </h2>
                     <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">
-                        {user
-                            ? "Explore our exclusive property listings with complete details"
-                            : "Sign in to view complete property details including pricing and contact information"
-                        }
+                        Explore our exclusive property listings with complete details
                     </p>
                 </motion.div>
 
@@ -90,34 +86,26 @@ export const PropertiesSection = () => {
                                             </div>
                                         </div>
 
-                                        {/* Authenticated Info - Only for Logged-in Users */}
-                                        {user ? (
-                                            <>
-                                                {property.price && (
-                                                    <div className="mb-4 pb-4 border-b border-white/10">
-                                                        <p className="text-2xl font-bold text-amber-400">
-                                                            ₹{property.price.toLocaleString()}
-                                                        </p>
-                                                    </div>
-                                                )}
-
-                                                {property.description && (
-                                                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">
-                                                        {property.description}
-                                                    </p>
-                                                )}
-
-                                                <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-900 font-semibold">
-                                                    View Full Details
-                                                </Button>
-                                            </>
-                                        ) : (
-                                            <Link to="/auth">
-                                                <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-900 font-semibold">
-                                                    View Details
-                                                </Button>
-                                            </Link>
+                                        {/* Public Info - Always Visible */}
+                                        {property.price && (
+                                            <div className="mb-4 pb-4 border-b border-white/10">
+                                                <p className="text-2xl font-bold text-amber-400">
+                                                    ₹{property.price.toLocaleString()}
+                                                </p>
+                                            </div>
                                         )}
+
+                                        {property.description && (
+                                            <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                                                {property.description}
+                                            </p>
+                                        )}
+
+                                        <Link to={`/properties/${property.id}`}>
+                                            <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-900 font-semibold">
+                                                View Details
+                                            </Button>
+                                        </Link>
                                     </div>
                                 </div>
                             </motion.div>

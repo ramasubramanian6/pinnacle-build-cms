@@ -301,7 +301,7 @@ const Contact = () => {
                 {/* Features */}
                 <div className="mt-8 pt-8 border-t border-white/10">
                   <div className="grid grid-cols-2 gap-4">
-                    {["24hr Response", "Free Consultation", "Expert Team", "30+ Years Experience"].map((feature, idx) => (
+                    {["24hr Response", "Free Consultation", "Expert Team", "35+ Years Experience"].map((feature, idx) => (
                       <div key={idx} className="flex items-center gap-2 text-sm text-slate-300">
                         <CheckCircle2 className="w-4 h-4 text-amber-400 flex-shrink-0" />
                         <span>{feature}</span>

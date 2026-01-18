@@ -44,6 +44,9 @@ export default function AdminProjects() {
     total_units: 0,
     sold_units: 0,
     featured: false,
+    estimated_completion: "",
+    start_date: "",
+    amenities: "",
   });
 
   useEffect(() => {
@@ -66,6 +69,9 @@ export default function AdminProjects() {
       total_units: 0,
       sold_units: 0,
       featured: false,
+      estimated_completion: "",
+      start_date: "",
+      amenities: "",
     });
     setEditingProject(null);
   };
@@ -100,16 +106,31 @@ export default function AdminProjects() {
       total_units: project.total_units || 0,
       sold_units: project.sold_units || 0,
       featured: project.featured || false,
+      estimated_completion: project.estimated_completion || "",
+      start_date: project.start_date || "",
+      amenities: project.amenities ? project.amenities.join(", ") : "",
     });
     setIsDialogOpen(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Convert amenities string to array
+    const amenitiesArray = formData.amenities
+      .split(",")
+      .map(item => item.trim())
+      .filter(item => item !== "");
+
+    const submissionData = {
+      ...formData,
+      amenities: amenitiesArray
+    };
+
     if (editingProject) {
-      await updateProject.mutateAsync({ id: editingProject.id, ...formData });
+      await updateProject.mutateAsync({ id: editingProject.id, ...submissionData });
     } else {
-      await createProject.mutateAsync(formData);
+      await createProject.mutateAsync(submissionData);
     }
     setIsDialogOpen(false);
     resetForm();
@@ -235,6 +256,35 @@ export default function AdminProjects() {
                         min="0"
                         value={formData.sold_units}
                         onChange={(e) => setFormData({ ...formData, sold_units: parseInt(e.target.value) || 0 })}
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="amenities">Amenities (comma separated)</Label>
+                    <Textarea
+                      id="amenities"
+                      placeholder="e.g. Swimming Pool, Gym, 24/7 Security"
+                      value={formData.amenities}
+                      onChange={(e) => setFormData({ ...formData, amenities: e.target.value })}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="start_date">Start Date</Label>
+                      <Input
+                        id="start_date"
+                        type="date"
+                        value={formData.start_date ? new Date(formData.start_date).toISOString().split('T')[0] : ''}
+                        onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="estimated_completion">Estimated Completion Date</Label>
+                      <Input
+                        id="estimated_completion"
+                        type="date"
+                        value={formData.estimated_completion ? new Date(formData.estimated_completion).toISOString().split('T')[0] : ''}
+                        onChange={(e) => setFormData({ ...formData, estimated_completion: e.target.value })}
                       />
                     </div>
                   </div>

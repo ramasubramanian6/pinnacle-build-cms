@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { useBlogs, useCreateBlog, useUpdateBlog, useDeleteBlog, Blog } from "@/hooks/useBlogs";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { LuxuryLoader, DotsLoader } from "@/components/premium/LuxuryLoader";
 import { Button } from "@/components/ui/button";
@@ -16,7 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Pencil, Trash2, Calendar, Star } from "lucide-react";
+import { Plus, Pencil, Trash2, Calendar, Star, X, Upload } from "lucide-react";
 
 export default function AdminBlogs() {
     const { user, loading: authLoading } = useAuth();
@@ -28,6 +30,7 @@ export default function AdminBlogs() {
     const navigate = useNavigate();
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
     const [formData, setFormData] = useState<{
         title: string;
@@ -110,6 +113,23 @@ export default function AdminBlogs() {
             title,
             slug: generateSlug(title),
         });
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const url = await uploadImageToCloudinary(file);
+            setFormData(prev => ({ ...prev, image_url: url }));
+            toast.success("Image uploaded successfully");
+        } catch (error) {
+            console.error("Upload error:", error);
+            toast.error("Failed to upload image");
+        } finally {
+            setUploading(false);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -241,12 +261,63 @@ export default function AdminBlogs() {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="image_url">Image URL</Label>
-                                        <Input
-                                            id="image_url"
-                                            value={formData.image_url}
-                                            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                                        />
+                                        <Label htmlFor="image">Featured Image</Label>
+                                        <div className="flex items-start gap-4">
+                                            {formData.image_url ? (
+                                                <div className="relative w-32 h-20 rounded-lg overflow-hidden border border-border group">
+                                                    <img
+                                                        src={formData.image_url}
+                                                        alt="Preview"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setFormData({ ...formData, image_url: "" })}
+                                                        className="absolute top-1 right-1 p-1 bg-black/50 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    >
+                                                        <X className="w-3 h-3" />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="w-32 h-20 rounded-lg border border-dashed border-muted-foreground/30 flex items-center justify-center bg-muted/30">
+                                                    <span className="text-xs text-muted-foreground">No image</span>
+                                                </div>
+                                            )}
+                                            <div className="flex-1">
+                                                <div className="relative">
+                                                    <Input
+                                                        id="image"
+                                                        type="file"
+                                                        accept="image/*"
+                                                        onChange={handleImageUpload}
+                                                        disabled={uploading}
+                                                        className="hidden"
+                                                    />
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        className="w-full"
+                                                        disabled={uploading}
+                                                        onClick={() => document.getElementById("image")?.click()}
+                                                    >
+                                                        {uploading ? (
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                                                                <span>Uploading...</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex items-center gap-2">
+                                                                <Upload className="w-4 h-4" />
+                                                                <span>Upload Image</span>
+                                                            </div>
+                                                        )}
+                                                    </Button>
+                                                </div>
+                                                <p className="text-xs text-muted-foreground mt-1.5">
+                                                    Recommended size: 1200x630px. Max size: 5MB.
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div className="flex items-center gap-2">

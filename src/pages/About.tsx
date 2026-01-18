@@ -1,11 +1,11 @@
 import { Helmet } from "react-helmet-async";
-import { Users } from "lucide-react";
+import { Users, Hammer, Truck, Ruler, FileText, CheckCircle2, ShieldCheck, Briefcase } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
 import { GlassmorphismCard } from "@/components/premium/GlassmorphismCard";
 import { AnimatedText, GradientText } from "@/components/premium/AnimatedText";
 import { ProgressRing } from "@/components/premium/ProgressRing";
-import { aboutStats, milestones, coreValues, visionMission, founderQuote, companyIntro, leadershipTeam } from "@/data/about";
+import { aboutStats, milestones, coreValues, visionMission, founderQuote, companyIntro, leadershipTeam, capabilities, coreServicesList, packages } from "@/data/about";
 import heroImage from "@/assets/hero-construction.jpg";
 import brixxspaceLogo from "@/assets/brixxspace-logo.png";
 
@@ -138,6 +138,58 @@ const About = () => {
             </div>
           </div>
         </section>
+
+        {/* Capabilities Section */}
+        <section className="py-24 bg-background">
+          <div className="container mx-auto px-6">
+            <ScrollReveal className="text-center mb-16">
+              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
+                Resources & Equipment
+              </span>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground">
+                Our Capabilities
+              </h2>
+              <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+                We have the capacity to mobilise skilled manpower, advanced construction equipment,
+                and resources for projects of any scale and complexity.
+              </p>
+            </ScrollReveal>
+
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <ScrollReveal direction="left">
+                <div className="grid grid-cols-1 gap-4">
+                  {capabilities.map((item, index) => (
+                    <GlassmorphismCard key={index} hover className="p-4 flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                        <Truck className="w-5 h-5 text-accent" />
+                      </div>
+                      <span className="font-medium text-foreground">{item}</span>
+                    </GlassmorphismCard>
+                  ))}
+                </div>
+              </ScrollReveal>
+              <ScrollReveal direction="right" delay={0.2}>
+                <div className="bg-secondary/50 rounded-2xl p-8 border border-border">
+                  <h3 className="font-display text-2xl font-bold text-foreground mb-6">
+                    Professional Execution
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed mb-6">
+                    Our in-house fleet includes specialized machinery for civil and earthwork projects,
+                    supported by TATA Hitachi Excavators, JCBs, Bulldozers, and more.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Supported by a team of experienced engineers and technicians, we ensure high-quality
+                    project execution with strict adherence to safety and timelines.
+                  </p>
+                </div>
+              </ScrollReveal>
+            </div>
+          </div>
+        </section>
+
+
+
+
 
         {/* Core Values */}
         <section className="py-24 bg-background">

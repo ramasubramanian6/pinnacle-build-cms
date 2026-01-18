@@ -3,8 +3,8 @@ import { Building, Users, Award, Calendar, Shield, Heart, Target, Eye } from "lu
 export const aboutStats = [
   { icon: Building, value: "200+", label: "Projects Completed" },
   { icon: Users, value: "50+", label: "Expert Professionals" },
-  { icon: Award, value: "25+", label: "Industry Awards" },
-  { icon: Calendar, value: "15+", label: "Years of Excellence" },
+  { icon: Award, value: "150+", label: "Happy Clients" }, // Inferred, keeping placeholder or specific if found
+  { icon: Calendar, value: "35+", label: "Years of Experience" },
 ];
 
 export const milestones = [
@@ -84,23 +84,101 @@ export const founderQuote = {
 export const companyIntro = {
   title: "Building Excellence in South Tamil Nadu",
   paragraphs: [
-    "BRIXXSPACE is a premier construction and infrastructure company headquartered in Tirunelveli, Tamil Nadu. Since our inception, we have been committed to delivering high-quality construction solutions that exceed client expectations.",
-    "Our portfolio spans residential complexes, commercial buildings, industrial facilities, and infrastructure projects. We combine traditional craftsmanship with modern construction technology to create structures that stand the test of time.",
-    "With a team of 50+ experienced professionals including architects, engineers, and skilled craftsmen, we have successfully completed over 200 projects across South Tamil Nadu, earning the trust of hundreds of satisfied clients.",
+    "Brixx Space is a professional construction consultation and project advisory firm backed by 35+ years of industry expertise. Led by Mr A. Ulagu Lakshmanan, Director, the company is built on strong foundations of civil engineering, road construction, and infrastructure development across Tamil Nadu.",
+    "Based in Krishnapuram, Tirunelveli, Brixx Space provides end-to-end construction consulting, technical planning, design coordination, and execution guidance for residential, commercial, and infrastructure projects.",
+    "Technical operations are led by Er. Loknath S, M.E (Structural Engineering), who ensures client ideas are transformed into efficient and buildable designs through strong coordination, documentation, and value engineering. Brixx Space helps clients reduce risk, control costs, and build right—before construction begins.",
+    "Trusted civil engineer and construction contractor in Tamil Nadu, with over 35 years of experience in road construction, RCC works, and large-scale infrastructure projects. Serving major government departments, the company is recognised for its high-quality construction, advanced machinery, stringent safety standards, and timely project delivery across multiple districts."
   ],
 };
 
 export const leadershipTeam = [
   {
-    name: "Director Name",
-    role: "Founder & Managing Director",
-    bio: "With over 30 years of experience in the construction industry, leading the company with a vision for excellence and innovation.",
+    name: "Mr. A. Ulagu Lakshmanan",
+    role: "Director",
+    bio: "With over 35 years of experience in road construction, RCC works, and large-scale infrastructure projects. Serving major government departments, the company is recognised for its high-quality construction, advanced machinery, stringent safety standards, and timely project delivery across multiple districts.",
     image: null // Placeholder
   },
   {
-    name: "Technical Lead Name",
-    role: "Technical Lead",
-    bio: "Expert in structural engineering and project management, ensuring every project meets the highest standards of safety and quality.",
+    name: "Er. Loknath S",
+    role: "Design & Technical Lead",
+    bio: "Structural engineering professional with strong expertise in civil construction, design, and project execution. Holding an M.E. in Structural Engineering from Anna University and certified in advanced RCC design, he brings technical precision and modern engineering insight to every project. With hands-on experience as a Project Manager and a proven research background in materials and durability studies, he delivers solutions that blend practicality, innovation, and structural reliability. His work reflects a commitment to quality, accuracy, and engineering excellence across all construction and consultancy services.",
     image: null // Placeholder
   }
+];
+
+export const capabilities = [
+  "TATA Hitachi Excavators",
+  "JCBs",
+  "Bulldozers",
+  "Vibratory & Road Rollers",
+  "Hot Mix Plant (for Bituminous Road Works)",
+  "Paver Finishers",
+  "Specialized Machinery for Civil & Earthwork Projects",
+];
+
+export const coreServicesList = [
+  {
+    title: "Design Coordination",
+    description: "Transforming client vision into buildable, compliant designs.",
+  },
+  {
+    title: "Budget Management",
+    description: "Implementing automated cost control, BOQ vs. actual spend tracking, and value engineering.",
+  },
+  {
+    title: "Scheduling",
+    description: "Managing project timelines, milestones, and ensuring smooth execution from planning to handover.",
+  },
+  {
+    title: "Contract Administration",
+    description: "Overseeing all contract documentation and vendor coordination.",
+  },
+  {
+    title: "Site Supervision",
+    description: "Detailed monitoring, including daily reports, safety logs, and vendor check-ins.",
+  },
+];
+
+export const packages = [
+  {
+    name: "Consult Package",
+    description: "Basic consultancy",
+    includes: [
+      "Expert consultation",
+      "Site feasibility guidance",
+      "Basic planning advice",
+    ],
+  },
+  {
+    name: "Assist Package",
+    description: "Consultancy + Labour",
+    includes: [
+      "Consultancy",
+      "Skilled labour team",
+      "Basic supervision",
+      "Execution support",
+    ],
+  },
+  {
+    name: "BOQ Package",
+    description: "Detailed BOQ service",
+    includes: [
+      "Bill of Quantity",
+      "Material estimation",
+      "Cost planning",
+      "Optimised budget suggestions",
+    ],
+  },
+  {
+    name: "Smart Package",
+    description: "Smart contract – choose services",
+    includes: [
+      "Consultancy",
+      "Labour",
+      "BOQ",
+      "Site visits",
+      "Quality checks",
+      "Add-on services (pay-per-service)",
+    ],
+  },
 ];

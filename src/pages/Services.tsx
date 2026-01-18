@@ -64,7 +64,7 @@ const Services = () => {
         <title>Professional Services | Brixx Space Construction Consultation</title>
         <meta
           name="description"
-          content="Expert construction consultation services backed by 30+ years of experience. Design coordination, budget management, quality assurance, and more."
+          content="Expert construction consultation services backed by 35+ years of experience. Design coordination, budget management, quality assurance, and more."
         />
       </Helmet>
       <Layout>
@@ -94,7 +94,7 @@ const Services = () => {
               </h1>
 
               <p className="text-xl text-slate-300 leading-relaxed mb-8">
-                Comprehensive project advisory backed by 30+ years of industry expertise. From concept to completion, we ensure excellence at every stage.
+                Comprehensive project advisory backed by 35+ years of industry expertise. From concept to completion, we ensure excellence at every stage.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -236,7 +236,7 @@ const Services = () => {
                   </p>
                   <ul className="space-y-4">
                     {[
-                      "30+ years of industry experience",
+                      "35+ years of industry experience",
                       "500+ successful projects delivered",
                       "Expert team of qualified professionals",
                       "Commitment to quality and timely delivery",

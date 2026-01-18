@@ -16,6 +16,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus, Pencil, Trash2, Star, Quote } from "lucide-react";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { toast } from "sonner";
 
 export default function AdminTestimonials() {
     const { user, loading: authLoading } = useAuth();
@@ -28,6 +30,8 @@ export default function AdminTestimonials() {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
+    const [uploading, setUploading] = useState(false);
+
     const [formData, setFormData] = useState({
         name: "",
         role: "",
@@ -36,6 +40,23 @@ export default function AdminTestimonials() {
         avatar_url: "",
         featured: false,
     });
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const url = await uploadImageToCloudinary(file);
+            setFormData(prev => ({ ...prev, avatar_url: url }));
+            toast.success("Avatar uploaded successfully");
+        } catch (error) {
+            console.error("Upload error:", error);
+            toast.error("Failed to upload avatar");
+        } finally {
+            setUploading(false);
+        }
+    };
 
     useEffect(() => {
         if (!authLoading && !user) navigate("/auth");
@@ -181,12 +202,35 @@ export default function AdminTestimonials() {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="avatar_url">Avatar URL</Label>
-                                        <Input
-                                            id="avatar_url"
-                                            value={formData.avatar_url}
-                                            onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
-                                        />
+                                        <Label htmlFor="avatar">Client Avatar</Label>
+                                        <div className="flex flex-col gap-4">
+                                            <Input
+                                                id="avatar"
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                disabled={uploading}
+                                            />
+                                            {uploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+                                            {formData.avatar_url && (
+                                                <div className="relative w-20 h-20 rounded-full overflow-hidden border border-border">
+                                                    <img
+                                                        src={formData.avatar_url}
+                                                        alt="Avatar Preview"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <Button
+                                                        type="button"
+                                                        variant="destructive"
+                                                        size="icon"
+                                                        className="absolute top-0 right-0 h-5 w-5 rounded-full"
+                                                        onClick={() => setFormData(prev => ({ ...prev, avatar_url: "" }))}
+                                                    >
+                                                        <Trash2 className="h-3 w-3" />
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="flex justify-end gap-2 pt-4">
                                         <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>

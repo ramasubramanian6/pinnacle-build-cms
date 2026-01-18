@@ -5,6 +5,7 @@ import { AboutSection } from "@/components/home/AboutSection";
 import { PackagesSection } from "@/components/home/PackagesSection";
 import { PropertiesSection } from "@/components/home/PropertiesSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
+import { ConsultationCTA } from "@/components/home/ConsultationCTA";
 
 const Index = () => {
   return (
@@ -13,7 +14,7 @@ const Index = () => {
         <title>Brixx Space | Professional Construction Consultation & Advisory in Tirunelveli</title>
         <meta
           name="description"
-          content="Brixx Space - Professional construction consultation and project advisory firm backed by 30+ years of industry expertise. Expert services in Tirunelveli, Tamil Nadu."
+          content="Brixx Space - Professional construction consultation and project advisory firm backed by 35+ years of industry expertise. Expert services in Tirunelveli, Tamil Nadu."
         />
         <meta name="keywords" content="construction consultation Tirunelveli, project advisory Tamil Nadu, civil engineering, construction planning, Brixx Space" />
         <link rel="canonical" href="https://brixxspace.com" />

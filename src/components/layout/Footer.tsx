@@ -77,7 +77,7 @@ export const Footer = () => {
               />
             </Link>
             <p className="text-muted-foreground mb-6 leading-relaxed">
-              Professional construction consultation and project advisory firm backed by 30+ years of industry expertise.
+              Professional construction consultation and project advisory firm backed by 35+ years of industry expertise.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social) => (

@@ -62,7 +62,7 @@ export const AboutSection = () => {
                     </h2>
                     <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
                         Brixx Space is a professional construction consultation and project advisory firm backed by{" "}
-                        <span className="font-semibold text-amber-700">30+ years of industry expertise</span>.
+                        <span className="font-semibold text-amber-700">35+ years of industry expertise</span>.
                         Led by experienced professionals, we provide end-to-end construction consulting, technical planning,
                         and execution guidance.
                     </p>

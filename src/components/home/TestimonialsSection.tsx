@@ -45,9 +45,7 @@ export const TestimonialsSection = () => {
                             Clients Say
                         </span>
                     </h2>
-                    <p className="text-lg md:text-xl text-black max-w-3xl mx-auto">
-                        Trusted by hundreds of satisfied clients across Tamil Nadu
-                    </p>
+
                 </motion.div>
 
                 {/* Testimonials Grid */}
@@ -116,32 +114,7 @@ export const TestimonialsSection = () => {
                 )}
 
                 {/* Bottom Stats */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
-                >
-                    {[
-                        { value: "500+", label: "Happy Clients" },
-                        { value: "4.9/5", label: "Average Rating" },
-                        { value: "100%", label: "Satisfaction Rate" },
-                        { value: "35+", label: "Years of Trust" },
-                    ].map((stat, index) => (
-                        <div
-                            key={index}
-                            className="text-center p-6 rounded-2xl bg-gradient-to-br from-amber-500/5 to-yellow-600/5 border border-amber-500/20"
-                        >
-                            <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent mb-2">
-                                {stat.value}
-                            </div>
-                            <div className="text-sm text-slate-600">
-                                {stat.label}
-                            </div>
-                        </div>
-                    ))}
-                </motion.div>
+
             </div>
         </section>
     );

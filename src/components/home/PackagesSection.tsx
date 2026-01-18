@@ -57,7 +57,7 @@ export const PackagesSection = () => {
                                 className="group relative"
                             >
                                 {/* Featured Badge */}
-                                {pkg.featured && (
+                                {pkg.is_popular && (
                                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
                                         <div className="flex items-center gap-1 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 shadow-lg shadow-amber-500/50">
                                             <Star className="w-3.5 h-3.5 text-white fill-white" />
@@ -67,14 +67,14 @@ export const PackagesSection = () => {
                                 )}
 
                                 <div
-                                    className={`relative h-full p-8 rounded-3xl border transition-all duration-500 ${pkg.featured
-                                            ? "bg-gradient-to-br from-amber-500/10 to-yellow-600/10 border-amber-500/50 shadow-2xl shadow-amber-500/20 scale-105"
-                                            : "bg-white/5 border-white/10 hover:border-amber-500/30 hover:bg-white/10"
+                                    className={`relative h-full p-8 rounded-3xl border transition-all duration-500 ${pkg.is_popular
+                                        ? "bg-gradient-to-br from-amber-500/10 to-yellow-600/10 border-amber-500/50 shadow-2xl shadow-amber-500/20 scale-105"
+                                        : "bg-white/5 border-white/10 hover:border-amber-500/30 hover:bg-white/10"
                                         }`}
                                 >
                                     {/* Package Name */}
                                     <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">
-                                        {pkg.name}
+                                        {pkg.title}
                                     </h3>
 
                                     {/* Description */}
@@ -83,21 +83,21 @@ export const PackagesSection = () => {
                                     </p>
 
                                     {/* Price Info */}
-                                    {pkg.price_info && (
+                                    {pkg.price && (
                                         <div className="mb-6 pb-6 border-b border-white/10">
                                             <p className="text-amber-400 font-semibold text-lg">
-                                                {pkg.price_info}
+                                                {pkg.price}
                                             </p>
                                         </div>
                                     )}
 
                                     {/* Includes List */}
-                                    {pkg.includes && pkg.includes.length > 0 && (
+                                    {pkg.features && pkg.features.length > 0 && (
                                         <div className="space-y-3 mb-8">
                                             <p className="text-sm font-semibold text-slate-300 uppercase tracking-wide">
                                                 Includes:
                                             </p>
-                                            {pkg.includes.map((item, idx) => (
+                                            {pkg.features.map((item, idx) => (
                                                 <div key={idx} className="flex items-start gap-3">
                                                     <div className="mt-0.5 flex-shrink-0">
                                                         <div className="w-5 h-5 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center">
@@ -114,9 +114,9 @@ export const PackagesSection = () => {
 
                                     {/* CTA Button */}
                                     <Button
-                                        className={`w-full h-12 font-semibold transition-all duration-300 ${pkg.featured
-                                                ? "bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-900 shadow-lg shadow-amber-500/30"
-                                                : "bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-amber-500/50"
+                                        className={`w-full h-12 font-semibold transition-all duration-300 ${pkg.is_popular
+                                            ? "bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-900 shadow-lg shadow-amber-500/30"
+                                            : "bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-amber-500/50"
                                             }`}
                                     >
                                         Choose Package
@@ -138,12 +138,14 @@ export const PackagesSection = () => {
                     <p className="text-slate-300 mb-6">
                         Not sure which package is right for you?
                     </p>
-                    <Button
-                        size="lg"
-                        className="bg-white/10 hover:bg-white/20 text-white border-2 border-white/20 hover:border-amber-500/50 backdrop-blur-sm transition-all duration-300"
+                    <a
+                        href="https://api.whatsapp.com/send?phone=919894948011&text=Hi%2C%20I%27m%20interested%20in%20a%20consultation%20for%20my%20construction%20project."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center h-11 rounded-md px-8 text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white/10 hover:bg-white/20 text-white border-2 border-white/20 hover:border-amber-500/50 backdrop-blur-sm transition-all duration-300"
                     >
                         Schedule a Consultation
-                    </Button>
+                    </a>
                 </motion.div>
             </div>
         </section>

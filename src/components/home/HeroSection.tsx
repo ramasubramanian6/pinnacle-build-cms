@@ -14,7 +14,7 @@ export const HeroSection = () => {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center bg-[#080808] overflow-hidden"
+      className="relative min-h-screen flex items-center bg-[#080808] overflow-hidden pt-32"
     >
       {/* Dynamic Background Layer */}
       <motion.div
@@ -36,21 +36,7 @@ export const HeroSection = () => {
       <div className="container mx-auto px-6 relative z-20">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-8">
-            {/* Premium Badge */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="inline-flex items-center gap-3 px-4 py-2 mb-8 bg-white/5 border border-white/10 backdrop-blur-md rounded-full"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
-              </span>
-              <span className="text-xs font-semibold text-white/80 uppercase tracking-[0.3em]">
-                Excellence since 1993
-              </span>
-            </motion.div>
+
 
             {/* Title with Playfair Display */}
             <motion.div
@@ -105,27 +91,7 @@ export const HeroSection = () => {
             </motion.div>
           </div>
 
-          {/* Right Column - Highlight Cards */}
-          <div className="lg:col-span-4 hidden lg:block">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.8 }}
-              className="space-y-6"
-            >
-              <div className="p-8 bg-white/5 border border-white/10 backdrop-blur-xl hover:border-gold/50 transition-colors duration-500">
-                <Trophy className="w-10 h-10 text-gold mb-4" />
-                <h3 className="text-3xl font-bold text-white mb-2 font-display">500+</h3>
-                <p className="text-white/40 uppercase text-xs tracking-widest font-semibold">Iconic Projects Completed</p>
-              </div>
 
-              <div className="p-8 bg-white/5 border border-white/10 backdrop-blur-xl hover:border-gold/50 transition-colors duration-500">
-                <ShieldCheck className="w-10 h-10 text-gold mb-4" />
-                <h3 className="text-3xl font-bold text-white mb-2 font-display">30+</h3>
-                <p className="text-white/40 uppercase text-xs tracking-widest font-semibold">Years of Engineering Mastery</p>
-              </div>
-            </motion.div>
-          </div>
         </div>
       </div>
 

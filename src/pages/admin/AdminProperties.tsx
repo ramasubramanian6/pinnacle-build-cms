@@ -50,6 +50,7 @@ export default function AdminProperties() {
     dimensions: "",
     facing: "",
     zoning: "Residential",
+    amenities: "",
   });
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function AdminProperties() {
       dimensions: "",
       facing: "",
       zoning: "Residential",
+      amenities: "",
     });
     setEditingProperty(null);
   };
@@ -116,16 +118,29 @@ export default function AdminProperties() {
       dimensions: property.dimensions || "",
       facing: property.facing || "",
       zoning: property.zoning || "Residential",
+      amenities: property.amenities ? property.amenities.join(", ") : "",
     });
     setIsDialogOpen(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Convert amenities string to array
+    const amenitiesArray = formData.amenities
+      .split(",")
+      .map(item => item.trim())
+      .filter(item => item !== "");
+
+    const submissionData = {
+      ...formData,
+      amenities: amenitiesArray
+    };
+
     if (editingProperty) {
-      await updateProperty.mutateAsync({ id: editingProperty.id, ...formData });
+      await updateProperty.mutateAsync({ id: editingProperty.id, ...submissionData });
     } else {
-      await createProperty.mutateAsync(formData);
+      await createProperty.mutateAsync(submissionData);
     }
     setIsDialogOpen(false);
     resetForm();
@@ -215,7 +230,7 @@ export default function AdminProperties() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="available">Available</SelectItem>
+                          <SelectItem value="available">Seeking Properties</SelectItem>
                           <SelectItem value="sold">Sold</SelectItem>
                           <SelectItem value="reserved">Reserved</SelectItem>
                         </SelectContent>
@@ -274,6 +289,15 @@ export default function AdminProperties() {
                       id="address"
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="amenities">Amenities (comma separated)</Label>
+                    <Textarea
+                      id="amenities"
+                      placeholder="e.g. Park, Clubhouse, Security"
+                      value={formData.amenities}
+                      onChange={(e) => setFormData({ ...formData, amenities: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
@@ -411,7 +435,7 @@ export default function AdminProperties() {
                                   : "bg-orange-500/10 text-orange-400"
                             }
                           >
-                            {property.status}
+                            {property.status === "available" ? "Seeking Properties" : property.status}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">

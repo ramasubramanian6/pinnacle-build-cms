@@ -11,6 +11,7 @@ import { AnimatedCounter } from "@/components/premium/ProgressRing";
 import { useProjects, useProjectStats } from "@/hooks/useProjects";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
 // Fallback images removed
 const fallbackImages = ["/placeholder.svg"];
 
@@ -113,7 +114,7 @@ const Projects = () => {
           <div className="container mx-auto px-6">
             {isLoading && fetchedProjects.length === 0 ? (
               <div className="flex justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                <LuxuryLoader />
               </div>
             ) : filteredProjects.length === 0 ? (
               <div className="text-center py-20">
@@ -173,29 +174,13 @@ const Projects = () => {
                             )}
                           </div>
 
-                          {user ? (
-                            <>
-                              <div className="flex items-center gap-1 text-muted-foreground mb-3">
-                                <Calendar size={14} className="text-accent" />
-                                <span className="text-sm">{getProjectYear(project)}</span>
-                              </div>
-                              <p className="text-muted-foreground text-sm line-clamp-2">
-                                {project.description}
-                              </p>
-                            </>
-                          ) : (
-                            <div className="pt-3 border-t border-border">
-                              <div className="flex items-center gap-2 text-muted-foreground mb-3">
-                                <Lock size={14} />
-                                <span className="text-sm">Login to view full details</span>
-                              </div>
-                              <Link to="/auth" onClick={(e) => e.stopPropagation()}>
-                                <Button variant="gold" size="sm" className="w-full">
-                                  Login to View
-                                </Button>
-                              </Link>
-                            </div>
-                          )}
+                          <div className="flex items-center gap-1 text-muted-foreground mb-3">
+                            <Calendar size={14} className="text-accent" />
+                            <span className="text-sm">{getProjectYear(project)}</span>
+                          </div>
+                          <p className="text-muted-foreground text-sm line-clamp-2">
+                            {project.description}
+                          </p>
                         </div>
                       </GlassmorphismCard>
                     </Link>

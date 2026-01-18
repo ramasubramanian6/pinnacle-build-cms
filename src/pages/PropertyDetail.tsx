@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
+import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
 import { motion } from "framer-motion";
 import {
     MapPin,
@@ -29,27 +30,14 @@ const PropertyDetail = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    // Redirect to login if not authenticated
-    useEffect(() => {
-        if (!user) {
-            navigate("/auth", { state: { from: `/properties/${id}` } });
-        }
-    }, [user, navigate, id]);
-
     // Fetch property details
     const { data: property, isLoading } = useProperty(id || "");
 
-    if (!user) {
-        return null; // Will redirect
-    }
-
     if (isLoading) {
         return (
-            <Layout>
-                <div className="container mx-auto px-6 py-24 text-center">
-                    <p className="text-slate-600">Loading property details...</p>
-                </div>
-            </Layout>
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <LuxuryLoader />
+            </div>
         );
     }
 
@@ -125,7 +113,7 @@ const PropertyDetail = () => {
                                 className="max-w-4xl"
                             >
                                 <span className={`inline-block px-4 py-2 rounded-full text-sm font-bold mb-4 ${getStatusColor(property.status)}`}>
-                                    {property.status}
+                                    {property.status === "available" ? "Seeking Properties" : property.status}
                                 </span>
                                 <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
                                     {property.title}
@@ -180,7 +168,11 @@ const PropertyDetail = () => {
                                             )}
                                             <div className="text-center">
                                                 <Calendar className="w-6 h-6 text-[#FFB800] mx-auto mb-2" />
-                                                <p className="text-2xl font-bold text-slate-900">{new Date(property.created_at).getFullYear()}</p>
+                                                <p className="text-2xl font-bold text-slate-900">
+                                                    {property.created_at && !isNaN(new Date(property.created_at).getTime())
+                                                        ? new Date(property.created_at).getFullYear()
+                                                        : "Recently"}
+                                                </p>
                                                 <p className="text-sm text-slate-600">Listed</p>
                                             </div>
                                         </div>
@@ -197,11 +189,10 @@ const PropertyDetail = () => {
                                             About This Property
                                         </h2>
                                         <p className="text-slate-700 leading-relaxed text-lg">
-                                            {property.description || `This premium ${property.title.toLowerCase()} is located in the heart of ${property.location}. Featuring ${property.area_sqft} square feet of thoughtfully designed space, this property offers modern amenities and exceptional quality construction by Brixx Space.`}
+                                            {property.description || `This premium ${property.property_type.toLowerCase()} is located in the heart of ${property.location}. Featuring ${property.area_sqft} square feet of thoughtfully designed space, this property offers modern amenities and exceptional quality construction by BRIXXSPACE.`}
                                         </p>
                                     </motion.div>
 
-                                    {/* Features */}
                                     {/* Features */}
                                     <motion.div
                                         initial={{ opacity: 0, y: 30 }}
@@ -213,21 +204,16 @@ const PropertyDetail = () => {
                                             Key Features
                                         </h2>
                                         <div className="grid md:grid-cols-2 gap-4">
-                                            {[
-                                                "Premium Construction Quality",
-                                                "Modern Architecture",
-                                                "Prime Location",
-                                                "Excellent Connectivity",
-                                                "Vastu Compliant",
-                                                "Gated Community",
-                                                "24/7 Security",
-                                                "Power Backup"
-                                            ].map((feature, index) => (
-                                                <div key={index} className="flex items-center gap-3 p-4 rounded-xl bg-white border border-slate-200">
-                                                    <CheckCircle2 className="w-5 h-5 text-[#FFB800] flex-shrink-0" />
-                                                    <span className="text-slate-700">{feature}</span>
-                                                </div>
-                                            ))}
+                                            {property.amenities && property.amenities.length > 0 ? (
+                                                property.amenities.map((feature, index) => (
+                                                    <div key={index} className="flex items-center gap-3 p-4 rounded-xl bg-white border border-slate-200">
+                                                        <CheckCircle2 className="w-5 h-5 text-[#FFB800] flex-shrink-0" />
+                                                        <span className="text-slate-700">{feature}</span>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p className="text-slate-500">No specific features listed.</p>
+                                            )}
                                         </div>
                                     </motion.div>
 
@@ -343,7 +329,13 @@ const PropertyDetail = () => {
                                                 <Share2 className="w-5 h-5 text-[#FFB800]" />
                                                 Share Property
                                             </h3>
-                                            <Button variant="outline" className="w-full">
+                                            <Button
+                                                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white border-none"
+                                                onClick={() => {
+                                                    const text = `Check out this property: ${property.title}\n${window.location.href}`;
+                                                    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                                                }}
+                                            >
                                                 Share via WhatsApp
                                             </Button>
                                         </motion.div>
@@ -353,7 +345,14 @@ const PropertyDetail = () => {
                         </div>
                     </div>
                 </section>
-            </Layout>
+
+
+                {/* DEBUG SECTION - TO BE REMOVED */}
+                {/* <section className="container mx-auto px-6 py-4 bg-gray-100 mt-8 rounded text-xs overflow-auto">
+                    <p className="font-bold mb-2">Debug Data (Developer Only):</p>
+                    <pre>{JSON.stringify(property, null, 2)}</pre>
+                </section> */}
+            </Layout >
         </>
     );
 };

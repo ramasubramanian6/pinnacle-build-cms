@@ -15,29 +15,22 @@ import {
     Mail,
     Share2
 } from "lucide-react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProject } from "@/hooks/useProjects";
+import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
+
 const fallbackImages = ["/placeholder.svg"];
-
-
 
 const ProjectDetail = () => {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
-    const navigate = useNavigate();
 
-    // Redirect if not authenticated
     // Check if already interested
     const [interestSent, setInterestSent] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
-    useEffect(() => {
-        if (!user) {
-            navigate("/auth", { state: { from: `/projects/${id}` } });
-        }
-    }, [user, navigate, id]);
 
     const { data: fetchedProject, isLoading } = useProject(id || "");
 
@@ -56,7 +49,11 @@ const ProjectDetail = () => {
     }, [user, project]);
 
     const handleInterest = async () => {
-        if (!user || !project) return;
+        if (!user) {
+            toast.error("Please login to register interest");
+            return;
+        }
+        if (!project) return;
         setSubmitting(true);
         try {
             await api.post('/contacts', {
@@ -76,15 +73,11 @@ const ProjectDetail = () => {
         }
     };
 
-    if (!user) return null; // Will redirect
-
-    if (isLoading && !project) {
+    if (isLoading) {
         return (
-            <Layout>
-                <div className="container mx-auto px-6 py-24 text-center">
-                    <p className="text-slate-600">Loading project details...</p>
-                </div>
-            </Layout>
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <LuxuryLoader />
+            </div>
         );
     }
 
@@ -271,7 +264,13 @@ const ProjectDetail = () => {
                                                 <Share2 className="w-5 h-5 text-accent" />
                                                 Share Project
                                             </h3>
-                                            <Button variant="outline" className="w-full">
+                                            <Button
+                                                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white border-none"
+                                                onClick={() => {
+                                                    const text = `Check out this project: ${project.title}\n${window.location.href}`;
+                                                    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                                                }}
+                                            >
                                                 Share via WhatsApp
                                             </Button>
                                         </motion.div>
