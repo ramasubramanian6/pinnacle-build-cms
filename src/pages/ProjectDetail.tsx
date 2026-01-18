@@ -15,7 +15,7 @@ import {
     Mail,
     Share2
 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProject } from "@/hooks/useProjects";
@@ -26,6 +26,15 @@ const fallbackImages = ["/placeholder.svg"];
 const ProjectDetail = () => {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Protect Route
+    useEffect(() => {
+        if (!user) {
+            navigate("/auth", { state: { from: location }, replace: true });
+        }
+    }, [user, navigate, location]);
 
     // Check if already interested
     const [interestSent, setInterestSent] = useState(false);

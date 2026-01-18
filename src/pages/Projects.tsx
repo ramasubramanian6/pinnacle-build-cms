@@ -133,7 +133,11 @@ const Projects = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     layout
                   >
-                    <Link to={`/projects/${project.id}`} className="group block">
+                    <Link
+                      to={user ? `/projects/${project.id}` : "/auth"}
+                      state={!user ? { from: { pathname: `/projects/${project.id}` } } : undefined}
+                      className="group block"
+                    >
                       <GlassmorphismCard hover className="overflow-hidden">
                         <div className="relative h-[280px] overflow-hidden">
                           <img

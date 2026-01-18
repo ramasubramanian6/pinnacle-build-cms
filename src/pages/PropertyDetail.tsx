@@ -15,7 +15,7 @@ import {
     ArrowLeft,
     Share2
 } from "lucide-react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
@@ -32,6 +32,15 @@ const PropertyDetail = () => {
 
     // Fetch property details
     const { data: property, isLoading } = useProperty(id || "");
+
+    const location = useLocation();
+
+    // Protect Route: Redirect to login if not authenticated
+    useEffect(() => {
+        if (!user) {
+            navigate("/auth", { state: { from: location }, replace: true });
+        }
+    }, [user, navigate, location]);
 
     if (isLoading) {
         return (

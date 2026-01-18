@@ -159,7 +159,7 @@ const Properties = () => {
                           </div>
                         </div>
 
-                        {property.bedrooms && (
+                        {user && property.bedrooms && (
                           <div className="flex gap-4 text-sm text-muted-foreground mb-4">
                             <span>{property.bedrooms} Beds</span>
                             <span>{property.bathrooms} Baths</span>
@@ -167,9 +167,9 @@ const Properties = () => {
                         )}
 
                         <div className="pt-4 border-t border-border">
-                          <Link to={`/properties/${property.id}`}>
+                          <Link to={user ? `/properties/${property.id}` : "/auth"} state={!user ? { from: { pathname: `/properties/${property.id}` } } : undefined}>
                             <Button variant="gold" className="w-full">
-                              View Details
+                              {user ? "View Details" : "Login to View Details"}
                             </Button>
                           </Link>
                         </div>

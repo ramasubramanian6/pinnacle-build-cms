@@ -95,15 +95,15 @@ export const PropertiesSection = () => {
                                             </div>
                                         )}
 
-                                        {property.description && (
+                                        {user && property.description && (
                                             <p className="text-slate-400 text-sm mb-4 line-clamp-2">
                                                 {property.description}
                                             </p>
                                         )}
 
-                                        <Link to={`/properties/${property.id}`}>
+                                        <Link to={user ? `/properties/${property.id}` : "/auth"} state={!user ? { from: { pathname: `/properties/${property.id}` } } : undefined}>
                                             <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-900 font-semibold">
-                                                View Details
+                                                {user ? "View Details" : "Login to View Details"}
                                             </Button>
                                         </Link>
                                     </div>

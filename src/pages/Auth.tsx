@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
@@ -41,6 +41,7 @@ const Auth = () => {
 
   const { user, loading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Redirect if already logged in
   if (!loading && user) {
@@ -87,7 +88,8 @@ const Auth = () => {
         }
 
         toast.success("Welcome back!");
-        navigate("/dashboard");
+        const from = location.state?.from?.pathname || "/dashboard";
+        navigate(from, { replace: true });
       } else {
         const result = signupSchema.safeParse(formData);
         if (!result.success) {

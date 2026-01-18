@@ -9,8 +9,11 @@ import { useBlogs } from "@/hooks/useBlogs";
 // Static blog data (fallback)
 // Static data removed
 
+import { useAuth } from "@/contexts/AuthContext";
+
 const Blog = () => {
   const { data: fetchedBlogs, isLoading } = useBlogs();
+  const { user } = useAuth();
 
   // Use fetched blogs if available, otherwise fall back to static data
   // Use fetched blogs only
@@ -98,7 +101,10 @@ const Blog = () => {
                 viewport={{ once: true }}
                 className="max-w-7xl mx-auto"
               >
-                <Link to={`/blog/${featuredPost.slug}`}>
+                <Link
+                  to={user ? `/blog/${featuredPost.slug}` : "/auth"}
+                  state={!user ? { from: { pathname: `/blog/${featuredPost.slug}` } } : undefined}
+                >
                   <div className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 border border-[#FFB800]/20 hover:border-[#FFB800]/50 transition-all duration-500">
                     <div className="grid lg:grid-cols-2 gap-0">
                       {/* Image */}
@@ -163,7 +169,10 @@ const Blog = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <Link to={`/blog/${post.slug}`}>
+                  <Link
+                    to={user ? `/blog/${post.slug}` : "/auth"}
+                    state={!user ? { from: { pathname: `/blog/${post.slug}` } } : undefined}
+                  >
                     <div className="group h-full rounded-3xl overflow-hidden bg-white border border-slate-200 hover:border-[#FFB800]/50 hover:shadow-2xl hover:shadow-[#FFB800]/10 transition-all duration-500">
                       {/* Image */}
                       <div className="relative h-56 overflow-hidden">

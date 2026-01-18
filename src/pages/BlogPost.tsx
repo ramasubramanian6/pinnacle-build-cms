@@ -2,15 +2,57 @@ import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useBlog, useBlogs } from "@/hooks/useBlogs";
+import { useAuth } from "@/contexts/AuthContext";
 import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+// Simple Markdown Parser to avoid external dependencies
+const parseContent = (content: string) => {
+    if (!content) return "";
+
+    let html = content
+        // Headers
+        .replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold text-slate-900 mt-6 mb-3">$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-slate-900 mt-8 mb-4">$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1 class="text-3xl font-bold text-slate-900 mt-8 mb-6">$1</h1>')
+        // Bold
+        .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+        // Tables (Basic support)
+        .replace(/\|(.+)\|/gim, (match) => {
+            const cells = match.split('|').filter(cell => cell.trim() !== '');
+            return `<tr class="border-b border-slate-200">${cells.map(cell => `<td class="p-2">${cell.trim()}</td>`).join('')}</tr>`;
+        })
+        // Lists (Unordered)
+        .replace(/^\* (.*$)/gim, '<li class="ml-4 list-disc text-slate-700 mb-1">$1</li>')
+        // Paragraphs (double newlines)
+        .replace(/\n\n/gim, '</p><p class="mb-4 text-slate-700 leading-relaxed">')
+        // Line breaks
+        .replace(/\n/gim, '<br />');
+
+    // Wrap tables
+    html = html.replace(/(<tr.*<\/tr>)/gis, '<div class="overflow-x-auto my-6"><table class="w-full text-left border-collapse">$1</table></div>');
+
+    // Wrap lists in ul (simplified) - usually parser handles this better but for simple display:
+    // We'll mostly rely on the list items being styled individually or simple substitution
+
+    return `<div class="prose-slate">${html}</div>`;
+};
 
 const BlogPost = () => {
     const { slug } = useParams<{ slug: string }>();
+    const { user } = useAuth(); // Assume useAuth is available
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Protect Route
+    useEffect(() => {
+        if (!user) {
+            navigate("/auth", { state: { from: location }, replace: true });
+        }
+    }, [user, navigate, location]);
+
     const { data: post, isLoading } = useBlog(slug || "");
     const { data: allPosts } = useBlogs();
 
@@ -101,19 +143,16 @@ const BlogPost = () => {
                 {/* Article Content */}
                 <section className="py-16 bg-white">
                     <div className="container mx-auto px-6">
-                        <div className="max-w-4xl mx-auto">
-                            <div className="grid lg:grid-cols-[1fr_300px] gap-12">
+                        <div className="max-w-7xl mx-auto">
+                            <div className="grid lg:grid-cols-[1fr_350px] gap-12">
                                 {/* Main Content */}
                                 <motion.article
                                     initial={{ opacity: 0, y: 30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.6, delay: 0.2 }}
-                                    className="text-lg prose prose-lg prose-slate max-w-none hover:prose-a:text-[#FFB800] prose-a:transition-colors prose-headings:font-display prose-headings:font-bold prose-headings:text-slate-900 prose-p:text-slate-700 prose-li:text-slate-700 prose-strong:text-slate-900"
-                                >
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                        {post.content || ""}
-                                    </ReactMarkdown>
-                                </motion.article>
+                                    className="text-lg prose prose-lg prose-slate max-w-none hover:prose-a:text-[#FFB800] prose-a:transition-colors"
+                                    dangerouslySetInnerHTML={{ __html: parseContent(post.content || "") }}
+                                />
 
                                 {/* Sidebar */}
                                 <aside className="space-y-8">
