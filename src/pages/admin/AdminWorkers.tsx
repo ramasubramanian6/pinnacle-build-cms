@@ -31,6 +31,9 @@ export default function AdminWorkers() {
         name: "",
         role: "",
         bio: "",
+        position: "",
+        phone: "",
+        email: "",
         image_url: "",
         order_index: 0,
     });
@@ -48,6 +51,9 @@ export default function AdminWorkers() {
             name: "",
             role: "",
             bio: "",
+            position: "",
+            phone: "",
+            email: "",
             image_url: "",
             order_index: 0,
         });
@@ -60,6 +66,9 @@ export default function AdminWorkers() {
             name: worker.name,
             role: worker.role,
             bio: worker.bio || "",
+            position: worker.position || "",
+            phone: worker.phone || "",
+            email: worker.email || "",
             image_url: worker.image_url || "",
             order_index: worker.order_index,
         });
@@ -138,6 +147,36 @@ export default function AdminWorkers() {
                                             value={formData.bio}
                                             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                                             rows={4}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="position">Position / Title</Label>
+                                            <Input
+                                                id="position"
+                                                placeholder="e.g., Managing Director"
+                                                value={formData.position}
+                                                onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="phone">Phone</Label>
+                                            <Input
+                                                id="phone"
+                                                placeholder="e.g., +91 98765 43210"
+                                                value={formData.phone}
+                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="email">Email</Label>
+                                        <Input
+                                            id="email"
+                                            type="email"
+                                            placeholder="e.g., contact@brixxspace.com"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">

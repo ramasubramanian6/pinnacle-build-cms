@@ -8,6 +8,9 @@ export interface Worker {
   role: string;
   image_url: string | null;
   bio: string | null;
+  position?: string;
+  phone?: string;
+  email?: string;
   social_links: Record<string, string> | null;
   order_index: number;
   created_at?: string;

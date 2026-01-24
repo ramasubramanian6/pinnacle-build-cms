@@ -16,6 +16,15 @@ const workerSchema = mongoose.Schema(
         bio: {
             type: String,
         },
+        position: {
+            type: String,
+        },
+        phone: {
+            type: String,
+        },
+        email: {
+            type: String,
+        },
         social_links: {
             type: Map,
             of: String
