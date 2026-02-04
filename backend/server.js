@@ -33,6 +33,8 @@ app.use('/api/testimonials', require('./routes/testimonialRoutes'));
 app.use('/api/workers', require('./routes/workerRoutes'));
 app.use('/api/packages', require('./routes/packageRoutes'));
 app.use('/api/contacts', require('./routes/contactRoutes'));
+app.use('/api/slider-images', require('./routes/sliderImageRoutes'));
+app.use('/api/promotions', require('./routes/promotionRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');

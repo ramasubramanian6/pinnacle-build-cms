@@ -1,4 +1,4 @@
-import { Building2, Home, Mail, FolderKanban, LogOut, Settings } from "lucide-react";
+import { Building2, Home, Mail, FolderKanban, LogOut, Settings, Image, Tag } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,8 @@ const menuItems = [
   { title: "Properties", url: "/admin/properties", icon: Building2 },
   { title: "Services", url: "/admin/services", icon: Settings },
   { title: "Blogs", url: "/admin/blogs", icon: FolderKanban },
+  { title: "Slider Images", url: "/admin/slider-images", icon: Image },
+  { title: "Flash Deals", url: "/admin/promotions", icon: Tag },
   { title: "Testimonials", url: "/admin/testimonials", icon: Mail },
   { title: "Contacts", url: "/admin/contacts", icon: Mail },
 ];

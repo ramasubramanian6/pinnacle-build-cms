@@ -5,7 +5,7 @@ import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
 import { GlassmorphismCard } from "@/components/premium/GlassmorphismCard";
 import { AnimatedText, GradientText } from "@/components/premium/AnimatedText";
 import { ProgressRing } from "@/components/premium/ProgressRing";
-import { aboutStats, milestones, coreValues, visionMission, founderQuote, companyIntro, leadershipTeam, capabilities, coreServicesList, packages } from "@/data/about";
+import { aboutStats, milestones, coreValues, visionMission, founderQuote, companyIntro, leadershipTeam, capabilities, coreServicesList, processSteps, packages } from "@/data/about";
 import heroImage from "@/assets/hero-construction.jpg";
 import brixxspaceLogo from "@/assets/brixxspace-logo.png";
 import { Button } from "@/components/ui/button";
@@ -186,15 +186,50 @@ const About = () => {
           </div>
         </section>
 
-        {/* 4. Core Services (Engineering Intelligence) */}
+        {/* 4. Core Services (New List) */}
+        <section className="py-24 bg-background">
+          <div className="container mx-auto px-6">
+            <ScrollReveal className="text-center mb-16">
+              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
+                What We Offer
+              </span>
+              <h2 className="font-display text-4xl font-bold text-foreground">
+                Core Services
+              </h2>
+              <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+                Comprehensive construction and development solutions tailored to your needs.
+              </p>
+            </ScrollReveal>
+
+            <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
+              {coreServicesList.map((service, index) => (
+                <ScrollReveal key={index} delay={index * 0.1}>
+                  <GlassmorphismCard hover className="h-full flex flex-col p-6">
+                    <div className="mb-4 p-3 rounded-full bg-accent/10 w-fit">
+                      <Ruler className="w-6 h-6 text-accent" />
+                    </div>
+                    <h3 className="font-display text-lg font-bold text-foreground mb-2">
+                      {service.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {service.description}
+                    </p>
+                  </GlassmorphismCard>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Our Process (Old Core Services) */}
         <section className="py-24 bg-secondary">
           <div className="container mx-auto px-6">
             <ScrollReveal className="text-center mb-16">
               <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
-                Our Process
+                How We Work
               </span>
               <h2 className="font-display text-4xl font-bold text-foreground">
-                Core Services
+                Our Process
               </h2>
               <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
                 BRIXX SPACE provides comprehensive expertise across all critical construction phases.
@@ -202,7 +237,7 @@ const About = () => {
             </ScrollReveal>
 
             <StaggerReveal className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {coreServicesList.map((service, index) => (
+              {processSteps.map((service, index) => (
                 <div key={index} className="relative">
                   <div className="bg-background rounded-xl p-6 h-full border border-border hover:border-accent/50 transition-colors group shadow-sm">
                     <div className="text-4xl font-bold text-accent/10 absolute top-4 right-4 group-hover:text-accent/20 transition-colors">

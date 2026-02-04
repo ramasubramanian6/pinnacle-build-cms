@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useWorkers } from "@/hooks/useWorkers";
 import { Building2, Award, Shield, Users, Phone, Mail } from "lucide-react";
+import { ImageSlider } from "@/components/home/ImageSlider";
 
 export const AboutSection = () => {
     const { data: workers, isLoading } = useWorkers();
@@ -158,6 +159,19 @@ export const AboutSection = () => {
                     </div>
                 </motion.div>
 
+
+
+                {/* Slider Section */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-20 rounded-3xl overflow-hidden shadow-2xl"
+                >
+                    <ImageSlider />
+                </motion.div>
+
                 {/* Capabilities */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -195,6 +209,6 @@ export const AboutSection = () => {
                     </div>
                 </motion.div>
             </div>
-        </section>
+        </section >
     );
 };

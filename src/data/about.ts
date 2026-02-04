@@ -116,7 +116,7 @@ export const capabilities = [
   "Specialized Machinery for Civil & Earthwork Projects",
 ];
 
-export const coreServicesList = [
+export const processSteps = [
   {
     title: "Design Coordination",
     description: "Transforming client vision into buildable, compliant designs.",
@@ -136,6 +136,29 @@ export const coreServicesList = [
   {
     title: "Site Supervision",
     description: "Detailed monitoring, including daily reports, safety logs, and vendor check-ins.",
+  },
+];
+
+export const coreServicesList = [
+  {
+    title: "Construction Consultancy",
+    description: "Expert guidance on project feasibility, planning, and execution strategies.",
+  },
+  {
+    title: "Construction Contracting",
+    description: "End-to-end management of construction projects with quality assurance.",
+  },
+  {
+    title: "Interior & Exterior Contracting",
+    description: "Comprehensive solutions for aesthetic and functional interior and exterior spaces.",
+  },
+  {
+    title: "Architectural Services",
+    description: "Innovative architectural designs tailored to modern needs and regulations.",
+  },
+  {
+    title: "Land Developing & Promoting",
+    description: "Strategic land development and promotion for residential and commercial value.",
   },
 ];
 

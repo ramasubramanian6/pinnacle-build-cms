@@ -28,6 +28,8 @@ import AdminPackages from "./pages/admin/AdminPackages";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminBlogs from "./pages/admin/AdminBlogs";
+import AdminSliderImages from "./pages/admin/AdminSliderImages";
+import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminProjectInterests from "./pages/admin/AdminProjectInterests";
 import NotFound from "./pages/NotFound";
 
@@ -65,6 +67,8 @@ const App = () => (
               <Route path="/admin/testimonials" element={<AdminTestimonials />} />
               <Route path="/admin/services" element={<AdminServices />} />
               <Route path="/admin/blogs" element={<AdminBlogs />} />
+              <Route path="/admin/slider-images" element={<AdminSliderImages />} />
+              <Route path="/admin/promotions" element={<AdminPromotions />} />
               <Route path="/admin/project-interests" element={<AdminProjectInterests />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
