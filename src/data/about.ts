@@ -103,6 +103,12 @@ export const leadershipTeam = [
     role: "Design & Technical Lead",
     bio: "Structural engineering professional with strong expertise in civil construction, design, and project execution. Holding an M.E. in Structural Engineering from Anna University and certified in advanced RCC design, he brings technical precision and modern engineering insight to every project. With hands-on experience as a Project Manager and a proven research background in materials and durability studies, he delivers solutions that blend practicality, innovation, and structural reliability. His work reflects a commitment to quality, accuracy, and engineering excellence across all construction and consultancy services.",
     image: null // Placeholder
+  },
+  {
+    name: "Iyyappan A DME",
+    role: "Project Coordinator",
+    bio: "Manages project timelines, budgets, and communication. Acts as the bridge between clients, consultants, and site teams. Tracks progress, coordinates vendors, and ensures smooth execution from planning to handover.",
+    image: null // Placeholder
   }
 ];
 

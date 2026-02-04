@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useServices } from "@/hooks/useServices";
 import * as LucideIcons from "lucide-react";
+import { PackagesSection } from "@/components/home/PackagesSection";
 
 // Static services removed
 
@@ -266,6 +267,9 @@ const Services = () => {
             </div>
           </div>
         </section>
+
+        {/* Packages Section */}
+        <PackagesSection />
 
         {/* CTA Section */}
         <section className="py-20 bg-slate-900">
