@@ -60,7 +60,8 @@ export const useFeaturedProjects = () => {
       // Filter on client or server. Server doesn't support query params yet, so client filter.
       // Assuming 'featured' field exists
       const projects = data.map((p: any) => ({ ...p, id: p._id })) as Project[];
-      return projects.filter(p => p.featured).slice(0, 3);
+      const featured = projects.filter(p => p.featured);
+      return featured.length > 0 ? featured.slice(0, 3) : projects.slice(0, 3);
     },
   });
 };

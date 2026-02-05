@@ -1,10 +1,11 @@
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
 import { ImageSlider } from "@/components/home/ImageSlider";
+
+import { ServicesOverview } from "@/components/home/ServicesOverview";
 import { AboutSection } from "@/components/home/AboutSection";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
-import { PromotionalSlider } from "@/components/home/PromotionalSlider";
 import { ConsultationCTA } from "@/components/home/ConsultationCTA";
 
 const Index = () => {
@@ -21,10 +22,11 @@ const Index = () => {
       </Helmet>
       <Layout>
         <ImageSlider />
+
+        <ServicesOverview />
         <AboutSection />
         <FeaturedProjects />
         <TestimonialsSection />
-        <PromotionalSlider />
       </Layout>
     </>
   );

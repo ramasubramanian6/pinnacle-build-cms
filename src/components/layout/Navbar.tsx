@@ -55,7 +55,7 @@ export const Navbar = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? "bg-background/95 backdrop-blur-md shadow-lg py-4"
+        ? "bg-slate-950/95 backdrop-blur-md shadow-lg py-4"
         : "bg-transparent py-6"
         }`}
     >
@@ -75,7 +75,7 @@ export const Navbar = () => {
               to={link.path}
               className={`relative font-body text-sm tracking-wide transition-colors duration-300 ${location.pathname === link.path
                 ? "text-accent"
-                : "text-foreground/80 hover:text-foreground"
+                : "text-white/80 hover:text-white"
                 }`}
             >
               {link.name}
@@ -141,7 +141,7 @@ export const Navbar = () => {
               <Button
                 variant="ghost"
                 size="default"
-                className="text-foreground/80 hover:text-foreground hover:bg-foreground/10"
+                className="text-white/80 hover:text-white hover:bg-white/10"
               >
                 Login
               </Button>
@@ -157,7 +157,7 @@ export const Navbar = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden relative z-10 p-2 text-foreground"
+          className="lg:hidden relative z-10 p-2 text-white"
           aria-label="Toggle menu"
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -172,7 +172,7 @@ export const Navbar = () => {
             animate={{ opacity: 1, height: "100vh" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden fixed inset-0 top-0 bg-background z-40"
+            className="lg:hidden fixed inset-0 top-0 bg-slate-950 z-40"
           >
             <div className="flex flex-col items-center justify-center h-full gap-8">
               {navLinks.map((link, index) => (
@@ -186,7 +186,7 @@ export const Navbar = () => {
                     to={link.path}
                     className={`font-display text-3xl transition-colors ${location.pathname === link.path
                       ? "text-accent"
-                      : "text-foreground"
+                      : "text-white"
                       }`}
                   >
                     {link.name}

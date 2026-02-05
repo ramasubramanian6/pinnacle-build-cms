@@ -26,32 +26,41 @@ export function ImageSlider() {
     return (
         <div className="relative group overflow-hidden bg-black/5">
             <div className="embla overflow-hidden" ref={emblaRef}>
-                <div className="flex h-[500px] sm:h-[600px] lg:h-[700px]">
+                <div className="flex h-[80vh] min-h-[500px] lg:h-[700px]">
                     {images.map((image) => (
                         <div className="flex-[0_0_100%] min-w-0 relative" key={image.id}>
                             <div className="absolute inset-0">
                                 <img
                                     src={image.image_url}
                                     alt={image.title || "Slide"}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover animate-in fade-in zoom-in duration-1000"
                                 />
-                                {/* Overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                                {/* Premium Gradient Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
                             </div>
 
                             {/* Content */}
-                            <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white z-10">
-                                <div className="container mx-auto">
-                                    {image.title && (
-                                        <h2 className="text-4xl md:text-6xl font-display font-bold mb-4 animate-in slide-in-from-bottom-5 fade-in duration-700">
-                                            {image.title}
-                                        </h2>
-                                    )}
-                                    {image.description && (
-                                        <p className="text-lg md:text-xl text-white/90 max-w-2xl animate-in slide-in-from-bottom-5 fade-in duration-700 delay-100">
-                                            {image.description}
-                                        </p>
-                                    )}
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="container mx-auto px-6">
+                                    <div className="max-w-3xl pt-20">
+                                        <div className="hidden md:flex items-center gap-2 mb-6 animate-in slide-in-from-bottom-5 fade-in duration-700">
+                                            <div className="w-12 h-[2px] bg-accent"></div>
+                                            <span className="text-accent uppercase tracking-widest font-semibold text-sm">Welcome to Brixx Space</span>
+                                        </div>
+
+                                        {image.title && (
+                                            <h2 className="text-3xl md:text-6xl lg:text-7xl font-display font-bold text-white mb-3 md:mb-6 leading-tight animate-in slide-in-from-bottom-5 fade-in duration-700 delay-100">
+                                                {image.title}
+                                            </h2>
+                                        )}
+                                        {image.description && (
+                                            <p className="text-sm md:text-xl text-slate-200 mb-6 md:mb-8 max-w-xl leading-relaxed animate-in slide-in-from-bottom-5 fade-in duration-700 delay-200">
+                                                {image.description}
+                                            </p>
+                                        )}
+
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
