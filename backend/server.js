@@ -16,30 +16,23 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// CORS configuration for production
-const allowedOrigins = [
-    'https://brixxspace72.web.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-];
+// Manual CORS for Vercel serverless
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
 
-app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
 
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
-
-app.use(helmet());
 app.use(morgan('dev'));
 
 // Routes
