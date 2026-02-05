@@ -1,21 +1,10 @@
 import { Link } from "react-router-dom";
-import { ArrowUpRight, Ruler, Hammer, Building2, Paintbrush, ArrowRight, Wallet, Home, Key, Settings } from "lucide-react";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useServices } from "@/hooks/useServices";
 import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
 
-const getIcon = (iconName: string) => {
-    switch (iconName?.toLowerCase()) {
-        case 'ruler': return Ruler;
-        case 'hammer': return Hammer;
-        case 'paintbrush': return Paintbrush;
-        case 'building': return Building2;
-        case 'wallet': return Wallet;
-        case 'home': return Home;
-        case 'key': return Key;
-        default: return Settings;
-    }
-};
+
 
 export const ServicesOverview = () => {
     const { data: services, isLoading } = useServices();
@@ -70,7 +59,6 @@ export const ServicesOverview = () => {
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {displayServices.map((service, index) => {
-                        const Icon = getIcon(service.icon);
                         return (
                             <motion.div
                                 key={service.id}
