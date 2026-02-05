@@ -19,16 +19,32 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// Manual CORS for Vercel serverless
+// CORS Configuration for Vercel serverless
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    const allowedOrigins = [
+        'https://brixxspace72.web.app',
+        'https://brixxspace72.firebaseapp.com',
+        'http://localhost:3000',
+        'http://localhost:5173'
+    ];
+
+    const origin = req.headers.origin;
+
+    // Allow all origins in development, specific origins in production
+    if (process.env.NODE_ENV !== 'production' || allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin || '*');
+    } else {
+        res.header('Access-Control-Allow-Origin', '*');
+    }
+
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
     res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Max-Age', '86400'); // 24 hours
 
     // Handle preflight requests
     if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
+        return res.status(200).end();
     }
     next();
 });
