@@ -42,7 +42,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Check if user is logged in
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('token');
+      let token = localStorage.getItem('token');
+      // Defensive fix for corrupted local storage
+      if (token === "[object Object]") {
+        console.warn("Detected corrupted token in localStorage, clearing.");
+        localStorage.removeItem('token');
+        token = null;
+      }
+
       if (!token) {
         setLoading(false);
         return;

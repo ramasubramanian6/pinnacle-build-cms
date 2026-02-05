@@ -17,6 +17,8 @@ export interface Project {
   sold_units: number | null;
   amenities: string[] | null;
   featured: boolean | null;
+  gallery: string[] | null;
+  featured_image: string | null;
   created_at: string;
   updated_at: string;
 }

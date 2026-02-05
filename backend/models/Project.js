@@ -44,6 +44,14 @@ const projectSchema = mongoose.Schema(
         },
         features: [String],
         amenities: [String],
+        gallery: [String],
+        featured_image: {
+            type: String,
+        },
+        featured: {
+            type: Boolean,
+            default: false,
+        },
         documents_count: {
             type: Number,
             default: 0

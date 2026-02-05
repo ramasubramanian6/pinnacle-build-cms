@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Switch } from "@/components/ui/switch";
 import { uploadImageToCloudinary } from "@/lib/cloudinary";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +41,8 @@ export default function AdminProjects() {
     category: "Residential",
     status: "ongoing",
     image_url: "",
+    featured_image: "",
+    gallery: [] as string[],
     progress: 0,
     total_units: 0,
     sold_units: 0,
@@ -65,6 +68,8 @@ export default function AdminProjects() {
       category: "Residential",
       status: "ongoing",
       image_url: "",
+      featured_image: "",
+      gallery: [],
       progress: 0,
       total_units: 0,
       sold_units: 0,
@@ -102,6 +107,8 @@ export default function AdminProjects() {
       category: project.category,
       status: project.status,
       image_url: project.image_url || "",
+      featured_image: project.featured_image || "",
+      gallery: project.gallery || [],
       progress: project.progress || 0,
       total_units: project.total_units || 0,
       sold_units: project.sold_units || 0,
@@ -326,6 +333,101 @@ export default function AdminProjects() {
                       />
                     </div>
                   </div>
+
+                  <div className="space-y-4 border rounded-lg p-4 bg-muted/30">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label htmlFor="featured">Featured on Home Page</Label>
+                        <p className="text-sm text-muted-foreground">Pin this project to the home page featured section</p>
+                      </div>
+                      <Switch
+                        id="featured"
+                        checked={formData.featured}
+                        onCheckedChange={(checked) => setFormData({ ...formData, featured: checked })}
+                      />
+                    </div>
+
+                    {formData.featured && (
+                      <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-2">
+                        <Label htmlFor="featured_image">Featured Image (Home Page Display)</Label>
+                        <div className="flex flex-col gap-4">
+                          <Input
+                            id="featured_image"
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              setUploading(true);
+                              try {
+                                const url = await uploadImageToCloudinary(file);
+                                setFormData(prev => ({ ...prev, featured_image: url }));
+                                toast.success("Featured image uploaded");
+                              } catch (error) {
+                                toast.error("Failed to upload featured image");
+                              } finally {
+                                setUploading(false);
+                              }
+                            }}
+                            disabled={uploading}
+                          />
+                          {formData.featured_image && (
+                            <div className="relative w-full h-32 rounded-lg overflow-hidden border border-border">
+                              <img src={formData.featured_image} alt="Featured Preview" className="w-full h-full object-cover" />
+                              <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => setFormData(prev => ({ ...prev, featured_image: "" }))}>
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="gallery">Gallery Images (Max 5)</Label>
+                    <div className="flex flex-col gap-4">
+                      <Input
+                        id="gallery"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={async (e) => {
+                          const files = Array.from(e.target.files || []);
+                          if (files.length === 0) return;
+                          setUploading(true);
+                          try {
+                            const uploadPromises = files.map(file => uploadImageToCloudinary(file));
+                            const urls = await Promise.all(uploadPromises);
+                            setFormData(prev => ({ ...prev, gallery: [...(prev.gallery || []), ...urls].slice(0, 5) }));
+                            toast.success(`${urls.length} images uploaded`);
+                          } catch (error) {
+                            toast.error("Failed to upload images");
+                          } finally {
+                            setUploading(false);
+                          }
+                        }}
+                        disabled={uploading || (formData.gallery?.length || 0) >= 5}
+                      />
+                      <div className="grid grid-cols-5 gap-2">
+                        {formData.gallery?.map((url, index) => (
+                          <div key={index} className="relative aspect-square rounded-md overflow-hidden border border-border group">
+                            <img src={url} alt={`Gallery ${index}`} className="w-full h-full object-cover" />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              className="absolute top-1 right-1 h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity"
+                              onClick={() => setFormData(prev => ({ ...prev, gallery: prev.gallery.filter((_, i) => i !== index) }))}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="flex justify-end gap-2">
                     <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                       Cancel

@@ -1,4 +1,5 @@
 const Project = require('../models/Project');
+const mongoose = require('mongoose');
 
 // @desc    Get all projects
 // @route   GET /api/projects
@@ -12,6 +13,10 @@ const getProjects = async (req, res) => {
 // @route   GET /api/projects/:id
 // @access  Public
 const getProjectById = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Project not found' });
+    }
+
     const project = await Project.findById(req.params.id);
 
     if (project) {
@@ -38,7 +43,10 @@ const createProject = async (req, res) => {
         sold_units: req.body.sold_units || 0,
         estimated_completion: req.body.estimated_completion,
         features: req.body.features || [],
-        amenities: req.body.amenities || []
+        amenities: req.body.amenities || [],
+        gallery: req.body.gallery || [],
+        featured_image: req.body.featured_image,
+        featured: req.body.featured || false
     });
 
     const createdProject = await project.save();
@@ -58,6 +66,9 @@ const updateProject = async (req, res) => {
         project.category = req.body.category || project.category;
         project.status = req.body.status || project.status;
         project.image_url = req.body.image_url || project.image_url;
+        project.gallery = req.body.gallery || project.gallery;
+        project.featured_image = req.body.featured_image || project.featured_image;
+        project.featured = req.body.featured !== undefined ? req.body.featured : project.featured;
         project.progress = req.body.progress !== undefined ? req.body.progress : project.progress;
         project.total_units = req.body.total_units !== undefined ? req.body.total_units : project.total_units;
         project.sold_units = req.body.sold_units !== undefined ? req.body.sold_units : project.sold_units;

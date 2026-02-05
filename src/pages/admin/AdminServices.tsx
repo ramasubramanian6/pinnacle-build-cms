@@ -12,10 +12,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, CheckCircle2 } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function AdminServices() {
@@ -35,12 +37,14 @@ export default function AdminServices() {
         icon: string;
         features: string[];
         featureInput: string;
+        featured: boolean;
     }>({
         title: "",
         description: "",
         icon: "Building2",
         features: [],
         featureInput: "",
+        featured: false,
     });
 
     useEffect(() => {
@@ -58,6 +62,7 @@ export default function AdminServices() {
             icon: "Building2",
             features: [],
             featureInput: "",
+            featured: false,
         });
         setEditingService(null);
     };
@@ -70,6 +75,7 @@ export default function AdminServices() {
             icon: service.icon || "Building2",
             features: service.features || [],
             featureInput: "",
+            featured: service.featured || false,
         });
         setIsDialogOpen(true);
     };
@@ -98,6 +104,7 @@ export default function AdminServices() {
             description: formData.description,
             icon: formData.icon,
             features: formData.features,
+            featured: formData.featured,
         };
 
         if (editingService) {
@@ -197,6 +204,14 @@ export default function AdminServices() {
                                             ))}
                                         </ul>
                                     </div>
+                                    <div className="flex items-center gap-2 pt-2">
+                                        <Checkbox
+                                            id="featured"
+                                            checked={formData.featured}
+                                            onCheckedChange={(checked) => setFormData({ ...formData, featured: checked as boolean })}
+                                        />
+                                        <Label htmlFor="featured">Featured on Home Page</Label>
+                                    </div>
                                     <div className="flex justify-end gap-2">
                                         <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                             Cancel
@@ -229,7 +244,12 @@ export default function AdminServices() {
                                     <TableBody>
                                         {services?.map((service) => (
                                             <TableRow key={service.id} className="border-border">
-                                                <TableCell className="font-medium text-foreground">{service.title}</TableCell>
+                                                <TableCell className="font-medium text-foreground">
+                                                    {service.title}
+                                                    {service.featured && (
+                                                        <Badge variant="secondary" className="ml-2 text-xs bg-accent/20 text-accent border-accent/20">Featured</Badge>
+                                                    )}
+                                                </TableCell>
                                                 <TableCell className="text-muted-foreground">{service.icon}</TableCell>
                                                 <TableCell>
                                                     <div className="flex flex-wrap gap-1">

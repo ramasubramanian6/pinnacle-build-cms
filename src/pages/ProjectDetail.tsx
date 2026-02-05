@@ -205,6 +205,20 @@ const ProjectDetail = () => {
                                         </p>
                                     </div>
 
+                                    {/* Gallery */}
+                                    {project.gallery && project.gallery.length > 0 && (
+                                        <div className="mb-12">
+                                            <h2 className="font-display text-3xl font-bold text-slate-900 mb-6">Gallery</h2>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                                {project.gallery.map((img, idx) => (
+                                                    <div key={idx} className="relative aspect-video rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                                                        <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
                                     {/* Amenities */}
                                     {project.amenities && project.amenities.length > 0 && (
                                         <div>

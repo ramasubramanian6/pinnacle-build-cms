@@ -9,6 +9,7 @@ export interface Service {
     icon: string;
     features: string[] | null;
     image_url: string | null;
+    featured?: boolean;
     created_at?: string;
     updated_at?: string;
 }
