@@ -8,8 +8,11 @@ const connectDB = require('./config/db');
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
+// Connect to database (async, non-blocking for serverless)
+connectDB().catch(err => {
+    console.error('Failed to connect to MongoDB:', err.message);
+    // Don't crash the server, just log the error
+});
 
 const app = express();
 
