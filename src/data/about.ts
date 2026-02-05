@@ -91,24 +91,34 @@ export const companyIntro = {
   ],
 };
 
+import loknathImage from "../assets/lokash.png";
+import abudulImage from "../assets/abudul_image.jpeg";
+import ulaguImage from "../assets/Ulagu.png";
+
 export const leadershipTeam = [
   {
     name: "Mr. A. Ulagu Lakshmanan",
     role: "Director",
-    bio: "With over 35 years of experience in road construction, RCC works, and large-scale infrastructure projects. Serving major government departments, the company is recognised for its high-quality construction, advanced machinery, stringent safety standards, and timely project delivery across multiple districts.",
-    image: null // Placeholder
+    bio: "With over 35 years of experience in road construction, RCC works, and large-scale infrastructure projects. Known for high-quality construction, advanced machinery, and timely delivery across government and private sectors.",
+    image: ulaguImage
   },
   {
     name: "Er. Loknath S",
     role: "Design & Technical Lead",
-    bio: "Structural engineering professional with strong expertise in civil construction, design, and project execution. Holding an M.E. in Structural Engineering from Anna University and certified in advanced RCC design, he brings technical precision and modern engineering insight to every project. With hands-on experience as a Project Manager and a proven research background in materials and durability studies, he delivers solutions that blend practicality, innovation, and structural reliability. His work reflects a commitment to quality, accuracy, and engineering excellence across all construction and consultancy services.",
-    image: null // Placeholder
+    bio: "Structural engineering professional with M.E. from Anna University. Expert in civil construction and advanced RCC design, blending technical precision with innovation to ensure structural reliability and engineering excellence in every project.",
+    image: loknathImage
   },
   {
     name: "Iyyappan A DME",
     role: "Project Coordinator",
-    bio: "Manages project timelines, budgets, and communication. Acts as the bridge between clients, consultants, and site teams. Tracks progress, coordinates vendors, and ensures smooth execution from planning to handover.",
-    image: null // Placeholder
+    bio: "Manages project timelines, budgets, and communication. Acts as the vital bridge between clients, consultants, and site teams, ensuring smooth execution and coordination from initial planning stages through to final handover.",
+    image: null // Placeholder, image not found in assets
+  },
+  {
+    name: "Mr. Abdullah Ubaidullah",
+    role: "Architect",
+    bio: "Architect proven in delivering technically sound residential and commercial projects. Specializes in detailed working drawings, spatial planning, and interdisciplinary coordination, translating design intent into practical, buildable solutions.",
+    image: abudulImage
   }
 ];
 

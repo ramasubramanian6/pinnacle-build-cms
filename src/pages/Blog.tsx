@@ -2,8 +2,10 @@ import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
-import { Calendar, Clock, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ScrollReveal } from "@/components/premium/ScrollReveal";
+import { GradientText } from "@/components/premium/AnimatedText";
 import { useBlogs } from "@/hooks/useBlogs";
 
 // Static blog data (fallback)
@@ -40,54 +42,24 @@ const Blog = () => {
       </Helmet>
       <Layout>
         {/* Hero Section */}
-        <section className="relative py-24 md:py-32 overflow-hidden">
-          {/* Background Image */}
-          <div className="absolute inset-0">
-            <img
-              src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1920&h=1080&fit=crop"
-              alt="Construction background"
-              className="w-full h-full object-cover"
-            />
-            {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#0A0A0A]/90 via-[#1A1A1A]/85 to-[#0A0A0A]/90" />
-          </div>
-
-          {/* Grid Pattern Overlay */}
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,184,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,184,0,0.03)_1px,transparent_1px)] bg-[size:100px_100px]" />
-            <motion.div
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.1, 0.2, 0.1],
-              }}
-              transition={{ duration: 15, repeat: Infinity }}
-              className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#FFB800]/20 to-[#8B5CF6]/20 rounded-full blur-3xl"
-            />
-          </div>
-
+        <section className="pt-32 pb-20 bg-background relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
           <div className="container mx-auto px-6 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto text-center"
-            >
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#FFB800]/10 to-[#8B5CF6]/10 border border-[#FFB800]/20 backdrop-blur-sm mb-6">
-                <TrendingUp className="w-5 h-5 text-[#FFB800]" />
-                <span className="text-sm font-semibold text-[#FFB800]">Our Blog</span>
-              </div>
-
-              <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-                Insights &
-                <span className="block bg-gradient-to-r from-[#FFB800] via-[#FFA500] to-[#FF8C00] bg-clip-text text-transparent">
-                  Stories
-                </span>
+            <ScrollReveal>
+              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
+                Our Blog
+              </span>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+                <span className="text-accent">Insights &</span> Stories
               </h1>
-
-              <p className="text-xl text-slate-400 leading-relaxed max-w-3xl mx-auto">
-                Explore the latest trends in construction, project stories, and expert insights from our team.
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="text-muted-foreground text-lg max-w-2xl">
+                Explore the latest trends in construction, project stories, and expert insights from the Brixx Space team.
               </p>
-            </motion.div>
+            </ScrollReveal>
           </div>
         </section>
 

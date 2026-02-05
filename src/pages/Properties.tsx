@@ -66,7 +66,7 @@ const Properties = () => {
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                <GradientText>Premium</GradientText> Properties
+                <span className="text-accent">Premium</span> Properties
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.2}>

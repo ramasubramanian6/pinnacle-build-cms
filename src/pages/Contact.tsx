@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/lib/api";
+import { ScrollReveal } from "@/components/premium/ScrollReveal";
+import { GradientText } from "@/components/premium/AnimatedText";
 
 const contactInfo = [
   {
@@ -100,42 +102,24 @@ const Contact = () => {
       </Helmet>
       <Layout>
         {/* Hero Section */}
-        <section className="relative py-24 md:py-32 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-            <motion.div
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.1, 0.2, 0.1],
-              }}
-              transition={{ duration: 15, repeat: Infinity }}
-              className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-amber-500/20 to-yellow-600/20 rounded-full blur-3xl"
-            />
-          </div>
-
+        <section className="pt-32 pb-20 bg-background relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
           <div className="container mx-auto px-6 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto text-center"
-            >
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-amber-500/10 to-yellow-600/10 border border-amber-500/20 backdrop-blur-sm mb-6">
-                <Sparkles className="w-5 h-5 text-amber-400" />
-                <span className="text-sm font-semibold text-amber-100">Get In Touch</span>
-              </div>
-
-              <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-                Let's Build
-                <span className="block bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent">
-                  Your Vision Together
-                </span>
+            <ScrollReveal>
+              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
+                Get In Touch
+              </span>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+                Let's Build <span className="text-accent">Your Vision</span>
               </h1>
-
-              <p className="text-xl text-slate-300 leading-relaxed max-w-3xl mx-auto">
-                Ready to start your construction project? Contact us today for a <span className="text-amber-400 font-semibold">free consultation</span> and let's bring your dreams to reality.
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="text-muted-foreground text-lg max-w-2xl">
+                Ready to start your construction project? Contact us today for a free consultation and let's bring your dreams to reality.
               </p>
-            </motion.div>
+            </ScrollReveal>
           </div>
         </section>
 

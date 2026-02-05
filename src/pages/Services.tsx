@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button";
 import { useServices } from "@/hooks/useServices";
 import * as LucideIcons from "lucide-react";
 import { PackagesSection } from "@/components/home/PackagesSection";
+import { ScrollReveal } from "@/components/premium/ScrollReveal";
+import { GradientText } from "@/components/premium/AnimatedText";
 
 // Static services removed
 
@@ -70,49 +72,38 @@ const Services = () => {
       </Helmet>
       <Layout>
         {/* Hero Section */}
-        <section className="relative py-24 md:py-32 bg-slate-900 overflow-hidden">
-          <div className="absolute inset-0">
-            <img
-              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&h=1080&fit=crop"
-              alt="Construction services"
-              className="w-full h-full object-cover opacity-20"
-            />
-          </div>
-
+        <section className="pt-32 pb-20 bg-background relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
           <div className="container mx-auto px-6 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto text-center"
-            >
-              <span className="inline-block px-4 py-2 rounded-full bg-[#FFB800]/10 border border-[#FFB800]/20 text-[#FFB800] text-sm font-semibold mb-6">
+            <ScrollReveal>
+              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
                 Professional Services
               </span>
-
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                Expert Construction Consultation Services
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+                Expert <span className="text-accent">Construction</span> Consultation
               </h1>
-
-              <p className="text-xl text-slate-300 leading-relaxed mb-8">
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="text-muted-foreground text-lg max-w-2xl mb-8">
                 Comprehensive project advisory backed by 35+ years of industry expertise. From concept to completion, we ensure excellence at every stage.
               </p>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/contact">
-                  <Button className="h-12 px-8 bg-[#FFB800] hover:bg-[#FFA500] text-slate-900 font-semibold">
+                  <Button className="h-12 px-8 bg-accent hover:bg-accent/90 text-primary font-semibold">
                     Get Started
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </Link>
                 <a href="tel:+919894948011">
-                  <Button variant="outline" className="h-12 px-8 border-white/20 text-white hover:bg-white/10">
+                  <Button variant="outline" className="h-12 px-8">
                     <Phone className="mr-2 w-4 h-4" />
                     Call Us
                   </Button>
                 </a>
               </div>
-            </motion.div>
+            </ScrollReveal>
           </div>
         </section>
 

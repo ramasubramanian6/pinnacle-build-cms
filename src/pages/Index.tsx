@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { Layout } from "@/components/layout/Layout";
-import { HeroSection } from "@/components/home/HeroSection";
+import { ImageSlider } from "@/components/home/ImageSlider";
 import { AboutSection } from "@/components/home/AboutSection";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
@@ -20,7 +20,7 @@ const Index = () => {
         <link rel="canonical" href="https://brixxspace.com" />
       </Helmet>
       <Layout>
-        <HeroSection />
+        <ImageSlider />
         <AboutSection />
         <FeaturedProjects />
         <TestimonialsSection />

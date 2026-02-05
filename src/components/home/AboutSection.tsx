@@ -1,11 +1,8 @@
 import { motion } from "framer-motion";
 import { Building2, Award, Shield, Users } from "lucide-react";
 
+
 export const AboutSection = () => {
-
-
-
-
     const values = [
         {
             icon: Shield,
@@ -30,7 +27,7 @@ export const AboutSection = () => {
     ];
 
     return (
-        <section className="relative py-24 md:py-32 bg-gradient-to-br from-slate-50 via-white to-amber-50/30 overflow-hidden">
+        <section className="relative pt-24 md:pt-32 pb-48 md:pb-64 bg-gradient-to-br from-slate-50 via-white to-amber-50/30 overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
 
@@ -101,6 +98,6 @@ export const AboutSection = () => {
                     </div>
                 </motion.div>
             </div>
-        </section >
+        </section>
     );
 };

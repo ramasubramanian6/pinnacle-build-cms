@@ -1,11 +1,11 @@
 import { Helmet } from "react-helmet-async";
-import { Users, Hammer, Truck, Ruler, FileText, CheckCircle2, ShieldCheck, Briefcase, Phone, Mail, MapPin, ArrowUpRight } from "lucide-react";
+import { Users, Hammer, Truck, Ruler, FileText, ShieldCheck, Briefcase, Phone, Mail, MapPin } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { ScrollReveal, StaggerReveal } from "@/components/premium/ScrollReveal";
 import { GlassmorphismCard } from "@/components/premium/GlassmorphismCard";
 import { AnimatedText, GradientText } from "@/components/premium/AnimatedText";
 import { ProgressRing } from "@/components/premium/ProgressRing";
-import { aboutStats, milestones, coreValues, visionMission, founderQuote, companyIntro, leadershipTeam, capabilities, coreServicesList, processSteps, packages } from "@/data/about";
+import { aboutStats, milestones, coreValues, visionMission, founderQuote, companyIntro, leadershipTeam, capabilities, coreServicesList } from "@/data/about";
 import heroImage from "@/assets/hero-construction.jpg";
 import brixxspaceLogo from "@/assets/brixxspace-logo.png";
 import { Button } from "@/components/ui/button";
@@ -28,28 +28,20 @@ const About = () => {
           </div>
           <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
 
-          <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-            <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent to-transparent" />
-            <div className="absolute top-3/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent to-transparent" />
-            <div className="absolute left-1/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-accent to-transparent" />
-            <div className="absolute left-3/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-accent to-transparent" />
-          </div>
-
-          <div className="container mx-auto px-6 relative z-10 text-center">
+          <div className="container mx-auto px-6 relative z-10">
             <ScrollReveal>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent border border-accent/20 mb-6">
-                <Ruler className="w-4 h-4" />
-                <span className="text-sm font-medium uppercase tracking-wider">Engineering Excellence</span>
-              </div>
+              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
+                Engineering Excellence
+              </span>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
               <h1 className="font-display text-4xl md:text-5xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
-                <GradientText>Precision.</GradientText> Innovation.<br />
+                <span className="text-accent">Precision.</span> Innovation.<br />
                 <span className="text-foreground">Construction Redefined.</span>
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
-              <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+              <p className="text-muted-foreground text-lg md:text-xl max-w-3xl leading-relaxed">
                 Brixx Space is a professional construction consultation and project advisory firm backed by 35+ years of industry expertise.
               </p>
             </ScrollReveal>
@@ -118,29 +110,36 @@ const About = () => {
                 Technical Expertise
               </span>
               <h2 className="font-display text-4xl font-bold text-foreground">
-                Our Leadership
+                Key Experts
               </h2>
             </ScrollReveal>
 
-            <div className="grid lg:grid-cols-2 gap-12">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1400px] mx-auto">
               {leadershipTeam.map((member, idx) => (
-                <ScrollReveal key={member.name} direction={idx === 0 ? "right" : "left"} delay={0.1 * idx}>
-                  <div className="bg-background rounded-3xl border border-border p-8 md:p-10 h-full hover:border-accent/40 transition-colors duration-300 relative group overflow-hidden">
-                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                      {idx === 0 ? <Users size={120} /> : <Ruler size={120} />}
+                <ScrollReveal key={member.name} delay={0.1 * idx}>
+                  <div className="bg-background rounded-2xl border border-border p-6 h-full hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 group flex flex-col items-center text-center">
+                    <div className="w-32 h-32 rounded-full bg-secondary flex items-center justify-center border border-border group-hover:bg-accent/10 transition-colors mb-6 shadow-sm overflow-hidden relative">
+                      {member.image ? (
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-4xl font-bold text-accent">{member.name.charAt(0)}</span>
+                      )}
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-6 mb-6 items-start">
-                      <div className="w-20 h-20 rounded-2xl bg-secondary flex items-center justify-center flex-shrink-0 border border-border">
-                        <span className="text-2xl font-bold text-accent">{member.name.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <h3 className="font-display text-2xl font-bold text-foreground">{member.name}</h3>
-                        <p className="text-accent font-medium mt-1 uppercase tracking-wide text-sm">{member.role}</p>
-                      </div>
+                    <div className="mb-4 w-full border-b border-border/50 pb-4">
+                      <h3 className="font-display text-xl font-bold text-foreground leading-tight min-h-[3rem] flex items-center justify-center">
+                        {member.name}
+                      </h3>
+                      <p className="text-accent font-medium uppercase tracking-wide text-xs mt-2">
+                        {member.role}
+                      </p>
                     </div>
 
-                    <p className="text-muted-foreground leading-relaxed border-t border-border pt-6 text-sm md:text-base">
+                    <p className="text-muted-foreground leading-relaxed text-sm text-justify">
                       {member.bio}
                     </p>
                   </div>
@@ -151,7 +150,7 @@ const About = () => {
         </section>
 
         {/* 3. Capabilities / Machinery */}
-        <section className="py-24 bg-background">
+        <section className="pt-24 pb-12 bg-background">
           <div className="container mx-auto px-6">
             <ScrollReveal className="text-center mb-16">
               <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
@@ -187,7 +186,7 @@ const About = () => {
         </section>
 
         {/* 4. Core Services (New List) */}
-        <section className="py-24 bg-background">
+        <section className="pt-12 pb-24 bg-background">
           <div className="container mx-auto px-6">
             <ScrollReveal className="text-center mb-16">
               <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
@@ -222,126 +221,11 @@ const About = () => {
         </section>
 
         {/* 5. Our Process (Old Core Services) */}
-        <section className="py-24 bg-secondary">
-          <div className="container mx-auto px-6">
-            <ScrollReveal className="text-center mb-16">
-              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
-                How We Work
-              </span>
-              <h2 className="font-display text-4xl font-bold text-foreground">
-                Our Process
-              </h2>
-              <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-                BRIXX SPACE provides comprehensive expertise across all critical construction phases.
-              </p>
-            </ScrollReveal>
 
-            <StaggerReveal className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {processSteps.map((service, index) => (
-                <div key={index} className="relative">
-                  <div className="bg-background rounded-xl p-6 h-full border border-border hover:border-accent/50 transition-colors group shadow-sm">
-                    <div className="text-4xl font-bold text-accent/10 absolute top-4 right-4 group-hover:text-accent/20 transition-colors">
-                      0{index + 1}
-                    </div>
-                    <h3 className="font-display text-lg font-bold text-foreground mb-3 relative z-10">
-                      {service.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed relative z-10">
-                      {service.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </StaggerReveal>
-          </div>
-        </section>
 
-        {/* 5. Packages */}
-        <section className="py-24 bg-background">
-          <div className="container mx-auto px-6">
-            <ScrollReveal className="text-center mb-16">
-              <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
-                Engagement Models
-              </span>
-              <h2 className="font-display text-4xl font-bold text-foreground">
-                Unique Packages
-              </h2>
-              <p className="text-muted-foreground mt-4">
-                Tailored to your needs
-              </p>
-            </ScrollReveal>
 
-            <StaggerReveal className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {packages.map((pkg, i) => (
-                <div key={pkg.name}>
-                  <GlassmorphismCard variant={pkg.name.includes("Smart") ? "strong" : "default"} className={`h-full flex flex-col ${pkg.name.includes("Smart") ? 'border-accent/50' : ''}`}>
-                    <div className="mb-6">
-                      <h3 className="font-display text-xl font-bold text-foreground">{pkg.name}</h3>
-                      <p className="text-sm text-muted-foreground mt-2 h-10">{pkg.description}</p>
-                    </div>
-                    <ul className="space-y-3 mb-8 flex-grow">
-                      {pkg.includes.map((feat, fi) => (
-                        <li key={fi} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <CheckCircle2 className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
-                          <span>{feat}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </GlassmorphismCard>
-                </div>
-              ))}
-            </StaggerReveal>
-          </div>
-        </section>
 
-        {/* 6. Undergoing Projects (Teaser) */}
-        <section className="py-24 bg-secondary relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-5 pointer-events-none">
-            <div className="absolute inset-0 bg-[radial-gradient(#fbbf24_1px,transparent_1px)] [background-size:16px_16px]" />
-          </div>
 
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-              <ScrollReveal>
-                <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
-                  Our Work
-                </span>
-                <h2 className="font-display text-4xl font-bold text-foreground">
-                  Recent Projects
-                </h2>
-              </ScrollReveal>
-              <ScrollReveal delay={0.1}>
-                <a href="/projects" className="inline-flex items-center gap-2 text-foreground font-medium hover:text-accent transition-colors">
-                  View All Project <ArrowUpRight className="w-4 h-4" />
-                </a>
-              </ScrollReveal>
-            </div>
-
-            <StaggerReveal className="grid md:grid-cols-2 gap-8">
-              {/* We'll showcase a generic 'Ongoing' style card if we don't want to hardcode specific IDs from data */}
-              <div className="group relative rounded-2xl overflow-hidden aspect-video border border-border">
-                <img src={heroImage} alt="Project 1" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6">
-                  <span className="px-3 py-1 bg-accent text-black text-xs font-bold uppercase rounded-full mb-3 inline-block">Ongoing</span>
-                  <h3 className="text-white text-2xl font-bold">Thamiraparani Extension</h3>
-                  <p className="text-white/70 text-sm mt-1">Infrastructure</p>
-                </div>
-              </div>
-
-              <div className="group relative rounded-2xl overflow-hidden aspect-video border border-border">
-                <img src={heroImage} alt="Project 2" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6">
-                  <span className="px-3 py-1 bg-white text-black text-xs font-bold uppercase rounded-full mb-3 inline-block">Commercial</span>
-                  <h3 className="text-white text-2xl font-bold">Tech Park Nellai</h3>
-                  <p className="text-white/70 text-sm mt-1">Commercial Complex</p>
-                </div>
-              </div>
-            </StaggerReveal>
-          </div>
-        </section>
 
         {/* 7. Contact Section */}
         <section className="py-24 bg-slate-950 text-white relative">

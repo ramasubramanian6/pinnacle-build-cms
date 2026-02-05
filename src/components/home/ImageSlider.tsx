@@ -5,6 +5,8 @@ import { LuxuryLoader } from '@/components/premium/LuxuryLoader';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import { HeroSection } from '@/components/home/HeroSection';
+
 export function ImageSlider() {
     const { data: images, isLoading } = useSliderImages();
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -19,7 +21,7 @@ export function ImageSlider() {
 
     if (isLoading) return <div className="h-[500px] flex items-center justify-center"><LuxuryLoader /></div>;
 
-    if (!images || images.length === 0) return null;
+    if (!images || images.length === 0) return <HeroSection />;
 
     return (
         <div className="relative group overflow-hidden bg-black/5">
