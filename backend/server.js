@@ -40,22 +40,28 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-const PORT = process.env.PORT || 5001;
+const PORT = parseInt(process.env.PORT) || 5001;
 
-const startServer = (port) => {
-    const server = app.listen(port, '0.0.0.0', () => {
-        console.log(`Server running on port ${port}`);
-    });
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+    const startServer = (port) => {
+        const server = app.listen(port, '0.0.0.0', () => {
+            console.log(`Server running on port ${port}`);
+        });
 
-    server.on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-            console.log(`Port ${port} is in use, trying ${port + 1}...`);
-            startServer(port + 1);
-        } else {
-            console.error('Server error:', err);
-            process.exit(1);
-        }
-    });
-};
+        server.on('error', (err) => {
+            if (err.code === 'EADDRINUSE') {
+                console.log(`Port ${port} is in use, trying ${Number(port) + 1}...`);
+                startServer(Number(port) + 1);
+            } else {
+                console.error('Server error:', err);
+                process.exit(1);
+            }
+        });
+    };
 
-startServer(PORT);
+    startServer(PORT);
+}
+
+// Export for Vercel serverless
+module.exports = app;
