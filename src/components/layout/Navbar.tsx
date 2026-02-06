@@ -50,167 +50,243 @@ export const Navbar = () => {
   }, [location]);
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? "bg-slate-950/95 backdrop-blur-md shadow-lg py-4"
-        : "bg-transparent py-6"
-        }`}
-    >
-      <div className="container mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="relative z-10">
-          <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
-            <img src={brixxspaceLogo} alt="Brixx Space" className="h-12 w-auto" />
-          </motion.div>
-        </Link>
+    <>
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled && !isMobileMenuOpen
+          ? "bg-[#080808]/90 backdrop-blur-md py-4"
+          : "bg-gradient-to-b from-black/60 to-transparent py-6"
+          }`}
+      >
+        <div className="container mx-auto px-6 relative flex items-center justify-between h-16">
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`relative font-body text-sm tracking-wide transition-colors duration-300 ${location.pathname === link.path
-                ? "text-accent"
-                : "text-white/80 hover:text-white"
-                }`}
-            >
-              {link.name}
-              {location.pathname === link.path && (
-                <motion.div
-                  layoutId="activeNav"
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-accent"
-                />
-              )}
+          {/* Left Side (Empty for balance or could put Socials) */}
+          <div className="hidden lg:block w-1/3"></div>
+
+          {/* Center Logo - Hide when desktop menu is open to match clean look, or keep? 
+              Image shows "AR HOMES" logo at top center even when menu is open.
+          */}
+          <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-100'}`}>
+            <Link to="/">
+              <motion.div whileHover={{ scale: 1.05 }} className="flex items-center">
+                <img src={brixxspaceLogo} alt="Brixx Space" className="h-10 md:h-12 w-auto" />
+              </motion.div>
             </Link>
-          ))}
-        </nav>
+          </div>
 
-        {/* CTA Buttons */}
-        <div className="hidden lg:flex items-center gap-4">
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || ""} />
-                    <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user.user_metadata?.full_name || "User"}</p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {user.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/profile" className="cursor-pointer">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/interests" className="cursor-pointer">
-                    <Heart className="mr-2 h-4 w-4" />
-                    <span>My Interests</span>
-                  </Link>
-                </DropdownMenuItem>
-                {user.role === 'admin' && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      <span>Dashboard</span>
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 focus:text-red-600">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Link to="/auth">
-              <Button
-                variant="ghost"
-                size="default"
-                className="text-white/80 hover:text-white hover:bg-white/10"
+          {/* Right Side - Contact & Menu */}
+          <div className="w-full lg:w-1/3 flex items-center justify-end gap-6 md:gap-8 z-50">
+            {/* CONTACT Text Link (Desktop) - Hide when menu open */}
+            {!isMobileMenuOpen && (
+              <Link
+                to="/contact"
+                className="hidden lg:block font-body text-sm tracking-widest font-bold text-white uppercase hover:text-accent transition-colors"
               >
-                Login
-              </Button>
-            </Link>
-          )}
-          <Link to="/contact">
-            <Button variant="gold" size="default">
-              Get Consultation
-            </Button>
-          </Link>
+                Contact
+              </Link>
+            )}
+
+            {/* Hamburger Menu Trigger - Swaps to Close button inside overlay for desktop, but here for mobile */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`p-2 text-white hover:text-accent transition-colors focus:outline-none ${isMobileMenuOpen ? 'hidden lg:hidden' : 'block'}`}
+              aria-label="Open menu"
+            >
+              <Menu className="w-8 h-8 md:w-10 md:h-10 stroke-[1.5]" />
+            </button>
+
+            {/* Close Button for Mobile (when open) */}
+            {isMobileMenuOpen && (
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="lg:hidden p-2 text-white hover:text-accent transition-colors focus:outline-none"
+                aria-label="Close menu"
+              >
+                <X className="w-8 h-8 md:w-10 md:h-10 stroke-[1.5]" />
+              </button>
+            )}
+
+
+            {/* Desktop Close Button (White Square) - Only visible when menu open on Desktop */}
+            {isMobileMenuOpen && (
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="hidden lg:flex h-14 w-14 bg-white items-center justify-center hover:bg-gray-200 transition-colors"
+                aria-label="Close menu"
+              >
+                <X className="w-8 h-8 text-black stroke-[1.5]" />
+              </button>
+            )}
+          </div>
+
         </div>
+      </motion.header>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden relative z-10 p-2 text-white"
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
+      {/* Full Screen Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "100vh" }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden fixed inset-0 top-0 bg-slate-950 z-40"
+            className={`fixed inset-0 z-40 flex flex-col items-center justify-center
+                ${/* Mobile Styles */ ""}
+                lg:bg-[#002833] bg-[#080808] 
+            `}
+            style={{ top: 0 }}
           >
-            <div className="flex flex-col items-center justify-center h-full gap-8">
+
+            {/* ================= MOBILE LAYOUT (Vertical Stack) ================= */}
+            <div className="flex lg:hidden flex-col items-center gap-8 mt-20">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.path}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: 0.1 + index * 0.1 }}
                 >
                   <Link
                     to={link.path}
-                    className={`font-display text-3xl transition-colors ${location.pathname === link.path
-                      ? "text-accent"
-                      : "text-white"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`font-display text-4xl transition-colors duration-300 ${location.pathname === link.path ? "text-accent" : "text-white/80 hover:text-white"
                       }`}
                   >
                     {link.name}
                   </Link>
                 </motion.div>
               ))}
+
+              <div className="mt-8 flex gap-4">
+                {user ? (
+                  <Button onClick={() => { handleSignOut(); setIsMobileMenuOpen(false); }} variant="outline" className="text-white border-white/20 hover:bg-white/10">Sign Out</Button>
+                ) : (
+                  <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}><Button variant="outline" className="text-white border-white/20 hover:bg-white/10">Login</Button></Link>
+                )}
+              </div>
+            </div>
+
+
+            {/* ================= DESKTOP LAYOUT (Serif Grid with Pipes) ================= */}
+            <div className="hidden lg:flex w-full max-w-6xl flex-col items-center justify-center gap-12 pt-20 relative">
+              {/* Background Pattern Overlay (Subtle Global) */}
+              <div className="absolute inset-0 z-0 pointer-events-none opacity-5 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+
+              {/* Right Side Pattern - Professional Line/Architectural Style */}
+              <div className="absolute right-0 top-0 bottom-0 w-1/3 text-white/5 pointer-events-none z-0 overflow-hidden">
+                <svg className="absolute right-0 top-1/2 -translate-y-1/2 h-[150%] w-auto translate-x-1/3" viewBox="0 0 500 500" fill="none" stroke="currentColor" strokeWidth="1">
+                  <circle cx="250" cy="250" r="100" className="opacity-20" />
+                  <circle cx="250" cy="250" r="150" className="opacity-10" />
+                  <circle cx="250" cy="250" r="200" className="opacity-20" />
+                  <circle cx="250" cy="250" r="250" className="opacity-10" />
+                  <circle cx="250" cy="250" r="300" className="opacity-20" />
+                  <circle cx="250" cy="250" r="350" className="opacity-10" />
+                  <circle cx="250" cy="250" r="400" className="opacity-30" />
+
+                  {/* Architectural / Blueprint accents */}
+                  <path d="M250 50 L250 450" className="opacity-10" />
+                  <path d="M50 250 L450 250" className="opacity-10" />
+                </svg>
+                <div
+                  className="absolute inset-0 bg-gradient-to-l from-[#002833] via-transparent to-transparent"
+                ></div>
+              </div>
+
+              {/* Primary Navigation Row */}
+              <div className="relative z-10 flex flex-wrap justify-center items-center gap-x-8 gap-y-6 px-12">
+                {/* Standard Links: Home, About, Services, Projects, Properties, Blog, Contact */}
+                {navLinks.filter(l => l.name !== 'Home').map((link, index, array) => (
+                  <motion.div
+                    key={link.path}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + index * 0.05 }}
+                    className="flex items-center gap-8"
+                  >
+                    <Link
+                      to={link.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="font-serif text-5xl text-white hover:text-white/70 transition-colors tracking-tight"
+                      style={{ fontFamily: '"Playfair Display", serif' }}
+                    >
+                      {link.name}
+                    </Link>
+
+                    {index < array.length - 1 && (
+                      <span className="text-white/30 text-5xl font-light">|</span>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Secondary/Account Navigation Row */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="mt-8"
+                transition={{ delay: 0.4 }}
+                className="relative z-10 flex flex-wrap justify-center items-center gap-x-8 mt-4"
               >
-                <Link to="/contact">
-                  <Button variant="gold" size="xl">
-                    Get a Quote
-                  </Button>
-                </Link>
+                {user ? (
+                  <>
+                    {/* Admin Links */}
+                    {user.role === 'admin' && (
+                      <>
+                        <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-4xl text-accent hover:text-white transition-colors" style={{ fontFamily: '"Playfair Display", serif' }}>
+                          Dashboard
+                        </Link>
+                        <span className="text-white/30 text-4xl font-light">|</span>
+                      </>
+                    )}
+
+                    {/* Profile (Common) */}
+                    <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-4xl text-white/70 hover:text-white transition-colors" style={{ fontFamily: '"Playfair Display", serif' }}>
+                      Profile
+                    </Link>
+
+                    {/* User Specific: Interests */}
+                    {user.role !== 'admin' && (
+                      <>
+                        <span className="text-white/30 text-4xl font-light">|</span>
+                        <Link to="/interests" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-4xl text-white/70 hover:text-white transition-colors" style={{ fontFamily: '"Playfair Display", serif' }}>
+                          Interests
+                        </Link>
+                      </>
+                    )}
+
+                    <span className="text-white/30 text-4xl font-light">|</span>
+
+                    {/* Sign Out */}
+                    <button onClick={() => { handleSignOut(); setIsMobileMenuOpen(false); }} className="font-serif text-4xl text-white/70 hover:text-red-400 transition-colors" style={{ fontFamily: '"Playfair Display", serif' }}>
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-4xl text-white/50 hover:text-white transition-colors" style={{ fontFamily: '"Playfair Display", serif' }}>
+                    Client Login
+                  </Link>
+                )}
               </motion.div>
+
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+
+      {/* Contact Text for Desktop Menu (Top Right) - Replaces the normal Contact link when menu is open
+          Wait, the design has "CONTACT" next to the X button inside the dark header?
+          The image shows "CONTACT [X]" at the top right.
+       */}
+      {isMobileMenuOpen && (
+        <div className="hidden lg:block fixed top-6 right-24 z-50">
+          <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-body text-sm tracking-widest font-bold text-white uppercase hover:text-white/80">
+            Contact
+          </Link>
+        </div>
+      )}
+
+    </>
   );
 };

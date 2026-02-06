@@ -1,112 +1,136 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, MousePointer2, ShieldCheck, Trophy } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/hero-construction.jpg";
-import { useRef } from "react";
+import { Accessibility } from "lucide-react";
+import { useSliderImages } from "@/hooks/useSliderImages";
+import heroBg from "@/assets/hero-construction.jpg"; // Fallback static image
 
 export const HeroSection = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const { data: images, isLoading } = useSliderImages();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto-rotate slider
+  useEffect(() => {
+    if (!images || images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 10000); // Change slide every 8 seconds
+
+    return () => clearInterval(interval);
+  }, [images]);
+
+  const hasImages = images && images.length > 0;
+  const currentImage = hasImages ? images[currentIndex].image_url : heroBg;
+
+  // Preload next image for smoother transitions
+  useEffect(() => {
+    if (hasImages) {
+      const nextIndex = (currentIndex + 1) % images.length;
+      const img = new Image();
+      img.src = images[nextIndex].image_url;
+    }
+  }, [currentIndex, hasImages, images]);
 
   return (
-    <section
-      ref={containerRef}
-      className="relative min-h-screen flex items-center bg-[#080808] overflow-hidden pt-32"
-    >
-      {/* Dynamic Background Layer */}
-      <motion.div
-        style={{ y: y1 }}
-        className="absolute inset-0 z-0"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#080808]/40 via-transparent to-[#080808] z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#080808] via-[#080808]/80 to-transparent z-10" />
-        <img
-          src={heroBg}
-          alt="Premium Construction"
-          className="w-full h-full object-cover opacity-60 scale-110"
-        />
+    <section className="relative h-screen w-full overflow-hidden bg-[#080808]">
+      {/* Background Image Slider */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="absolute inset-0 z-0"
+        >
+          <div className="absolute inset-0 bg-black/40 z-10" /> {/* Dark overlay for text contrast */}
+          <img
+            src={currentImage}
+            alt={hasImages ? images[currentIndex].title || "Luxury Home" : "Luxury Custom Home"}
+            className="w-full h-full object-cover"
+          />
+        </motion.div>
+      </AnimatePresence>
 
-        {/* Subtle Decorative Grid */}
-        <div className="absolute inset-0 z-10 opacity-10 bg-[linear-gradient(rgba(255,184,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,184,0,0.1)_1px,transparent_1px)] bg-[size:60px_60px]" />
-      </motion.div>
+      {/* Main Content */}
+      <div className="relative z-20 container mx-auto px-6 h-full flex flex-col justify-end pb-32 md:pb-24 lg:justify-end">
 
-      <div className="container mx-auto px-6 relative z-20">
-        <div className="grid lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-8">
+        {/* Centered Text */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center">
 
-
-            {/* Title with Playfair Display */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
+          {/* Main Title */}
+          <AnimatePresence mode="wait">
+            <motion.h1
+              key={`title-${currentIndex}`}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="font-display text-5xl md:text-7xl lg:text-8xl text-white font-normal leading-tight tracking-tight mb-6"
+              style={{ fontFamily: '"Playfair Display", serif' }}
             >
-              <h1 className="font-display text-6xl md:text-8xl lg:text-9xl text-white font-bold leading-[0.9] tracking-tighter mb-8">
-                Building <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-gold-light to-gold-dark italic pr-4">
-                  Masterpieces
-                </span>
-              </h1>
-            </motion.div>
+              {hasImages && images[currentIndex].title ? images[currentIndex].title : "Luxury Custom Home Builders"}
+            </motion.h1>
+          </AnimatePresence>
 
-            {/* Refined Description */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="max-w-xl"
-            >
-              <p className="text-lg md:text-xl text-white/60 leading-relaxed mb-10 font-body">
-                Redefining the landscape of South Tamil Nadu with architectural precision and engineering excellence. We don't just build structures; we create landmarks.
-              </p>
-            </motion.div>
+          {/* Horizontal Line & Description */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex items-center justify-center gap-4 max-w-4xl mx-auto px-4"
+          >
+            <div className="h-px bg-white/60 flex-1 hidden md:block"></div>
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={`desc-${currentIndex}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-white font-body text-lg md:text-xl font-medium tracking-wide text-center"
+              >
+                {hasImages && images[currentIndex].description ? images[currentIndex].description : "Custom built homes for those with discerning taste."}
+              </motion.p>
+            </AnimatePresence>
+            <div className="h-px bg-white/60 flex-1 hidden md:block"></div>
+          </motion.div>
+        </div>
 
-            {/* Action Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex flex-wrap gap-6"
-            >
-              <Link to="/contact">
-                <Button className="h-16 px-10 bg-gold hover:bg-gold-dark text-black font-bold text-base uppercase tracking-widest rounded-none group relative overflow-hidden transition-all duration-500">
-                  <span className="relative z-10 flex items-center gap-2">
-                    Start Your Project
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Button>
-              </Link>
+        {/* Bottom Elements */}
+        <div className="absolute bottom-12 left-0 right-0 px-6 md:px-12 flex items-center justify-between z-30">
+          {/* Accessibility Icon (Bottom Left) */}
+          {/* <div className="hidden md:block">
+            <button className="bg-[#0055ff] p-2 rounded-full text-white hover:bg-blue-600 transition-colors" aria-label="Accessibility settings">
+              <Accessibility className="w-6 h-6" />
+            </button>
+          </div> */}
 
-              <Link to="/projects">
-                <Button
-                  variant="outline"
-                  className="h-16 px-10 border-white/20 text-white hover:bg-white hover:text-black hover:border-white font-medium text-base uppercase tracking-widest rounded-none transition-all duration-300 backdrop-blur-sm"
-                >
-                  Discover Portfolio
-                </Button>
-              </Link>
-            </motion.div>
+          {/* Slider Indicators (Bottom Center) - DYNAMIC */}
+          <div className="absolute left-1/2 -translate-x-1/2 flex gap-3">
+            {hasImages ? (
+              images.map((_, index) => (
+                <div
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all duration-300 ${index === currentIndex
+                    ? "bg-white scale-125"
+                    : "border border-white/50 bg-transparent hover:bg-white"
+                    }`}
+                ></div>
+              ))
+            ) : (
+              // Fallback static dot if no images loaded/ready
+              <div className="w-2.5 h-2.5 rounded-full bg-white cursor-pointer"></div>
+            )}
           </div>
 
-
+          {/* Right side spacer */}
+          <div className="hidden md:block w-10"></div>
         </div>
+
       </div>
-
-      {/* Modern Scroll Indicator */}
-      <motion.div
-        style={{ opacity }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-3"
-      >
-        <span className="text-[10px] text-white/40 uppercase tracking-[0.4em] font-bold">Scroll to Explore</span>
-        <div className="w-px h-16 bg-gradient-to-b from-gold via-gold/50 to-transparent" />
-      </motion.div>
-
-      {/* Corner Accent */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gold/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 blur-[150px] rounded-full pointer-events-none" />
     </section>
   );
 };

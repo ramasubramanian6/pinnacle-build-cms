@@ -118,22 +118,7 @@ const Profile = () => {
                                         {profile.full_name?.charAt(0) || user?.email?.charAt(0)}
                                     </AvatarFallback>
                                 </Avatar>
-                                <div>
-                                    <Label htmlFor="avatar" className="cursor-pointer">
-                                        <div className="flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-slate-50 transition-colors">
-                                            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                                            <span>Change Avatar</span>
-                                        </div>
-                                        <Input
-                                            id="avatar"
-                                            type="file"
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={handleAvatarUpload}
-                                            disabled={uploading}
-                                        />
-                                    </Label>
-                                </div>
+                                {/* Avatar Upload Removed as per request */}
                             </div>
 
                             <div className="grid gap-4">
