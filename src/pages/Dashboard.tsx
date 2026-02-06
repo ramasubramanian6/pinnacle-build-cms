@@ -37,6 +37,9 @@ const Dashboard = () => {
       navigate("/auth");
     } else if (isAdmin) {
       navigate("/admin");
+    } else if (!loading && !isAdmin) {
+      // Restrict access for non-admins (regular users)
+      navigate("/");
     }
   }, [user, loading, navigate, isAdmin]);
 
@@ -53,7 +56,7 @@ const Dashboard = () => {
     );
   }
 
-  if (!user) {
+  if (!user || (!isAdmin && !loading)) {
     return null;
   }
 
@@ -93,12 +96,6 @@ const Dashboard = () => {
                       Admin Panel
                     </Button>
                   )}
-                  <Button variant="outline" size="icon">
-                    <Bell className="w-5 h-5" />
-                  </Button>
-                  <Button variant="outline" size="icon">
-                    <Settings className="w-5 h-5" />
-                  </Button>
                   <Button variant="outline" onClick={handleSignOut}>
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign Out

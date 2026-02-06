@@ -20,6 +20,9 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProject } from "@/hooks/useProjects";
 import { LuxuryLoader } from "@/components/premium/LuxuryLoader";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const fallbackImages = ["/placeholder.svg"];
 
@@ -39,6 +42,9 @@ const ProjectDetail = () => {
     // Check if already interested
     const [interestSent, setInterestSent] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [showPhoneModal, setShowPhoneModal] = useState(false);
+    const [phoneInput, setPhoneInput] = useState("");
+    const { updateProfile } = useAuth();
 
 
     const { data: fetchedProject, isLoading } = useProject(id || "");
@@ -63,6 +69,18 @@ const ProjectDetail = () => {
             return;
         }
         if (!project) return;
+
+        // Check if user has phone number
+        if (!user.phone) {
+            setShowPhoneModal(true);
+            return;
+        }
+
+        await submitInterest();
+    };
+
+    const submitInterest = async () => {
+        if (!user || !project) return;
         setSubmitting(true);
         try {
             await api.post('/contacts', {
@@ -77,6 +95,47 @@ const ProjectDetail = () => {
         } catch (error) {
             console.error(error);
             toast.error("Failed to register interest. Please try again.");
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handlePhoneSubmit = async () => {
+        if (!phoneInput.trim()) {
+            toast.error("Please enter a valid phone number");
+            return;
+        }
+
+        try {
+            setSubmitting(true);
+            // Update profile with phone number
+            await updateProfile({ phone: phoneInput });
+            setShowPhoneModal(false);
+            // Proceed with interest submission
+            // Note: user object in context might take a moment to update, 
+            // so we can't rely on it immediately for the next call unless we pass the phone manually 
+            // or wait for the effect. 
+            // However, submitInterest uses user.phone. 
+            // Let's modify submitInterest to accept phone override or update the local object logic.
+
+            // Better approach: Call api directly here for interest to avoid sync issues, 
+            // OR blindly trust that updateProfile updated the backend and we can send the interest NOW 
+            // but we need to pass the phone explicitly if we don't want to wait for context update.
+
+            await api.post('/contacts', {
+                name: user?.user_metadata?.full_name || user?.fullName || 'User',
+                email: user?.email || '',
+                phone: phoneInput, // Use the input value directly
+                subject: `Project Interest: ${project.title}`,
+                message: `User has expressed interest in this project.`,
+            });
+
+            setInterestSent(true);
+            toast.success("Interest registered! Our team will contact you soon.");
+
+        } catch (error) {
+            console.error(error);
+            // Error handling is done in updateProfile for profile part
         } finally {
             setSubmitting(false);
         }
@@ -304,6 +363,39 @@ const ProjectDetail = () => {
                     </div>
                 </section>
             </Layout>
+
+            <Dialog open={showPhoneModal} onOpenChange={setShowPhoneModal}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Contact Number Required</DialogTitle>
+                        <DialogDescription>
+                            Please provide your phone number so our team can reach you regarding this project.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex items-center space-x-2 py-4">
+                        <div className="grid flex-1 gap-2">
+                            <Label htmlFor="phone" className="sr-only">
+                                Phone Number
+                            </Label>
+                            <Input
+                                id="phone"
+                                placeholder="+91 98765 43210"
+                                value={phoneInput}
+                                onChange={(e) => setPhoneInput(e.target.value)}
+                                type="tel"
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter className="sm:justify-start">
+                        <Button type="button" variant="secondary" onClick={() => setShowPhoneModal(false)}>
+                            Cancel
+                        </Button>
+                        <Button type="button" onClick={handlePhoneSubmit} disabled={submitting}>
+                            {submitting ? "Saving..." : "Submit & Register Interest"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };

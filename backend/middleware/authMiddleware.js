@@ -4,6 +4,7 @@ const User = require('../models/User');
 const protect = async (req, res, next) => {
     let token;
 
+    // Check header
     if (
         req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer')
@@ -17,8 +18,21 @@ const protect = async (req, res, next) => {
             console.error(error);
             res.status(401).json({ message: 'Not authorized, token failed' });
         }
-    } else if (!token) {
-        return res.status(401).json({ message: 'Not authorized, no token' });
+    }
+    // Check cookie
+    else if (req.cookies && req.cookies.jwt) {
+        try {
+            token = req.cookies.jwt;
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            req.user = await User.findById(decoded.id).select('-password');
+            next();
+        } catch (error) {
+            console.error(error);
+            res.status(401).json({ message: 'Not authorized, token failed' });
+        }
+    }
+    else {
+        res.status(401).json({ message: 'Not authorized, no token' });
     }
 };
 

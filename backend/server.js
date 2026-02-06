@@ -16,8 +16,11 @@ connectDB().catch(err => {
 
 const app = express();
 
+const cookieParser = require('cookie-parser');
+
 // Middleware
 app.use(express.json());
+app.use(cookieParser());
 
 // CORS Configuration for Vercel serverless
 // CORS Configuration
@@ -25,7 +28,8 @@ const allowedOrigins = [
     'https://brixxspace72.web.app',
     'https://brixxspace72.firebaseapp.com',
     'http://localhost:3000',
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'http://localhost:8080'
 ];
 
 app.use(cors({
@@ -62,6 +66,9 @@ app.use('/api/packages', require('./routes/packageRoutes'));
 app.use('/api/contacts', require('./routes/contactRoutes'));
 app.use('/api/slider-images', require('./routes/sliderImageRoutes'));
 app.use('/api/promotions', require('./routes/promotionRoutes'));
+
+const { errorHandler } = require('./middleware/errorMiddleware');
+app.use(errorHandler);
 
 app.get('/', (req, res) => {
     res.send('API is running...');

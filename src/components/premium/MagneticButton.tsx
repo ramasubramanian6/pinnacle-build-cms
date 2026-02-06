@@ -9,8 +9,8 @@ interface MagneticButtonProps {
   onClick?: () => void;
 }
 
-export const MagneticButton = ({ 
-  children, 
+export const MagneticButton = ({
+  children,
   className = "",
   magneticIntensity = 0.3,
   onClick
@@ -62,13 +62,12 @@ export const MagneticButton = ({
 };
 
 // Ripple effect button
-interface RippleButtonProps {
+interface RippleButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   className?: string;
-  onClick?: () => void;
 }
 
-export const RippleButton = ({ children, className = "", onClick }: RippleButtonProps) => {
+export const RippleButton = ({ children, className = "", onClick, ...props }: RippleButtonProps) => {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.currentTarget;
     const rect = button.getBoundingClientRect();
@@ -79,17 +78,18 @@ export const RippleButton = ({ children, className = "", onClick }: RippleButton
     ripple.style.left = `${x}px`;
     ripple.style.top = `${y}px`;
     ripple.className = "absolute w-0 h-0 bg-white/30 rounded-full animate-[ripple_0.6s_linear] pointer-events-none";
-    
+
     button.appendChild(ripple);
     setTimeout(() => ripple.remove(), 600);
-    
-    onClick?.();
+
+    onClick?.(e);
   };
 
   return (
     <button
       onClick={handleClick}
       className={cn("relative overflow-hidden", className)}
+      {...props}
     >
       {children}
     </button>

@@ -115,7 +115,7 @@ export default function AdminProjectInterests() {
                                         {projectInterests.map((contact) => (
                                             <TableRow key={contact.id} className="border-border">
                                                 <TableCell className="text-muted-foreground text-sm">
-                                                    {format(new Date(contact.created_at), "MMM d, yyyy")}
+                                                    {contact.createdAt ? format(new Date(contact.createdAt), "MMM d, yyyy") : "N/A"}
                                                 </TableCell>
                                                 <TableCell className="font-medium text-foreground">
                                                     {getProjectName(contact.subject)}
@@ -127,12 +127,10 @@ export default function AdminProjectInterests() {
                                                             <Mail className="h-3 w-3" />
                                                             {contact.email}
                                                         </div>
-                                                        {contact.phone && (
-                                                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                                                <Phone className="h-3 w-3" />
-                                                                {contact.phone}
-                                                            </div>
-                                                        )}
+                                                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                                            <Phone className="h-3 w-3" />
+                                                            {contact.phone || "-"}
+                                                        </div>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>

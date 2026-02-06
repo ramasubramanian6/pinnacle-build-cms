@@ -96,7 +96,7 @@ export default function AdminContacts() {
                         <TableCell className="text-muted-foreground text-sm">
                           {(() => {
                             try {
-                              return contact.created_at ? format(new Date(contact.created_at), "MMM d, yyyy") : "N/A";
+                              return contact.createdAt ? format(new Date(contact.createdAt), "MMM d, yyyy") : "N/A";
                             } catch {
                               return "Invalid Date";
                             }
@@ -109,12 +109,10 @@ export default function AdminContacts() {
                               <Mail className="h-3 w-3" />
                               {contact.email}
                             </div>
-                            {contact.phone && (
-                              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                <Phone className="h-3 w-3" />
-                                {contact.phone}
-                              </div>
-                            )}
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <Phone className="h-3 w-3" />
+                              {contact.phone || "-"}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell className="text-foreground">
