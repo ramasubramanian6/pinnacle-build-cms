@@ -16,6 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useServices } from "@/hooks/useServices";
+import { useServiceCategories } from "@/hooks/useServiceCategories";
 import * as LucideIcons from "lucide-react";
 import { PackagesSection } from "@/components/home/PackagesSection";
 import { ScrollReveal } from "@/components/premium/ScrollReveal";
@@ -43,6 +44,7 @@ const phases = [
 
 const Services = () => {
   const { data: fetchedServices, isLoading } = useServices();
+  const { data: categories, isLoading: categoriesLoading } = useServiceCategories();
 
   // Use fetched services if available, otherwise fall back to static data
   // Map fetched services to match the display structure (converting icon string to component)
@@ -106,6 +108,63 @@ const Services = () => {
             </ScrollReveal>
           </div>
         </section>
+
+        {/* Service Categories Section */}
+        {categories && categories.length > 0 && (
+          <section className="py-20 bg-white">
+            <div className="container mx-auto px-6">
+              <div className="text-center mb-16">
+                <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                  Our Service Categories
+                </h2>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                  Explore our comprehensive range of construction services
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                {categories.map((category, index) => {
+                  // @ts-ignore
+                  const IconComponent = LucideIcons[category.icon] || Building2;
+                  return (
+                    <motion.div
+                      key={category.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <Link to={`/services/${category.slug}`}>
+                        <div className="group h-full p-8 rounded-2xl bg-white border border-slate-200 hover:border-accent/50 hover:shadow-xl transition-all duration-300">
+                          {/* Icon */}
+                          <div className="w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
+                            <IconComponent className="w-8 h-8 text-slate-700 group-hover:text-accent transition-colors" />
+                          </div>
+
+                          {/* Title */}
+                          <h3 className="font-display text-2xl font-bold text-slate-900 mb-3 group-hover:text-accent transition-colors">
+                            {category.title}
+                          </h3>
+
+                          {/* Description */}
+                          <p className="text-slate-600 leading-relaxed mb-4">
+                            {category.description}
+                          </p>
+
+                          {/* Link */}
+                          <div className="flex items-center text-accent font-medium">
+                            Explore Services
+                            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Services Grid */}
         <section className="py-20 bg-white">

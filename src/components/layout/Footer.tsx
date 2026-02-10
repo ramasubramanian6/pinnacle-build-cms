@@ -11,11 +11,11 @@ const footerLinks = {
     { name: "Blog", path: "/blog" },
     { name: "Contact", path: "/contact" },
   ],
-  services: [
-    { name: "Residential Development", path: "/services" },
-    { name: "Commercial Spaces", path: "/services" },
-    { name: "Investment & Consulting", path: "/services" },
-    { name: "Project Management", path: "/services" },
+  quickLinks: [
+    { name: "Properties", path: "/properties" },
+    { name: "Project Interests", path: "/interests" },
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Login", path: "/auth" },
   ],
 };
 
@@ -112,11 +112,11 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Services Links */}
+          {/* Quick Links */}
           <div>
-            <h3 className="font-display text-lg font-semibold mb-6">Services</h3>
+            <h3 className="font-display text-lg font-semibold mb-6">Quick Links</h3>
             <ul className="space-y-4">
-              {footerLinks.services.map((link) => (
+              {footerLinks.quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}

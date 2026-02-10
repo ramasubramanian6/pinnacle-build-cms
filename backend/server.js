@@ -29,7 +29,9 @@ const allowedOrigins = [
     'https://brixxspace72.firebaseapp.com',
     'http://localhost:3000',
     'http://localhost:5173',
-    'http://localhost:8080'
+    'http://localhost:8080',
+    'http://localhost:8081',
+    'http://localhost:8082'
 ];
 
 app.use(cors({
@@ -60,6 +62,8 @@ app.use('/api/user-projects', require('./routes/userProjectRoutes'));
 app.use('/api/properties', require('./routes/propertyRoutes'));
 app.use('/api/blogs', require('./routes/blogRoutes'));
 app.use('/api/services', require('./routes/serviceRoutes'));
+app.use('/api/service-categories', require('./routes/serviceCategoryRoutes'));
+app.use('/api/service-subcategories', require('./routes/serviceSubcategoryRoutes'));
 app.use('/api/testimonials', require('./routes/testimonialRoutes'));
 app.use('/api/workers', require('./routes/workerRoutes'));
 app.use('/api/packages', require('./routes/packageRoutes'));

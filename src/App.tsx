@@ -8,6 +8,8 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
+import ServiceCategoryDetail from "./pages/ServiceCategoryDetail";
+import ServiceSubcategoryDetail from "./pages/ServiceSubcategoryDetail";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Properties from "./pages/Properties";
@@ -31,6 +33,8 @@ import AdminBlogs from "./pages/admin/AdminBlogs";
 import AdminSliderImages from "./pages/admin/AdminSliderImages";
 import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminProjectInterests from "./pages/admin/AdminProjectInterests";
+import AdminServiceCategories from "./pages/admin/AdminServiceCategories";
+import AdminServiceSubcategories from "./pages/admin/AdminServiceSubcategories";
 import NotFound from "./pages/NotFound";
 
 import ScrollToTop from "./components/ScrollToTop";
@@ -50,6 +54,8 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/services/:categorySlug" element={<ServiceCategoryDetail />} />
+              <Route path="/services/:categorySlug/:subcategorySlug" element={<ServiceSubcategoryDetail />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/projects/:id" element={<ProjectDetail />} />
               <Route path="/properties" element={<Properties />} />
@@ -73,6 +79,8 @@ const App = () => (
               <Route path="/admin/slider-images" element={<AdminSliderImages />} />
               <Route path="/admin/promotions" element={<AdminPromotions />} />
               <Route path="/admin/project-interests" element={<AdminProjectInterests />} />
+              <Route path="/admin/service-categories" element={<AdminServiceCategories />} />
+              <Route path="/admin/service-subcategories" element={<AdminServiceSubcategories />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

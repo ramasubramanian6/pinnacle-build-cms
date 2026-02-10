@@ -78,14 +78,13 @@ export const Navbar = () => {
 
           {/* Right Side - Contact & Menu */}
           <div className="w-full lg:w-1/3 flex items-center justify-end gap-6 md:gap-8 z-50">
-            {/* CONTACT Text Link (Desktop) - Hide when menu open */}
+            {/* CONTACT Text Link (Desktop) - Disabled for now */}
             {!isMobileMenuOpen && (
-              <Link
-                to="/contact"
-                className="hidden lg:block font-body text-sm tracking-widest font-bold text-white uppercase hover:text-accent transition-colors"
+              <span
+                className="hidden lg:block font-body text-sm tracking-widest font-bold text-white/30 uppercase cursor-not-allowed"
               >
                 Contact
-              </Link>
+              </span>
             )}
 
             {/* Hamburger Menu Trigger - Swaps to Close button inside overlay for desktop, but here for mobile */}
@@ -148,14 +147,22 @@ export const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + index * 0.1 }}
                 >
-                  <Link
-                    to={link.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`font-display text-4xl transition-colors duration-300 ${location.pathname === link.path ? "text-accent" : "text-white/80 hover:text-white"
-                      }`}
-                  >
-                    {link.name}
-                  </Link>
+                  {link.name === 'Home' ? (
+                    <Link
+                      to={link.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`font-display text-4xl transition-colors duration-300 ${location.pathname === link.path ? "text-accent" : "text-white/80 hover:text-white"
+                        }`}
+                    >
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <span
+                      className="font-display text-4xl text-white/30 cursor-not-allowed"
+                    >
+                      {link.name}
+                    </span>
+                  )}
                 </motion.div>
               ))}
 
@@ -205,14 +212,12 @@ export const Navbar = () => {
                     transition={{ delay: 0.1 + index * 0.05 }}
                     className="flex items-center gap-8"
                   >
-                    <Link
-                      to={link.path}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="font-serif text-5xl text-white hover:text-white/70 transition-colors tracking-tight"
+                    <span
+                      className="font-serif text-5xl text-white/30 cursor-not-allowed tracking-tight"
                       style={{ fontFamily: '"Playfair Display", serif' }}
                     >
                       {link.name}
-                    </Link>
+                    </span>
 
                     {index < array.length - 1 && (
                       <span className="text-white/30 text-5xl font-light">|</span>
@@ -281,9 +286,9 @@ export const Navbar = () => {
        */}
       {isMobileMenuOpen && (
         <div className="hidden lg:block fixed top-6 right-24 z-50">
-          <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-body text-sm tracking-widest font-bold text-white uppercase hover:text-white/80">
+          <span className="font-body text-sm tracking-widest font-bold text-white/30 uppercase cursor-not-allowed">
             Contact
-          </Link>
+          </span>
         </div>
       )}
 

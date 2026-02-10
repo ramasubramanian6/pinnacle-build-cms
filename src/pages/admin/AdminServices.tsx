@@ -225,6 +225,50 @@ export default function AdminServices() {
                         </Dialog>
                     </div>
 
+                    {/* Navigation to Service Categories & Subcategories */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-blue-200 dark:border-blue-800 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/service-categories')}>
+                            <CardHeader>
+                                <CardTitle className="flex items-center justify-between">
+                                    <span className="text-lg">Service Categories</span>
+                                    <Badge variant="secondary" className="bg-blue-200 dark:bg-blue-800">New</Badge>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-sm text-muted-foreground mb-3">
+                                    Create main service categories (e.g., Building Construction, Interior Design)
+                                </p>
+                                <Button variant="outline" size="sm" className="w-full">
+                                    Manage Categories →
+                                </Button>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200 dark:border-purple-800 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/service-subcategories')}>
+                            <CardHeader>
+                                <CardTitle className="flex items-center justify-between">
+                                    <span className="text-lg">Service Subcategories</span>
+                                    <Badge variant="secondary" className="bg-purple-200 dark:bg-purple-800">New</Badge>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-sm text-muted-foreground mb-3">
+                                    Add subcategories with image galleries (e.g., Commercial, Residential)
+                                </p>
+                                <Button variant="outline" size="sm" className="w-full">
+                                    Manage Subcategories →
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    <div className="border-t pt-6">
+                        <h2 className="text-xl font-semibold mb-2">General Services</h2>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            These are standalone services not linked to categories. For structured services with subcategories, use the cards above.
+                        </p>
+                    </div>
+
                     <Card className="bg-card border-border">
                         <CardContent className="p-0">
                             {servicesLoading ? (
