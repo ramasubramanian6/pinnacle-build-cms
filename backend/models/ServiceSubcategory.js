@@ -38,6 +38,10 @@ const serviceSubcategorySchema = mongoose.Schema(
             }
         }],
         features: [String],
+        featuresDescription: {
+            type: String, // Introductory text for the features section
+            default: ''
+        },
         contentHeading: {
             type: String,
             default: '',
@@ -59,7 +63,20 @@ const serviceSubcategorySchema = mongoose.Schema(
         isActive: {
             type: Boolean,
             default: true,
-        }
+        },
+        // Enhanced content structure
+        process: [{
+            title: { type: String, required: true },
+            description: { type: String },
+        }],
+        benefits: [{
+            title: { type: String, required: true },
+            description: { type: String },
+        }],
+        faqs: [{
+            question: { type: String, required: true },
+            answer: { type: String, required: true },
+        }]
     },
     {
         timestamps: true,

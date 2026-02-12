@@ -12,6 +12,7 @@ import ServiceCategoryDetail from "./pages/ServiceCategoryDetail";
 import ServiceSubcategoryDetail from "./pages/ServiceSubcategoryDetail";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
+import PackageDetail from "./pages/PackageDetail";
 import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
 import Blog from "./pages/Blog";
@@ -58,6 +59,8 @@ const App = () => (
               <Route path="/services/:categorySlug/:subcategorySlug" element={<ServiceSubcategoryDetail />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/projects/:id" element={<ProjectDetail />} />
+              <Route path="/packages/:id" element={<PackageDetail />} />
+              <Route path="/packages/:id" element={<PackageDetail />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/properties/:id" element={<PropertyDetail />} />
               <Route path="/blog" element={<Blog />} />

@@ -11,6 +11,7 @@ const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI, {
             serverSelectionTimeoutMS: 5000,
+            family: 4, // Force IPv4 to avoid ENOTFOUND errors on some networks
         });
         console.log(`MongoDB Connected: ${conn.connection.host}`);
         cachedConnection = conn;

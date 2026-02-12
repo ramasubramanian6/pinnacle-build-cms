@@ -15,6 +15,8 @@ import { useServiceSubcategories } from "@/hooks/useServiceSubcategories";
 import * as LucideIcons from "lucide-react";
 import { ScrollReveal } from "@/components/premium/ScrollReveal";
 import { PackagesSection } from "@/components/home/PackagesSection";
+import { ServicesProcess } from "@/components/services/ServicesProcess";
+import { ServicesWhyChooseUs } from "@/components/services/ServicesWhyChooseUs";
 
 const ServiceCategory = ({ category, allSubcategories }: { category: any, allSubcategories: any[] }) => {
   const subcategories = allSubcategories?.filter(sub =>
@@ -206,8 +208,9 @@ const Services = () => {
         />
       </Helmet>
       <Layout>
-        {/* --- Hero Section --- */}
+
         <section className="pt-32 pb-20 bg-background relative overflow-hidden">
+          {/* ... existing hero content ... */}
           <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
           <div className="container mx-auto px-6 relative z-10">
             <ScrollReveal>
@@ -228,6 +231,9 @@ const Services = () => {
           </div>
         </section>
 
+        {/* --- Process Section (New) --- */}
+        <ServicesProcess />
+
         {/* --- Service Categories (Full Width & Always Visible) --- */}
         <section className="py-10 bg-white min-h-[600px]">
           <div className="w-full px-4 md:px-8 lg:px-12">
@@ -247,37 +253,13 @@ const Services = () => {
           </div>
         </section>
 
+        {/* --- Why Choose Us (New) --- */}
+        <ServicesWhyChooseUs />
+
         {/* --- Packages Section --- */}
         <PackagesSection />
 
-        {/* --- CTA Section --- */}
-        <section className="py-20 bg-slate-900">
-          <div className="container mx-auto px-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <ScrollReveal>
-                <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">
-                  Ready to Start Your Project?
-                </h2>
-                <p className="text-xl text-slate-300 mb-8">
-                  Contact us today for a free consultation and let's bring your vision to life.
-                </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Link to="/contact">
-                    <Button className="h-12 px-8 bg-accent hover:bg-accent/90 text-slate-900 font-bold text-base">
-                      Request Consultation
-                    </Button>
-                  </Link>
-                  <a href="tel:+919894948011">
-                    <Button variant="outline" className="h-12 px-8 border-white/20 text-white hover:bg-white/10">
-                      <Phone className="mr-2 w-4 h-4" />
-                      +91 98949 48011
-                    </Button>
-                  </a>
-                </div>
-              </ScrollReveal>
-            </div>
-          </div>
-        </section>
+
       </Layout>
     </>
   );

@@ -174,9 +174,14 @@ const ServiceSubcategoryDetail = () => {
                     <section className="py-20 bg-slate-50">
                         <div className="container mx-auto px-6">
                             <div className="max-w-5xl mx-auto">
-                                <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">
+                                <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-6 text-center">
                                     Key Features
                                 </h2>
+                                {subcategory.featuresDescription && (
+                                    <p className="text-lg text-slate-600 text-center max-w-3xl mx-auto mb-12">
+                                        {subcategory.featuresDescription}
+                                    </p>
+                                )}
                                 <div className="grid md:grid-cols-2 gap-6">
                                     {subcategory.features.map((feature, index) => (
                                         <motion.div
@@ -212,6 +217,80 @@ const ServiceSubcategoryDetail = () => {
                                         {subcategory.content}
                                     </p>
                                 </div>
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* Process Section */}
+                {subcategory.process && subcategory.process.length > 0 && (
+                    <section className="py-20 bg-slate-50">
+                        <div className="container mx-auto px-6">
+                            <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">
+                                Our Process
+                            </h2>
+                            <div className="max-w-4xl mx-auto space-y-8">
+                                {subcategory.process.map((step: any, index: number) => (
+                                    <div key={index} className="flex gap-6 relative">
+                                        <div className="flex flex-col items-center">
+                                            <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-primary font-bold z-10 shrink-0">
+                                                {index + 1}
+                                            </div>
+                                            {index !== subcategory.process.length - 1 && (
+                                                <div className="w-px h-full bg-slate-300 absolute top-10 bottom-0 left-5 -translate-x-1/2" />
+                                            )}
+                                        </div>
+                                        <div className="pb-8">
+                                            <h3 className="text-xl font-semibold text-slate-900 mb-2">{step.title}</h3>
+                                            <p className="text-slate-600">{step.description}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* Benefits Section */}
+                {subcategory.benefits && subcategory.benefits.length > 0 && (
+                    <section className="py-20 bg-white">
+                        <div className="container mx-auto px-6">
+                            <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">
+                                Why Choose Us?
+                            </h2>
+                            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                                {subcategory.benefits.map((benefit: any, index: number) => (
+                                    <div key={index} className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-lg transition-shadow">
+                                        <h3 className="text-xl font-semibold text-slate-900 mb-3">{benefit.title}</h3>
+                                        <p className="text-slate-600">{benefit.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* FAQ Section */}
+                {subcategory.faqs && subcategory.faqs.length > 0 && (
+                    <section className="py-20 bg-slate-50">
+                        <div className="container mx-auto px-6 max-w-3xl">
+                            <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">
+                                Frequently Asked Questions
+                            </h2>
+                            <div className="space-y-4">
+                                {subcategory.faqs.map((faq: any, index: number) => (
+                                    <details key={index} className="group bg-white rounded-xl border border-slate-200 overflow-hidden">
+                                        <summary className="flex items-center justify-between p-6 cursor-pointer list-none font-semibold text-slate-900">
+                                            {faq.question}
+                                            <span className="text-slate-400 group-open:rotate-180 transition-transform">
+                                                <ChevronRight className="w-5 h-5 rotate-90" />
+                                            </span>
+                                        </summary>
+                                        <div className="px-6 pb-6 text-slate-600 border-t border-slate-100 pt-4">
+                                            {faq.answer}
+                                        </div>
+                                    </details>
+                                ))}
                             </div>
                         </div>
                     </section>

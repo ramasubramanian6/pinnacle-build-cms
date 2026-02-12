@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { usePackages } from "@/hooks/usePackages";
 import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -113,14 +114,17 @@ export const PackagesSection = () => {
                                     )}
 
                                     {/* CTA Button */}
-                                    <Button
-                                        className={`w-full h-12 font-semibold transition-all duration-300 ${pkg.is_popular
-                                            ? "bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-900 shadow-lg shadow-amber-500/30"
-                                            : "bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-amber-500/50"
-                                            }`}
-                                    >
-                                        Choose Package
-                                    </Button>
+                                    {/* CTA Button */}
+                                    <Link to={`/packages/${pkg.id}`} className="block w-full">
+                                        <Button
+                                            className={`w-full h-12 font-semibold transition-all duration-300 ${pkg.is_popular
+                                                ? "bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-900 shadow-lg shadow-amber-500/30"
+                                                : "bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-amber-500/50"
+                                                }`}
+                                        >
+                                            View Details
+                                        </Button>
+                                    </Link>
                                 </div>
                             </motion.div>
                         ))}

@@ -18,6 +18,7 @@ export interface ServiceSubcategory {
     description: string;
     images: ServiceSubcategoryImage[];
     features: string[];
+    featuresDescription?: string;
     contentHeading: string;
     content: string;
     metaTitle?: string;
@@ -26,6 +27,19 @@ export interface ServiceSubcategory {
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
+    // Enhanced content fields
+    process?: {
+        title: string;
+        description: string;
+    }[];
+    benefits?: {
+        title: string;
+        description: string;
+    }[];
+    faqs?: {
+        question: string;
+        answer: string;
+    }[];
 }
 
 // Get all subcategories

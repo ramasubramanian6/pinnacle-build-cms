@@ -14,6 +14,14 @@ export interface Package {
     order_index: number;
     created_at?: string;
     updated_at?: string;
+    // Enhanced content
+    images?: string[];
+    featuresDescription?: string;
+    details?: string;
+    status?: string;
+    process?: { title: string; description: string; }[];
+    benefits?: { title: string; description: string; }[];
+    faqs?: { question: string; answer: string; }[];
 }
 
 export const usePackages = () => {
@@ -23,6 +31,17 @@ export const usePackages = () => {
             const { data } = await api.get("/packages");
             return data.map((p: any) => ({ ...p, id: p._id })) as Package[];
         },
+    });
+};
+
+export const usePackageById = (id: string) => {
+    return useQuery<Package>({
+        queryKey: ["package", id],
+        queryFn: async () => {
+            const { data } = await api.get(`/packages/${id}`);
+            return { ...data, id: data._id } as Package;
+        },
+        enabled: !!id,
     });
 };
 

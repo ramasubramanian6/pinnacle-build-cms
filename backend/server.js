@@ -8,11 +8,10 @@ const connectDB = require('./config/db');
 // Load env vars
 dotenv.config();
 
-// Connect to database (async, non-blocking for serverless)
-connectDB().catch(err => {
-    console.error('Failed to connect to MongoDB:', err.message);
-    // Don't crash the server, just log the error
-});
+// Database connection is handled in startServer for local dev, or implicitly for serverless
+// connectDB().catch(err => {
+//     console.error('Failed to connect to MongoDB:', err.message);
+// });
 
 const app = express();
 
@@ -82,20 +81,26 @@ const PORT = parseInt(process.env.PORT) || 5001;
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
-    const startServer = (port) => {
-        const server = app.listen(port, '0.0.0.0', () => {
-            console.log(`Server running on port ${port}`);
-        });
+    const startServer = async (port) => {
+        try {
+            await connectDB();
+            const server = app.listen(port, '0.0.0.0', () => {
+                console.log(`Server running on port ${port}`);
+            });
 
-        server.on('error', (err) => {
-            if (err.code === 'EADDRINUSE') {
-                console.log(`Port ${port} is in use, trying ${Number(port) + 1}...`);
-                startServer(Number(port) + 1);
-            } else {
-                console.error('Server error:', err);
-                process.exit(1);
-            }
-        });
+            server.on('error', (err) => {
+                if (err.code === 'EADDRINUSE') {
+                    console.log(`Port ${port} is in use, trying ${Number(port) + 1}...`);
+                    startServer(Number(port) + 1);
+                } else {
+                    console.error('Server error:', err);
+                    process.exit(1);
+                }
+            });
+        } catch (error) {
+            console.error('Failed to start server:', error);
+            process.exit(1);
+        }
     };
 
     startServer(PORT);
