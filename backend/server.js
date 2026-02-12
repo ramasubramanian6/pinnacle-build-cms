@@ -8,10 +8,13 @@ const connectDB = require('./config/db');
 // Load env vars
 dotenv.config();
 
-// Database connection is handled in startServer for local dev, or implicitly for serverless
-// connectDB().catch(err => {
-//     console.error('Failed to connect to MongoDB:', err.message);
-// });
+// Database connection is handled in startServer for local dev
+// For Vercel/Production, we need to initiate connection
+if (process.env.NODE_ENV === 'production') {
+    connectDB().catch(err => {
+        console.error('Failed to connect to MongoDB:', err.message);
+    });
+}
 
 const app = express();
 
