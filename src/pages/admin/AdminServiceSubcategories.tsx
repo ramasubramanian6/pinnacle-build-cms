@@ -34,6 +34,7 @@ const AdminServiceSubcategories = () => {
             description: '',
             images: [],
             features: [],
+            contentHeading: '',
             content: '',
             order: 0,
             isActive: true
@@ -366,6 +367,15 @@ const AdminServiceSubcategories = () => {
                         <div className="space-y-4 p-4 bg-slate-900/50 rounded-lg border border-slate-700">
                             <h3 className="text-lg font-semibold text-accent">Detailed Information</h3>
                             <p className="text-sm text-slate-400">Comprehensive content about this service</p>
+                            <div>
+                                <label className="block text-sm font-medium mb-2 text-white">Content Heading (Optional)</label>
+                                <Input
+                                    value={editingSubcategory.contentHeading || ''}
+                                    onChange={(e) => setEditingSubcategory({ ...editingSubcategory, contentHeading: e.target.value })}
+                                    placeholder="e.g., Why Choose Us?"
+                                    className="bg-slate-900 text-white border-slate-700"
+                                />
+                            </div>
                             <label className="block text-sm font-medium mb-2 text-white">Full Service Description</label>
                             <Textarea
                                 value={editingSubcategory.content || ''}

@@ -20,7 +20,6 @@ const navLinks = [
   { name: "About", path: "/about" },
   { name: "Services", path: "/services" },
   { name: "Projects", path: "/projects" },
-  { name: "Properties", path: "/properties" },
   { name: "Blog", path: "/blog" },
   { name: "Contact", path: "/contact" },
 ];
@@ -80,11 +79,13 @@ export const Navbar = () => {
           <div className="w-full lg:w-1/3 flex items-center justify-end gap-6 md:gap-8 z-50">
             {/* CONTACT Text Link (Desktop) - Disabled for now */}
             {!isMobileMenuOpen && (
-              <span
-                className="hidden lg:block font-body text-sm tracking-widest font-bold text-white/30 uppercase cursor-not-allowed"
+              <Link
+                to="/contact"
+                className="hidden lg:block font-body text-sm tracking-widest font-bold text-white hover:text-accent uppercase transition-colors"
+                aria-label="Contact Us"
               >
                 Contact
-              </span>
+              </Link>
             )}
 
             {/* Hamburger Menu Trigger - Swaps to Close button inside overlay for desktop, but here for mobile */}
@@ -147,22 +148,14 @@ export const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + index * 0.1 }}
                 >
-                  {link.name === 'Home' ? (
-                    <Link
-                      to={link.path}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={`font-display text-4xl transition-colors duration-300 ${location.pathname === link.path ? "text-accent" : "text-white/80 hover:text-white"
-                        }`}
-                    >
-                      {link.name}
-                    </Link>
-                  ) : (
-                    <span
-                      className="font-display text-4xl text-white/30 cursor-not-allowed"
-                    >
-                      {link.name}
-                    </span>
-                  )}
+                  <Link
+                    to={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`font-display text-4xl transition-colors duration-300 ${location.pathname === link.path ? "text-accent" : "text-white/80 hover:text-white"
+                      }`}
+                  >
+                    {link.name}
+                  </Link>
                 </motion.div>
               ))}
 
@@ -202,7 +195,7 @@ export const Navbar = () => {
               </div>
 
               {/* Primary Navigation Row */}
-              <div className="relative z-10 flex flex-wrap justify-center items-center gap-x-8 gap-y-6 px-12">
+              <div className="relative z-50 pointer-events-auto flex flex-wrap justify-center items-center gap-x-8 gap-y-6 px-12">
                 {/* Standard Links: Home, About, Services, Projects, Properties, Blog, Contact */}
                 {navLinks.filter(l => l.name !== 'Home').map((link, index, array) => (
                   <motion.div
@@ -212,12 +205,15 @@ export const Navbar = () => {
                     transition={{ delay: 0.1 + index * 0.05 }}
                     className="flex items-center gap-8"
                   >
-                    <span
-                      className="font-serif text-5xl text-white/30 cursor-not-allowed tracking-tight"
+                    <Link
+                      to={link.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`font-serif text-5xl tracking-tight transition-colors duration-300 ${location.pathname === link.path ? "text-accent" : "text-white/70 hover:text-white"
+                        }`}
                       style={{ fontFamily: '"Playfair Display", serif' }}
                     >
                       {link.name}
-                    </span>
+                    </Link>
 
                     {index < array.length - 1 && (
                       <span className="text-white/30 text-5xl font-light">|</span>
@@ -231,7 +227,7 @@ export const Navbar = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="relative z-10 flex flex-wrap justify-center items-center gap-x-8 mt-4"
+                className="relative z-50 pointer-events-auto flex flex-wrap justify-center items-center gap-x-8 mt-4"
               >
                 {user ? (
                   <>
@@ -286,9 +282,13 @@ export const Navbar = () => {
        */}
       {isMobileMenuOpen && (
         <div className="hidden lg:block fixed top-6 right-24 z-50">
-          <span className="font-body text-sm tracking-widest font-bold text-white/30 uppercase cursor-not-allowed">
+          <Link
+            to="/contact"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="font-body text-sm tracking-widest font-bold text-white hover:text-accent uppercase transition-colors"
+          >
             Contact
-          </span>
+          </Link>
         </div>
       )}
 

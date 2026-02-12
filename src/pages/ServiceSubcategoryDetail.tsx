@@ -202,6 +202,11 @@ const ServiceSubcategoryDetail = () => {
                     <section className="py-20 bg-white">
                         <div className="container mx-auto px-6">
                             <div className="max-w-4xl mx-auto">
+                                {subcategory.contentHeading && (
+                                    <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-8 text-center">
+                                        {subcategory.contentHeading}
+                                    </h2>
+                                )}
                                 <div className="prose prose-lg prose-slate max-w-none">
                                     <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">
                                         {subcategory.content}

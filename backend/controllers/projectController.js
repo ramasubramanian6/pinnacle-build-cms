@@ -13,16 +13,22 @@ const getProjects = async (req, res) => {
 // @route   GET /api/projects/:id
 // @access  Public
 const getProjectById = async (req, res) => {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        return res.status(404).json({ message: 'Project not found' });
-    }
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
 
-    const project = await Project.findById(req.params.id);
+        const project = await Project.findById(req.params.id).lean();
 
-    if (project) {
-        res.json(project);
-    } else {
-        res.status(404).json({ message: 'Project not found' });
+        if (project) {
+            // Manually add id virtual since we are using lean()
+            res.json({ ...project, id: project._id });
+        } else {
+            res.status(404).json({ message: 'Project not found' });
+        }
+    } catch (error) {
+        console.error("Error in getProjectById:", error);
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -46,7 +52,13 @@ const createProject = async (req, res) => {
         amenities: req.body.amenities || [],
         gallery: req.body.gallery || [],
         featured_image: req.body.featured_image,
-        featured: req.body.featured || false
+        featured: req.body.featured || false,
+        // New Fields
+        episodes: req.body.episodes || [],
+        ebook: req.body.ebook, // This will now include the image field if sent
+        products: req.body.products || [],
+        team: req.body.team,
+        extended_info: req.body.extended_info
     });
 
     const createdProject = await project.save();
@@ -74,6 +86,15 @@ const updateProject = async (req, res) => {
         project.sold_units = req.body.sold_units !== undefined ? req.body.sold_units : project.sold_units;
         project.estimated_completion = req.body.estimated_completion || project.estimated_completion;
         project.amenities = req.body.amenities || project.amenities;
+
+        // New Fields Updates
+        project.episodes = req.body.episodes || project.episodes;
+        project.ebook = req.body.ebook || project.ebook; // Handles image update automatically
+        project.products = req.body.products || project.products;
+        project.team = req.body.team || project.team;
+        project.extended_info = req.body.extended_info || project.extended_info;
+        project.start_date = req.body.start_date || project.start_date;
+        project.cost = req.body.cost || project.cost;
 
         const updatedProject = await project.save();
         res.json(updatedProject);

@@ -18,6 +18,7 @@ export interface ServiceSubcategory {
     description: string;
     images: ServiceSubcategoryImage[];
     features: string[];
+    contentHeading: string;
     content: string;
     metaTitle?: string;
     metaDescription?: string;

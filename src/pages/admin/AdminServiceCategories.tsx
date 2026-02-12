@@ -28,7 +28,6 @@ const AdminServiceCategories = () => {
             title: '',
             slug: '',
             description: '',
-            icon: 'Building2',
             order: 0,
             isActive: true
         });
@@ -148,18 +147,7 @@ const AdminServiceCategories = () => {
                                     className="bg-slate-900 text-white border-slate-700"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-2 text-white">Icon (Lucide Icon Name)</label>
-                                <Input
-                                    value={editingCategory.icon || ''}
-                                    onChange={(e) => setEditingCategory({ ...editingCategory, icon: e.target.value })}
-                                    placeholder="Building2"
-                                    className="bg-slate-900 text-white border-slate-700"
-                                />
-                                <p className="text-xs text-slate-400 mt-1">
-                                    Use Lucide icon names like: Building2, Home, Hammer, etc.
-                                </p>
-                            </div>
+
                             <div>
                                 <label className="block text-sm font-medium mb-2 text-white">Order</label>
                                 <Input
@@ -196,9 +184,7 @@ const AdminServiceCategories = () => {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                                     Slug
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                                    Icon
-                                </th>
+
                                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                                     Order
                                 </th>
@@ -220,9 +206,7 @@ const AdminServiceCategories = () => {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                             {category.slug}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
-                                            {category.icon}
-                                        </td>
+
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                             {category.order}
                                         </td>

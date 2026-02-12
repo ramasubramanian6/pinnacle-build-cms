@@ -10,6 +10,27 @@ const projectSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        client: {
+            type: String,
+        },
+        architect: {
+            type: String,
+        },
+        area: {
+            type: Number,
+        },
+        year: {
+            type: Number,
+        },
+        cost: {
+            type: String,
+        },
+        content: {
+            type: String,
+        },
+        embedded_video: {
+            type: String,
+        },
         location: {
             type: String,
             required: true,
@@ -60,6 +81,47 @@ const projectSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true
+        },
+        // --- New Fields for "Sharada" Style Redesign ---
+        episodes: [{
+            title: String,
+            duration: String,
+            thumbnail: String,
+            video_url: String, // Full video URL (Youtube/Vimeo)
+            isPremium: { type: Boolean, default: false }
+        }],
+        ebook: {
+            title: String,
+            pages: Number,
+            images: Number,
+            drawings: Number,
+            size: String,
+            url: String,
+            image: String // Cover image for the eBook
+        },
+        products: [{
+            category: String,
+            brand: String,
+            items: [String],
+            isPremium: { type: Boolean, default: true }
+        }],
+        team: {
+            principalArchitect: String,
+            firm: String,
+            architect_image: String,
+            designTeam: [String],
+            photoCredit: String,
+            cinematographer: String,
+            structuralConsultant: String,
+            otherConsultants: [String]
+        },
+        extended_info: {
+            plotArea: String,
+            facing: String,
+            vastu: String,
+            rooms: Number,
+            parking: Number,
+            floors: Number
         }
     },
     {

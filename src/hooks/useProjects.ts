@@ -21,6 +21,52 @@ export interface Project {
   featured_image: string | null;
   created_at: string;
   updated_at: string;
+  client?: string;
+  architect?: string;
+  area?: number;
+  year?: number;
+  cost?: string;
+  content?: string;
+  embedded_video?: string;
+  // New Fields
+  episodes?: {
+    title: string;
+    duration: string;
+    thumbnail: string;
+    video_url: string;
+    isPremium: boolean;
+  }[];
+  ebook?: {
+    title: string;
+    pages: number;
+    images: number;
+    drawings: number;
+    size: string;
+    url: string;
+    image?: string;
+  };
+  products?: {
+    category: string;
+    brand: string;
+    items?: string[];
+    isPremium: boolean;
+  }[];
+  team?: {
+    principalArchitect?: string;
+    firm?: string;
+    architect_image?: string;
+    photoCredit?: string;
+    cinematographer?: string;
+    structuralConsultant?: string;
+  };
+  extended_info?: {
+    plotArea?: string;
+    facing?: string;
+    vastu?: string;
+    rooms?: number;
+    parking?: number;
+    floors?: number;
+  };
 }
 
 export const useProjects = (category?: string) => {

@@ -12,7 +12,6 @@ const footerLinks = {
     { name: "Contact", path: "/contact" },
   ],
   quickLinks: [
-    { name: "Properties", path: "/properties" },
     { name: "Project Interests", path: "/interests" },
     { name: "Dashboard", path: "/dashboard" },
     { name: "Login", path: "/auth" },

@@ -38,6 +38,10 @@ const serviceSubcategorySchema = mongoose.Schema(
             }
         }],
         features: [String],
+        contentHeading: {
+            type: String,
+            default: '',
+        },
         content: {
             type: String,
             default: '',

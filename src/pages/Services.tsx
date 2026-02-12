@@ -1,352 +1,283 @@
-import { useRef } from "react";
-import { Helmet } from "react-helmet-async";
+import React from "react";
 import { Layout } from "@/components/layout/Layout";
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import {
   Building2,
-  Calculator,
-  ClipboardCheck,
-  FileText,
-  Shield,
-  Users,
-  CheckCircle2,
   ArrowRight,
-  Phone
+  Phone,
+  ArrowUpRight
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useServices } from "@/hooks/useServices";
 import { useServiceCategories } from "@/hooks/useServiceCategories";
+import { useServiceSubcategories } from "@/hooks/useServiceSubcategories";
 import * as LucideIcons from "lucide-react";
-import { PackagesSection } from "@/components/home/PackagesSection";
 import { ScrollReveal } from "@/components/premium/ScrollReveal";
-import { GradientText } from "@/components/premium/AnimatedText";
+import { PackagesSection } from "@/components/home/PackagesSection";
 
-// Static services removed
+const ServiceCategory = ({ category, allSubcategories }: { category: any, allSubcategories: any[] }) => {
+  const subcategories = allSubcategories?.filter(sub =>
+    (typeof sub.category === 'string' ? sub.category : sub.category.id) === category.id
+  ) || [];
 
-const phases = [
-  {
-    number: "01",
-    title: "Pre-Construction",
-    description: "Planning, design, and feasibility studies"
-  },
-  {
-    number: "02",
-    title: "Construction",
-    description: "Execution, supervision, and quality control"
-  },
-  {
-    number: "03",
-    title: "Post-Construction",
-    description: "Handover, documentation, and support"
-  }
-];
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = React.useState(false);
+  const [showRightArrow, setShowRightArrow] = React.useState(true);
+
+  const checkScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setShowLeftArrow(scrollLeft > 0);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  React.useEffect(() => {
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    return () => window.removeEventListener('resize', checkScroll);
+  }, [subcategories]);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = direction === 'left' ? -400 : 400;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      setTimeout(checkScroll, 300);
+    }
+  };
+
+  const isScrollable = subcategories.length > 10;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="rounded-3xl border border-slate-200 bg-white overflow-hidden"
+    >
+      {/* Header (No Icon, Professional) */}
+      <div className="p-6 md:p-8 bg-slate-50 border-b border-slate-200">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex flex-col gap-2">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
+              {category.title}
+            </h2>
+            <p className="text-slate-500 max-w-3xl text-lg leading-relaxed">
+              {category.description}
+            </p>
+          </div>
+
+          {/* Scroll Buttons (Only if scrollable) */}
+          {isScrollable && (
+            <div className="flex items-center gap-2 hidden md:flex shrink-0">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => scroll('left')}
+                disabled={!showLeftArrow}
+                className="rounded-full border-slate-200 hover:border-accent hover:text-accent disabled:opacity-30"
+              >
+                <LucideIcons.ChevronLeft className="w-5 h-5" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => scroll('right')}
+                disabled={!showRightArrow}
+                className="rounded-full border-slate-200 hover:border-accent hover:text-accent disabled:opacity-30"
+              >
+                <LucideIcons.ChevronRight className="w-5 h-5" />
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-6 md:p-8">
+        {subcategories.length > 0 ? (
+          isScrollable ? (
+            // Horizontal Scroll Layout
+            <div
+              ref={scrollContainerRef}
+              onScroll={checkScroll}
+              className="flex gap-6 overflow-x-auto pb-6 -mb-6 scrollbar-hide snap-x"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {subcategories.map((sub, idx) => (
+                <div key={sub.id} className="min-w-[300px] md:min-w-[350px] snap-start">
+                  <ServiceCard category={category} sub={sub} idx={idx} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            // Grid Layout
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {subcategories.map((sub, idx) => (
+                <ServiceCard key={sub.id} category={category} sub={sub} idx={idx} />
+              ))}
+            </div>
+          )
+        ) : (
+          <div className="text-center py-12 text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+            <p>No services found in this category yet.</p>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+const ServiceCard = ({ category, sub, idx }: { category: any, sub: any, idx: number }) => {
+  // @ts-ignore
+  const IconComponent = LucideIcons[category.icon] || Building2;
+
+  return (
+    <Link
+      to={`/services/${category.slug}/${sub.slug}`}
+      className="group/card relative h-full block h-full outline-none"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: idx * 0.05 }}
+        className="h-full bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-accent/40 hover:-translate-y-1 transition-all duration-300 flex flex-col shadow-sm"
+      >
+        {/* Image Area */}
+        <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
+          {sub.images && sub.images.length > 0 ? (
+            <img
+              src={sub.images[0].url}
+              alt={sub.title}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center opacity-10">
+              <IconComponent className="w-16 h-16 text-slate-300" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover/card:opacity-40 transition-opacity duration-300" />
+
+          {/* Floating Arrow (Subtle) */}
+          <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover/card:opacity-100 transform translate-y-2 group-hover/card:translate-y-0 transition-all duration-300 border border-white/30">
+            <ArrowUpRight className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="p-6 flex flex-col flex-1">
+          <h3 className="font-display text-xl font-bold text-slate-900 mb-2 group-hover/card:text-accent transition-colors">
+            {sub.title}
+          </h3>
+          <p className="text-slate-500 text-sm leading-relaxed line-clamp-2 mb-5 flex-1">
+            {sub.shortDescription}
+          </p>
+
+          <div className="flex items-center text-xs font-bold text-accent uppercase tracking-wider mt-auto">
+            View Details <ArrowRight className="w-3 h-3 ml-1 transition-transform group-hover/card:translate-x-1" />
+          </div>
+        </div>
+      </motion.div>
+    </Link>
+  );
+};
 
 const Services = () => {
-  const { data: fetchedServices, isLoading } = useServices();
   const { data: categories, isLoading: categoriesLoading } = useServiceCategories();
+  const { data: allSubcategories, isLoading: subcategoriesLoading } = useServiceSubcategories();
 
-  // Use fetched services if available, otherwise fall back to static data
-  // Map fetched services to match the display structure (converting icon string to component)
-  // Use fetched services only
-  const displayServices = fetchedServices && fetchedServices.length > 0
-    ? fetchedServices.map(s => {
-      // Dynamically get icon component from Lucide
-      // @ts-ignore
-      const IconComponent = LucideIcons[s.icon] || Building2;
-      return {
-        icon: IconComponent,
-        title: s.title,
-        description: s.description || "",
-        features: s.features || []
-      };
-    })
-    : [];
+  const LoadingSkeleton = () => (
+    <div className="space-y-4">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="h-24 bg-slate-100 rounded-xl animate-pulse" />
+      ))}
+    </div>
+  );
 
   return (
     <>
       <Helmet>
-        <title>Professional Services | Brixx Space Construction Consultation</title>
+        <title>Professional Services | Brixx Space Construction</title>
         <meta
           name="description"
-          content="Expert construction consultation services backed by 35+ years of experience. Design coordination, budget management, quality assurance, and more."
+          content="Expert construction consultation services backed by 35+ years of experience. Browse our specialized services from residential planning to commercial execution."
         />
       </Helmet>
       <Layout>
-        {/* Hero Section */}
+        {/* --- Hero Section --- */}
         <section className="pt-32 pb-20 bg-background relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
           <div className="container mx-auto px-6 relative z-10">
             <ScrollReveal>
               <span className="text-accent font-medium uppercase tracking-wider text-sm mb-4 block">
-                Professional Services
+                Our Expertise
               </span>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                Expert <span className="text-accent">Construction</span> Consultation
+                Comprehensive <span className="text-accent">Construction</span> Solutions
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
               <p className="text-muted-foreground text-lg max-w-2xl mb-8">
-                Comprehensive project advisory backed by 35+ years of industry expertise. From concept to completion, we ensure excellence at every stage.
+                From initial concept to final handover, we provide end-to-end services tailored to your specific needs. Explore our service categories below.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/contact">
-                  <Button className="h-12 px-8 bg-accent hover:bg-accent/90 text-primary font-semibold">
-                    Get Started
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-                <a href="tel:+919894948011">
-                  <Button variant="outline" className="h-12 px-8">
-                    <Phone className="mr-2 w-4 h-4" />
-                    Call Us
-                  </Button>
-                </a>
-              </div>
             </ScrollReveal>
           </div>
         </section>
 
-        {/* Service Categories Section */}
-        {categories && categories.length > 0 && (
-          <section className="py-20 bg-white">
-            <div className="container mx-auto px-6">
-              <div className="text-center mb-16">
-                <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                  Our Service Categories
-                </h2>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                  Explore our comprehensive range of construction services
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                {categories.map((category, index) => {
-                  // @ts-ignore
-                  const IconComponent = LucideIcons[category.icon] || Building2;
-                  return (
-                    <motion.div
-                      key={category.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      <Link to={`/services/${category.slug}`}>
-                        <div className="group h-full p-8 rounded-2xl bg-white border border-slate-200 hover:border-accent/50 hover:shadow-xl transition-all duration-300">
-                          {/* Icon */}
-                          <div className="w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors">
-                            <IconComponent className="w-8 h-8 text-slate-700 group-hover:text-accent transition-colors" />
-                          </div>
-
-                          {/* Title */}
-                          <h3 className="font-display text-2xl font-bold text-slate-900 mb-3 group-hover:text-accent transition-colors">
-                            {category.title}
-                          </h3>
-
-                          {/* Description */}
-                          <p className="text-slate-600 leading-relaxed mb-4">
-                            {category.description}
-                          </p>
-
-                          {/* Link */}
-                          <div className="flex items-center text-accent font-medium">
-                            Explore Services
-                            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </div>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Services Grid */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Our Core Services
-              </h2>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                End-to-end construction consultation services tailored to your project needs
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              {displayServices.map((service, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="group"
-                >
-                  <div className="h-full p-8 rounded-2xl bg-white border border-slate-200 hover:border-[#FFB800]/50 hover:shadow-xl transition-all duration-300">
-                    {/* Icon */}
-                    <div className="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center mb-6 group-hover:bg-[#FFB800]/10 transition-colors">
-                      <service.icon className="w-7 h-7 text-slate-700 group-hover:text-[#FFB800] transition-colors" />
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="font-display text-xl font-bold text-slate-900 mb-3">
-                      {service.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-slate-600 leading-relaxed mb-6 text-sm">
-                      {service.description}
-                    </p>
-
-                    {/* Features */}
-                    <ul className="space-y-2">
-                      {service.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
-                          <CheckCircle2 className="w-4 h-4 text-[#FFB800] flex-shrink-0 mt-0.5" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Project Phases */}
-        <section className="py-20 bg-slate-50">
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Key Project Phases
-              </h2>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                Comprehensive support throughout your construction journey
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {phases.map((phase, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.15 }}
-                  className="relative"
-                >
-                  <div className="p-8 rounded-2xl bg-white border border-slate-200 hover:border-[#FFB800]/50 hover:shadow-lg transition-all duration-300">
-                    {/* Number */}
-                    <div className="text-6xl font-bold text-[#FFB800]/20 mb-4">
-                      {phase.number}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="font-display text-xl font-bold text-slate-900 mb-3">
-                      {phase.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-slate-600 leading-relaxed">
-                      {phase.description}
-                    </p>
-                  </div>
-
-                  {/* Connector Line */}
-                  {index < phases.length - 1 && (
-                    <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-slate-200" />
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Why Choose Us */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-6">
-            <div className="max-w-5xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-                    Why Choose Brixx Space?
-                  </h2>
-                  <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                    With over three decades of experience in the construction industry, we bring unparalleled expertise and dedication to every project.
-                  </p>
-                  <ul className="space-y-4">
-                    {[
-                      "35+ years of industry experience",
-                      "500+ successful projects delivered",
-                      "Expert team of qualified professionals",
-                      "Commitment to quality and timely delivery",
-                      "Comprehensive end-to-end solutions"
-                    ].map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-[#FFB800] flex-shrink-0 mt-0.5" />
-                        <span className="text-slate-700">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  className="relative"
-                >
-                  <img
-                    src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=600&fit=crop"
-                    alt="Construction expertise"
-                    className="rounded-2xl shadow-2xl"
+        {/* --- Service Categories (Full Width & Always Visible) --- */}
+        <section className="py-10 bg-white min-h-[600px]">
+          <div className="w-full px-4 md:px-8 lg:px-12">
+            {categoriesLoading ? (
+              <LoadingSkeleton />
+            ) : (
+              <div className="space-y-12">
+                {categories?.map((category, index) => (
+                  <ServiceCategory
+                    key={category.id}
+                    category={category}
+                    allSubcategories={allSubcategories || []}
                   />
-                </motion.div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </section>
 
-        {/* Packages Section */}
+        {/* --- Packages Section --- */}
         <PackagesSection />
 
-        {/* CTA Section */}
-        {/* <section className="py-20 bg-slate-900">
+        {/* --- CTA Section --- */}
+        <section className="py-20 bg-slate-900">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">
-                Ready to Start Your Project?
-              </h2>
-              <p className="text-xl text-slate-300 mb-8">
-                Let's discuss how our expert consultation services can bring your vision to life
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link to="/contact">
-                  <Button className="h-12 px-8 bg-[#FFB800] hover:bg-[#FFA500] text-slate-900 font-semibold">
-                    Contact Us Today
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link to="/projects">
-                  <Button variant="outline" className="h-12 px-8 border-white/20 text-white hover:bg-white/10">
-                    View Our Projects
-                  </Button>
-                </Link>
-              </div>
+              <ScrollReveal>
+                <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">
+                  Ready to Start Your Project?
+                </h2>
+                <p className="text-xl text-slate-300 mb-8">
+                  Contact us today for a free consultation and let's bring your vision to life.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Link to="/contact">
+                    <Button className="h-12 px-8 bg-accent hover:bg-accent/90 text-slate-900 font-bold text-base">
+                      Request Consultation
+                    </Button>
+                  </Link>
+                  <a href="tel:+919894948011">
+                    <Button variant="outline" className="h-12 px-8 border-white/20 text-white hover:bg-white/10">
+                      <Phone className="mr-2 w-4 h-4" />
+                      +91 98949 48011
+                    </Button>
+                  </a>
+                </div>
+              </ScrollReveal>
             </div>
           </div>
-        </section> */}
+        </section>
       </Layout>
     </>
   );

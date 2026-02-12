@@ -91,7 +91,12 @@
     font-family: var(--font-body);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -104,6 +109,7 @@
 }
 
 @layer utilities {
+
   /* Glassmorphism */
   .glass {
     background: hsl(var(--glass-bg));
@@ -146,12 +152,10 @@
 
   /* Hero Overlay */
   .hero-overlay {
-    background: linear-gradient(
-      180deg,
-      hsl(220 15% 10% / 0.4) 0%,
-      hsl(220 15% 10% / 0.6) 50%,
-      hsl(220 15% 10% / 0.85) 100%
-    );
+    background: linear-gradient(180deg,
+        hsl(220 15% 10% / 0.4) 0%,
+        hsl(220 15% 10% / 0.6) 50%,
+        hsl(220 15% 10% / 0.85) 100%);
   }
 
   /* Premium Link Hover */
@@ -181,8 +185,15 @@
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
   }
 
   /* Pulse Glow */
@@ -191,8 +202,15 @@
   }
 
   @keyframes pulseGlow {
-    0%, 100% { box-shadow: 0 0 20px hsl(43 96% 56% / 0.2); }
-    50% { box-shadow: 0 0 50px hsl(43 96% 56% / 0.4); }
+
+    0%,
+    100% {
+      box-shadow: 0 0 20px hsl(43 96% 56% / 0.2);
+    }
+
+    50% {
+      box-shadow: 0 0 50px hsl(43 96% 56% / 0.4);
+    }
   }
 
   /* Shimmer Effect */
@@ -208,38 +226,59 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      hsl(0 0% 100% / 0.1),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        hsl(0 0% 100% / 0.1),
+        transparent);
     animation: shimmer 2s infinite;
   }
 
   @keyframes shimmer {
-    0% { left: -100%; }
-    100% { left: 100%; }
+    0% {
+      left: -100%;
+    }
+
+    100% {
+      left: 100%;
+    }
   }
 
   /* Fade Up Animation */
-  .stagger-children > * {
+  .stagger-children>* {
     opacity: 0;
     animation: fadeUp 0.6s ease-out forwards;
   }
 
-  .stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
-  .stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
-  .stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
-  .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
-  .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
-  .stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+  .stagger-children>*:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .stagger-children>*:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .stagger-children>*:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .stagger-children>*:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+
+  .stagger-children>*:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+
+  .stagger-children>*:nth-child(6) {
+    animation-delay: 0.6s;
+  }
 
   @keyframes fadeUp {
     from {
       opacity: 0;
       transform: translateY(30px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);

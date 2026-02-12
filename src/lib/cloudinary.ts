@@ -1,5 +1,5 @@
 
-export const uploadImageToCloudinary = async (file: File): Promise<string> => {
+export const uploadImageToCloudinary = async (file: File, resourceType: 'image' | 'video' | 'raw' | 'auto' = 'image'): Promise<string> => {
     const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
@@ -12,7 +12,7 @@ export const uploadImageToCloudinary = async (file: File): Promise<string> => {
     formData.append("upload_preset", uploadPreset);
 
     const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
         {
             method: "POST",
             body: formData,
@@ -21,7 +21,7 @@ export const uploadImageToCloudinary = async (file: File): Promise<string> => {
 
     if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || "Failed to upload image");
+        throw new Error(errorData.error?.message || "Failed to upload file");
     }
 
     const data = await response.json();
