@@ -36,6 +36,8 @@ import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminProjectInterests from "./pages/admin/AdminProjectInterests";
 import AdminServiceCategories from "./pages/admin/AdminServiceCategories";
 import AdminServiceSubcategories from "./pages/admin/AdminServiceSubcategories";
+import AdminProjectCategories from "./pages/admin/AdminProjectCategories";
+import AdminProjectSubcategories from "./pages/admin/AdminProjectSubcategories";
 import NotFound from "./pages/NotFound";
 
 import ScrollToTop from "./components/ScrollToTop";
@@ -84,11 +86,14 @@ const App = () => (
               <Route path="/admin/project-interests" element={<AdminProjectInterests />} />
               <Route path="/admin/service-categories" element={<AdminServiceCategories />} />
               <Route path="/admin/service-subcategories" element={<AdminServiceSubcategories />} />
+              <Route path="/admin/project-categories" element={<AdminProjectCategories />} />
+              <Route path="/admin/project-subcategories" element={<AdminProjectSubcategories />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
         </BrowserRouter>
+
       </TooltipProvider>
     </QueryClientProvider>
   </HelmetProvider>

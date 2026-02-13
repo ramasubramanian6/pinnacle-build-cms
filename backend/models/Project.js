@@ -39,6 +39,22 @@ const projectSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        projectCategory: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ProjectCategory'
+        },
+        projectSubcategory: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ProjectSubcategory'
+        },
+        serviceCategory: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ServiceCategory'
+        },
+        serviceSubcategory: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ServiceSubcategory'
+        },
         status: {
             type: String,
             enum: ['ongoing', 'completed', 'upcoming'],
@@ -122,7 +138,24 @@ const projectSchema = mongoose.Schema(
             rooms: Number,
             parking: Number,
             floors: Number
-        }
+        },
+        // Enhanced content structure
+        featuresDescription: {
+            type: String,
+            default: ''
+        },
+        process: [{
+            title: { type: String, required: true },
+            description: { type: String },
+        }],
+        benefits: [{
+            title: { type: String, required: true },
+            description: { type: String },
+        }],
+        faqs: [{
+            question: { type: String, required: true },
+            answer: { type: String, required: true },
+        }]
     },
     {
         timestamps: true,

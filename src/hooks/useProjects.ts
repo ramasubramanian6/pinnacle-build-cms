@@ -67,6 +67,16 @@ export interface Project {
     parking?: number;
     floors?: number;
   };
+  // Enhanced content
+  featuresDescription?: string;
+  process?: { title: string; description: string; }[];
+  benefits?: { title: string; description: string; }[];
+  faqs?: { question: string; answer: string; }[];
+  // Linked Services
+  serviceCategory?: string; // ID or populated object
+  serviceSubcategory?: string; // ID or populated object
+  projectCategory?: string | any; // ID or populated object
+  projectSubcategory?: string | any; // ID or populated object
 }
 
 export const useProjects = (category?: string) => {

@@ -34,10 +34,13 @@ const AdminServiceSubcategories = () => {
             description: '',
             images: [],
             features: [],
-            contentHeading: '',
-            content: '',
             order: 0,
-            isActive: true
+            isActive: true,
+            // Enhanced Content
+            featuresDescription: '',
+            process: [],
+            benefits: [],
+            faqs: []
         });
         setIsEditing(true);
     };
@@ -185,6 +188,41 @@ const AdminServiceSubcategories = () => {
         const features = [...(editingSubcategory.features || [])];
         features.splice(index, 1);
         setEditingSubcategory({ ...editingSubcategory, features });
+    };
+
+    // Helper for array fields (process, benefits, faqs)
+    const addArrayItem = (field: 'process' | 'benefits' | 'faqs') => {
+        if (!editingSubcategory) return;
+        const current = editingSubcategory[field] || [];
+        const newItem = field === 'faqs'
+            ? { question: '', answer: '' }
+            : { title: '', description: '' };
+
+        setEditingSubcategory({
+            ...editingSubcategory,
+            [field]: [...current, newItem]
+        });
+    };
+
+    const updateArrayItem = (field: 'process' | 'benefits' | 'faqs', index: number, key: string, value: string) => {
+        if (!editingSubcategory) return;
+        const current = [...(editingSubcategory[field] || [])];
+        // @ts-ignore
+        current[index] = { ...current[index], [key]: value };
+        setEditingSubcategory({
+            ...editingSubcategory,
+            [field]: current
+        });
+    };
+
+    const removeArrayItem = (field: 'process' | 'benefits' | 'faqs', index: number) => {
+        if (!editingSubcategory) return;
+        const current = [...(editingSubcategory[field] || [])];
+        current.splice(index, 1);
+        setEditingSubcategory({
+            ...editingSubcategory,
+            [field]: current
+        });
     };
 
     if (isLoading) {
@@ -346,8 +384,19 @@ const AdminServiceSubcategories = () => {
                         <div className="space-y-4 p-4 bg-slate-900/50 rounded-lg border border-slate-700">
                             <h3 className="text-lg font-semibold text-accent">What We Offer</h3>
                             <p className="text-sm text-slate-400">Key features and benefits of this service</p>
-                            <label className="block text-sm font-medium mb-2 text-white">Service Features</label>
-                            <div className="space-y-2">
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2 text-white">Features Description</label>
+                                <Textarea
+                                    value={editingSubcategory.featuresDescription || ''}
+                                    onChange={(e) => setEditingSubcategory({ ...editingSubcategory, featuresDescription: e.target.value })}
+                                    placeholder="Brief intro to the features section..."
+                                    className="bg-slate-900 text-white border-slate-700 mb-4"
+                                />
+                            </div>
+
+                            <label className="block text-sm font-medium mb-2 text-white">Service Features List</label>
+                            <div className="space-y-2 mb-6">
                                 {editingSubcategory.features?.map((feature, index) => (
                                     <div key={index} className="flex items-center gap-2 p-2 bg-slate-800 rounded">
                                         <span className="flex-1 text-sm">{feature}</span>
@@ -361,6 +410,109 @@ const AdminServiceSubcategories = () => {
                                     Add Feature
                                 </Button>
                             </div>
+
+                            {/* Process Section */}
+                            <div className="border-t border-slate-700 pt-4">
+                                <h4 className="text-md font-medium text-white mb-2">Our Process</h4>
+                                <div className="space-y-4">
+                                    {editingSubcategory.process?.map((item, index) => (
+                                        <div key={index} className="p-3 bg-slate-800 rounded border border-slate-700 space-y-2">
+                                            <div className="flex justify-between">
+                                                <span className="text-xs text-slate-400">Step {index + 1}</span>
+                                                <Button variant="ghost" size="sm" onClick={() => removeArrayItem('process', index)}>
+                                                    <X className="w-3 h-3" />
+                                                </Button>
+                                            </div>
+                                            <Input
+                                                value={item.title}
+                                                onChange={(e) => updateArrayItem('process', index, 'title', e.target.value)}
+                                                placeholder="Step Title"
+                                                className="bg-slate-900 text-white border-slate-600"
+                                            />
+                                            <Textarea
+                                                value={item.description}
+                                                onChange={(e) => updateArrayItem('process', index, 'description', e.target.value)}
+                                                placeholder="Step Description"
+                                                rows={2}
+                                                className="bg-slate-900 text-white border-slate-600"
+                                            />
+                                        </div>
+                                    ))}
+                                    <Button variant="outline" size="sm" onClick={() => addArrayItem('process')}>
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add Process Step
+                                    </Button>
+                                </div>
+                            </div>
+
+                            {/* Benefits Section */}
+                            <div className="border-t border-slate-700 pt-4 mt-4">
+                                <h4 className="text-md font-medium text-white mb-2">Why Choose Us (Benefits)</h4>
+                                <div className="space-y-4">
+                                    {editingSubcategory.benefits?.map((item, index) => (
+                                        <div key={index} className="p-3 bg-slate-800 rounded border border-slate-700 space-y-2">
+                                            <div className="flex justify-between">
+                                                <span className="text-xs text-slate-400">Benefit {index + 1}</span>
+                                                <Button variant="ghost" size="sm" onClick={() => removeArrayItem('benefits', index)}>
+                                                    <X className="w-3 h-3" />
+                                                </Button>
+                                            </div>
+                                            <Input
+                                                value={item.title}
+                                                onChange={(e) => updateArrayItem('benefits', index, 'title', e.target.value)}
+                                                placeholder="Benefit Title"
+                                                className="bg-slate-900 text-white border-slate-600"
+                                            />
+                                            <Textarea
+                                                value={item.description}
+                                                onChange={(e) => updateArrayItem('benefits', index, 'description', e.target.value)}
+                                                placeholder="Benefit Description"
+                                                rows={2}
+                                                className="bg-slate-900 text-white border-slate-600"
+                                            />
+                                        </div>
+                                    ))}
+                                    <Button variant="outline" size="sm" onClick={() => addArrayItem('benefits')}>
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add Benefit
+                                    </Button>
+                                </div>
+                            </div>
+
+                            {/* FAQS Section */}
+                            <div className="border-t border-slate-700 pt-4 mt-4">
+                                <h4 className="text-md font-medium text-white mb-2">Frequently Asked Questions</h4>
+                                <div className="space-y-4">
+                                    {editingSubcategory.faqs?.map((item, index) => (
+                                        <div key={index} className="p-3 bg-slate-800 rounded border border-slate-700 space-y-2">
+                                            <div className="flex justify-between">
+                                                <span className="text-xs text-slate-400">FAQ {index + 1}</span>
+                                                <Button variant="ghost" size="sm" onClick={() => removeArrayItem('faqs', index)}>
+                                                    <X className="w-3 h-3" />
+                                                </Button>
+                                            </div>
+                                            <Input
+                                                value={item.question}
+                                                onChange={(e) => updateArrayItem('faqs', index, 'question', e.target.value)}
+                                                placeholder="Question"
+                                                className="bg-slate-900 text-white border-slate-600"
+                                            />
+                                            <Textarea
+                                                value={item.answer}
+                                                onChange={(e) => updateArrayItem('faqs', index, 'answer', e.target.value)}
+                                                placeholder="Answer"
+                                                rows={2}
+                                                className="bg-slate-900 text-white border-slate-600"
+                                            />
+                                        </div>
+                                    ))}
+                                    <Button variant="outline" size="sm" onClick={() => addArrayItem('faqs')}>
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add FAQ
+                                    </Button>
+                                </div>
+                            </div>
+
                         </div>
 
                         {/* Detailed Information */}

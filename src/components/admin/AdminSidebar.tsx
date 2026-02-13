@@ -21,6 +21,8 @@ const menuItems = [
   { title: "Projects", url: "/admin/projects", icon: FolderKanban },
   { title: "Properties", url: "/admin/properties", icon: Building2 },
   { title: "Services", url: "/admin/services", icon: Settings },
+  { title: "Service Categories", url: "/admin/service-categories", icon: FolderKanban },
+  { title: "Service Subcat.", url: "/admin/service-subcategories", icon: FolderKanban },
   { title: "Blogs", url: "/admin/blogs", icon: FolderKanban },
   { title: "Slider Images", url: "/admin/slider-images", icon: Image },
   { title: "Flash Deals", url: "/admin/promotions", icon: Tag },

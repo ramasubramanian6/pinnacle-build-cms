@@ -28,6 +28,7 @@ const AdminServiceCategories = () => {
             title: '',
             slug: '',
             description: '',
+            icon: 'Building2',
             order: 0,
             isActive: true
         });
@@ -134,6 +135,15 @@ const AdminServiceCategories = () => {
                                     value={editingCategory.slug || ''}
                                     onChange={(e) => setEditingCategory({ ...editingCategory, slug: e.target.value })}
                                     placeholder="building-construction"
+                                    className="bg-slate-900 text-white border-slate-700"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-2 text-white">Icon (Lucide React Name)</label>
+                                <Input
+                                    value={editingCategory.icon || ''}
+                                    onChange={(e) => setEditingCategory({ ...editingCategory, icon: e.target.value })}
+                                    placeholder="e.g. Building2, Home, PenTool"
                                     className="bg-slate-900 text-white border-slate-700"
                                 />
                             </div>

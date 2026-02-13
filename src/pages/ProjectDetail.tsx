@@ -225,13 +225,21 @@ const ProjectDetail = () => {
                                 transition={{ duration: 0.8 }}
                             >
                                 <div className="flex items-center gap-3 mb-4">
-                                    <span className="text-accent tracking-widest uppercase text-sm font-semibold">{project.category}</span>
+                                    <span className="text-accent tracking-widest uppercase text-sm font-semibold">
+                                        {((project.projectCategory as any)?.title || project.category)}
+                                        {((project.projectSubcategory as any)?.title && ` • ${(project.projectSubcategory as any).title}`)}
+                                    </span>
                                     <span className="w-1 h-1 rounded-full bg-white/50" />
                                     <span className="text-white/80 uppercase text-sm tracking-wider">{project.location}</span>
                                 </div>
                                 <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
                                     {project.title}
                                 </h1>
+                                {project.featuresDescription && (
+                                    <p className="text-xl text-white/80 max-w-2xl mb-8 font-light leading-relaxed">
+                                        {project.featuresDescription}
+                                    </p>
+                                )}
 
                                 <div className="flex flex-wrap gap-4 mt-8">
                                     <Button size="lg" className="bg-white text-black hover:bg-gray-200 gap-2 rounded-full px-8 text-base font-semibold">
@@ -301,12 +309,63 @@ const ProjectDetail = () => {
                                     <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
                                         {project.content || project.description}
                                     </div>
-                                    <div className="mt-8 pt-8 border-t border-border">
-                                        <Button variant="link" className="text-accent p-0 h-auto font-semibold text-lg hover:no-underline hover:opacity-80">
-                                            Read More about the design philosophy <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
-                                        </Button>
-                                    </div>
+
                                 </section>
+
+                                {/* Process Section */}
+                                {project.process && project.process.length > 0 && (
+                                    <section>
+                                        <h2 className="font-display text-3xl font-bold text-foreground mb-8">Our Process</h2>
+                                        <div className="space-y-8 relative before:absolute before:inset-0 before:left-6 before:w-0.5 before:bg-border/50">
+                                            {project.process.map((step, idx) => (
+                                                <div key={idx} className="relative flex gap-8">
+                                                    <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-4 border-background bg-accent text-accent-foreground font-bold shadow-lg">
+                                                        {idx + 1}
+                                                    </div>
+                                                    <div className="pt-2">
+                                                        <h3 className="text-xl font-bold mb-2">{step.title}</h3>
+                                                        <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+                                )}
+
+                                {/* Benefits Section */}
+                                {project.benefits && project.benefits.length > 0 && (
+                                    <section>
+                                        <h2 className="font-display text-3xl font-bold text-foreground mb-8">Why Choose This?</h2>
+                                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            {project.benefits.map((benefit, idx) => (
+                                                <div key={idx} className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-border/50 hover:border-accent/50 transition-colors group">
+                                                    <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-accent group-hover:text-black transition-colors">
+                                                        <CheckCircle2 className="w-6 h-6 text-accent group-hover:text-black transition-colors" />
+                                                    </div>
+                                                    <h3 className="font-bold text-lg mb-2">{benefit.title}</h3>
+                                                    <p className="text-sm text-muted-foreground">{benefit.description}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+                                )}
+
+                                {/* FAQs Section */}
+                                {project.faqs && project.faqs.length > 0 && (
+                                    <section>
+                                        <h2 className="font-display text-3xl font-bold text-foreground mb-8">Frequently Asked Questions</h2>
+                                        <div className="space-y-4">
+                                            {project.faqs.map((faq, idx) => (
+                                                <div key={idx} className="bg-background border border-border rounded-xl p-6 hover:shadow-md transition-shadow">
+                                                    <h3 className="font-bold text-lg mb-2 flex items-start gap-3">
+                                                        <span className="text-accent">Q.</span> {faq.question}
+                                                    </h3>
+                                                    <p className="text-muted-foreground pl-8">{faq.answer}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+                                )}
 
                                 {/* Detailed Amenities */}
                                 {project.amenities && project.amenities.length > 0 && (

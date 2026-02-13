@@ -5,7 +5,11 @@ const mongoose = require('mongoose');
 // @route   GET /api/projects
 // @access  Public
 const getProjects = async (req, res) => {
-    const projects = await Project.find({});
+    const projects = await Project.find({})
+        .populate('serviceCategory')
+        .populate('serviceSubcategory')
+        .populate('projectCategory')
+        .populate('projectSubcategory');
     res.json(projects);
 };
 
@@ -18,11 +22,17 @@ const getProjectById = async (req, res) => {
             return res.status(404).json({ message: 'Project not found' });
         }
 
-        const project = await Project.findById(req.params.id).lean();
+        const project = await Project.findById(req.params.id)
+            .populate('serviceCategory')
+            .populate('serviceSubcategory')
+            .populate('projectCategory')
+            .populate('projectSubcategory')
+            .lean();
 
         if (project) {
             // Manually add id virtual since we are using lean()
-            res.json({ ...project, id: project._id });
+            const populatedProject = { ...project, id: project._id };
+            res.json(populatedProject);
         } else {
             res.status(404).json({ message: 'Project not found' });
         }
@@ -42,6 +52,10 @@ const createProject = async (req, res) => {
         description: req.body.description,
         location: req.body.location,
         category: req.body.category,
+        serviceCategory: req.body.serviceCategory,
+        serviceSubcategory: req.body.serviceSubcategory,
+        projectCategory: req.body.projectCategory,
+        projectSubcategory: req.body.projectSubcategory,
         status: req.body.status,
         image_url: req.body.image_url,
         progress: req.body.progress || 0,
@@ -76,6 +90,10 @@ const updateProject = async (req, res) => {
         project.description = req.body.description || project.description;
         project.location = req.body.location || project.location;
         project.category = req.body.category || project.category;
+        project.serviceCategory = req.body.serviceCategory || project.serviceCategory;
+        project.serviceSubcategory = req.body.serviceSubcategory || project.serviceSubcategory;
+        project.projectCategory = req.body.projectCategory || project.projectCategory;
+        project.projectSubcategory = req.body.projectSubcategory || project.projectSubcategory;
         project.status = req.body.status || project.status;
         project.image_url = req.body.image_url || project.image_url;
         project.gallery = req.body.gallery || project.gallery;

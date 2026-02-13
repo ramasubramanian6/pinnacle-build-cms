@@ -7,6 +7,8 @@ import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { useProjects, Project, useCreateProject, useUpdateProject, useDeleteProject } from "@/hooks/useProjects";
+import { useProjectCategories } from "@/hooks/useProjectCategories";
+import { useProjectSubcategories } from "@/hooks/useProjectSubcategories";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { LuxuryLoader, DotsLoader } from "@/components/premium/LuxuryLoader";
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Pencil, Trash2, X, Link as LinkIcon, Download } from "lucide-react";
 
+
+
 export default function AdminProjects() {
   const { user, loading: authLoading } = useAuth();
   const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
@@ -30,6 +34,9 @@ export default function AdminProjects() {
   const updateProject = useUpdateProject();
   const deleteProject = useDeleteProject();
   const navigate = useNavigate();
+
+  const { data: projectCategories } = useProjectCategories();
+  const { data: projectSubcategories } = useProjectSubcategories();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -41,7 +48,10 @@ export default function AdminProjects() {
     title: "",
     description: "",
     location: "",
-    category: "Residential",
+    category: "Residential", // Kept for backward compat or broad categorization
+    projectCategory: "",
+    projectSubcategory: "",
+
     status: "ongoing",
     image_url: "",
     featured_image: "",
@@ -142,7 +152,10 @@ export default function AdminProjects() {
       ebook,
       products,
       team,
-      extended_info
+      extended_info,
+      // Map potential object references to IDs if they come populated
+      projectCategory: project.projectCategory ? (typeof project.projectCategory === 'string' ? project.projectCategory : (project.projectCategory as any)._id) : "",
+      projectSubcategory: project.projectSubcategory ? (typeof project.projectSubcategory === 'string' ? project.projectSubcategory : (project.projectSubcategory as any)._id) : "",
     });
     setIsDialogOpen(true);
   };
@@ -277,6 +290,41 @@ export default function AdminProjects() {
                               <SelectItem value="ongoing">Ongoing</SelectItem>
                               <SelectItem value="completed">Completed</SelectItem>
                               <SelectItem value="planned">Planned</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Project Category</Label>
+                          <Select
+                            value={formData.projectCategory}
+                            onValueChange={(v) => setFormData({ ...formData, projectCategory: v, projectSubcategory: "" })}
+                          >
+                            <SelectTrigger><SelectValue placeholder="Select Category" /></SelectTrigger>
+                            <SelectContent>
+                              {projectCategories?.map((cat) => (
+                                <SelectItem key={cat._id} value={cat._id}>{cat.title}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Project Subcategory</Label>
+                          <Select
+                            value={formData.projectSubcategory}
+                            onValueChange={(v) => setFormData({ ...formData, projectSubcategory: v })}
+                            disabled={!formData.projectCategory}
+                          >
+                            <SelectTrigger><SelectValue placeholder="Select Subcategory" /></SelectTrigger>
+                            <SelectContent>
+                              {projectSubcategories
+                                ?.filter((sub) => {
+                                  // Handle both populated object or ID string for category ref
+                                  const catId = typeof sub.category === 'object' ? (sub.category as any)._id : sub.category;
+                                  return catId === formData.projectCategory;
+                                })
+                                .map((sub) => (
+                                  <SelectItem key={sub._id} value={sub._id}>{sub.title}</SelectItem>
+                                ))}
                             </SelectContent>
                           </Select>
                         </div>
@@ -626,6 +674,50 @@ export default function AdminProjects() {
                 </form>
               </DialogContent>
             </Dialog>
+          </div>
+
+          {/* Navigation to Project Categories & Subcategories */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-blue-200 dark:border-blue-800 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/project-categories')}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span className="text-lg">Project Categories</span>
+                  <Badge variant="secondary" className="bg-blue-200 dark:bg-blue-800">New</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Create main project categories (e.g., Residential, Commercial)
+                </p>
+                <Button variant="outline" size="sm" className="w-full">
+                  Manage Categories →
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200 dark:border-purple-800 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/project-subcategories')}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span className="text-lg">Project Subcategories</span>
+                  <Badge variant="secondary" className="bg-purple-200 dark:bg-purple-800">New</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Add subcategories with detailed descriptions (e.g., Luxury Villas, Apartments)
+                </p>
+                <Button variant="outline" size="sm" className="w-full">
+                  Manage Subcategories →
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="border-t pt-6">
+            <h2 className="text-xl font-semibold mb-2">All Projects</h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Manage individual project listings and their details.
+            </p>
           </div>
 
           {/* Project List Table */}

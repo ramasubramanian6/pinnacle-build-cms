@@ -66,6 +66,8 @@ app.use('/api/blogs', require('./routes/blogRoutes'));
 app.use('/api/services', require('./routes/serviceRoutes'));
 app.use('/api/service-categories', require('./routes/serviceCategoryRoutes'));
 app.use('/api/service-subcategories', require('./routes/serviceSubcategoryRoutes'));
+app.use('/api/project-categories', require('./routes/projectCategoryRoutes'));
+app.use('/api/project-subcategories', require('./routes/projectSubcategoryRoutes'));
 app.use('/api/testimonials', require('./routes/testimonialRoutes'));
 app.use('/api/workers', require('./routes/workerRoutes'));
 app.use('/api/packages', require('./routes/packageRoutes'));
